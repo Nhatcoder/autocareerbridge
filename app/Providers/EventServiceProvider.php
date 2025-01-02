@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
+use App\Events\CollaborationRequestEvent;
+use App\Events\EmailConfirmationRequired;
+use App\Events\PasswordResetRequested;
+use App\Listeners\SendAccountRecoveryInstructions;
+use App\Listeners\SendCollaborationRequestMail;
+use App\Listeners\SendEmailConfirmationNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +22,17 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+
+        EmailConfirmationRequired::class => [
+            SendEmailConfirmationNotification::class
+        ],
+
+        PasswordResetRequested::class => [
+            SendAccountRecoveryInstructions::class
+        ],
+        CollaborationRequestEvent::class => [
+            SendCollaborationRequestMail::class,
         ],
     ];
 

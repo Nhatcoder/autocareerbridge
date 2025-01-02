@@ -1,3 +1,20 @@
+// Notification
+async function changeStatus(id) {
+    fetch(`/notifications/seen?id=${id}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+
 // Theme admin
 $(function () {
     $("#datepicker").datepicker({
@@ -10,7 +27,7 @@ $(document).ready(function () {
     $(".booking-calender .fa.fa-clock-o").removeClass(this);
     $(".booking-calender .fa.fa-clock-o").addClass('fa-clock');
 });
-$('.my-select').selectpicker();
+// $('.my-select').selectpicker();
 
 jQuery(document).ready(function () {
     setTimeout(function () {
@@ -55,8 +72,38 @@ CKEDITOR.config.allowedContent = true;
 $(document).ready(function () {
     $(".tinymce_editor_init").each(function () {
         var textareaID = $(this).attr("id");
-        CKEDITOR.replace(textareaID, {});
+        CKEDITOR.replace(textareaID, {
+            // Loại bỏ các plugin không cần thiết để giao diện gọn hơn
+            removePlugins: 'elementspath,save',
+
+            // Thêm các plugin bổ sung để tăng tính năng
+            extraPlugins: 'image,justify,colorbutton',
+
+            // Tùy chỉnh thanh công cụ (toolbar)
+            toolbar: [
+                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+                {
+                    name: 'paragraph',
+                    items: ['NumberedList', 'BulletedList', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+                },
+                { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+                { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
+                { name: 'colors', items: ['TextColor', 'BGColor'] },
+                { name: 'document', items: ['Source'] }
+            ],
+
+            // Cấu hình file upload
+            filebrowserUploadUrl: '/upload-handler-url', // URL xử lý upload file
+            filebrowserUploadMethod: 'form',
+
+            // Tắt đường dẫn phần tử ở góc dưới
+            removeButtons: 'Subscript,Superscript',
+
+            // Chiều cao của trình chỉnh sửa
+            height: 300
+        });
     });
+
 
     function addImageCaption(img) {
         var altText = $(img).attr('alt');
@@ -154,43 +201,95 @@ var openFile = function (file) {
     reader.readAsDataURL(input.files[0]);
 };
 
-// Xóa ajax 
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+            $('#imagePreview').hide();
+            $('#imagePreview').fadeIn(650);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#imageUpload").on('change', function () {
+    readURL(this);
+});
+// Xóa ajax
 $(".btn-remove").on('click', function () {
     let type = $(this).data('type');
     let url = $(this).data('url');
     let token = $('meta[name="csrf-token"]').attr('content');
     let thisBtn = $(this);
 
+    const message = $(this).data('message');
+    const irreversibleAction = $(this).data('irreversible_action');
+    const del = $(this).data('delete');
+    const cancel = $(this).data('cancel');
+
     Swal.fire({
-        title: "Bạn có muốn xóa không ?",
-        text: "Điều này không thể hoàn nguyện !",
+        title: message,
+        text: irreversibleAction,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Xóa",
-        cancelButtonText: "Huỷ"
+        confirmButtonText: del,
+        cancelButtonText: cancel
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: url,
                 type: type,
                 data: {
-                    _token: token
+                    _token: token,
+                    _method: 'DELETE'
                 },
                 success: function (response) {
                     if (response.code == 200) {
                         thisBtn.closest("tr").remove();
-                        Swal.fire({
-                            title: "Đã xoá!",
-                            text: response.message,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                        toastr.success("", response.message)
+                    }
+
+                    if (response.code == 400) {
+                        toastr.error("", response.message)
+                    }
+                },
+                error: function (response) {
+                    if (response.responseJSON.code == 400) {
+                        toastr.error("", response.message)
                     }
                 }
             })
         }
     });
 })
+// language
+document.querySelector('.onchange-language').addEventListener('change', function (e) {
+    var url = e.target.getAttribute('data-url-language');
+    window.location.href = `${url}/` + e.target.value;
+})
+
+// logout
+document.querySelector('.btn-logout').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    Swal.fire({
+        title: "Đăng xuất",
+        text: "Bạn có muốn đăng xuất không ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#01a3ff",
+        cancelButtonColor: "#fd5353",
+        confirmButtonText: "Đăng xuất",
+        cancelButtonText: "Thoát"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let form = $(this).closest('form');
+            form.submit();
+        }
+    });
+});
+
+
