@@ -43,10 +43,11 @@
                                     <a href="{{ route('home') }}" class="gc_main_navigation">
                                         Trang chủ </a>
                                 </li>
-                                <li class="has-mega gc_main_navigation {{ Request::routeIs('search') ? 'active' : '' }}"><a href="{{ route('search') }}" class="gc_main_navigation">
+                                <li
+                                    class="has-mega gc_main_navigation {{ Request::routeIs('search') ? 'active' : '' }}">
+                                    <a href="{{ route('search') }}" class="gc_main_navigation">
                                         Việc làm</a>
                                 </li>
-
 
                                 <li
                                     class="gc_main_navigation parent {{ Request::routeIs('listUniversity') ? 'active' : '' }}">
@@ -234,18 +235,31 @@
                 <!-- mobile menu area end -->
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs hidden-sm">
                     <div class="jp_navi_right_btn_wrapper float-end ">
-                        <ul class="gc_header_wrapper menu-item dropdown ">
+                        <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
                             @if (Auth::guard('admin')->user())
+                                <style>
+                                    .icon_message {
+                                        color: #fff;
+                                        padding: 15px;
+                                        border-radius: 50%;
+                                        background: #3b4774;
+                                    }
+                                </style>
+
+                                <a href="{{ route('conversations', ['id'=>1]) }}" class="chat-company">
+                                    <i class="icon_message fa-solid fa-message"></i>
+                                </a>
                                 <a href="javascript:void(0);" role="button" class="menu-link"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-
                                     <li class="gc_main_navigation d-inline-flex">
-                                        <p class="gc_main_navigation m-3">
+
+                                        {{-- <p class="gc_main_navigation m-3">
                                             {{ $userName }}
-                                        </p>
+                                        </p> --}}
                                         <div class="img_thumb">
                                             @if (Auth::guard('admin')->user()->role === ROLE_ADMIN)
-                                                <div id="avatar" data-avatar="{{$userName}}" class="avatar"></div>
+                                                <div id="avatar" data-avatar="{{ $userName }}"
+                                                    class="avatar"></div>
                                             @elseif (Auth::guard('admin')->user()->role === ROLE_COMPANY && optional(Auth::guard('admin')->user()->company)->avatar_path)
                                                 <img class="img_thumb_item"
                                                     src="{{ asset(Auth::guard('admin')->user()->company->avatar_path) }}"
@@ -264,7 +278,6 @@
                                             @else
                                                 <div id="avatar" class="avatar"></div>
                                             @endif
-
                                         </div>
                                     </li>
                                 </a>
@@ -319,4 +332,3 @@
         </div>
     </div>
 </div>
-

@@ -1,129 +1,106 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông báo từ {{ $university->name }} về việc ứng tuyển công việc {{ $job->name }}</title>
+    <title>TopCV Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #23c0e9;
-        }
-
-        .header {
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .header h1 {
-            color: #23c0e9;
-            font-size: 24px;
-            margin: 0;
+        .sidebar {
+            background-color: #f8f9fa;
+            height: 100vh;
         }
 
         .content {
-            margin: 20px 0;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #ffffff;
         }
 
-        .content p {
-            font-size: 16px;
+        .no-chat img {
+            max-width: 100px;
         }
 
-        .button {
-            text-align: center;
-            margin: 20px 0;
-            cursor: pointer;
+        .jobs-list {
+            max-height: 100vh;
+            overflow-y: auto;
         }
 
-        .button a {
-            display: inline-block;
-            background-color: #23c0e9;
-            color: #fff;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-size: 16px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
+        .job-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
-        .button a:hover {
-            background-color: #27b1ff;
+        .job-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #777;
+        .job-item button {
+            margin-left: auto;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Thông báo về việc ứng tuyển công việc {{ $job->name }} của nhà trường {{ $university->name }}</h1>
-        </div>
-        <div class="content">
-            <p>Xin chào {{ $company->company->name }},</p>
-            <p>Chúng tôi xin thông báo rằng nhà trường <b>{{ $university->name }}</b> đã chính thức ứng tuyển vào công
-                việc: <b>{{ $job->name }}</b> của bạn.</p>
-            <p>Bạn có thể xem thông tin chi tiết về ứng tuyển của nhà trường qua nút bên dưới.</p>
-        </div>
-        <div class="button">
-            <a href="" target="_blank">Xem thông tin ứng tuyển</a>
-        </div>
-        <div class="content">
-            <p>Nếu bạn có bất kỳ câu hỏi nào hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email hoặc số điện
-                thoại được cung cấp trên trang web.</p>
-            <p>Trân trọng,</p>
-            <p>Đội ngũ {{ env('APP_NAME') }}</p>
-        </div>
-        <div class="footer">
-            <p>&copy; {{ date('Y') }} {{ env('APP_NAME') }}. Tất cả các quyền được bảo lưu.</p>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-3">
+                <h5>TopCV Connect</h5>
+                <input type="text" class="form-control mb-3" placeholder="Tên công ty, tên nhà tuyển dụng...">
+                <img src="https://via.placeholder.com/300x150" class="img-fluid mb-3" alt="Ad">
+                <p class="text-muted">Kết nối sâu hơn với bộ Sticker</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-7 content">
+                <h4 class="text-center">New way to follow your chance. <span class="text-success">More engage, more
+                        success</span></h4>
+                <div class="no-chat text-center">
+                    <img src="https://via.placeholder.com/100" alt="No Chat">
+                    <p class="text-muted">Bạn không có cuộc trò chuyện nào...</p>
+                </div>
+            </div>
+
+            <!-- Job List -->
+            <div class="col-md-3 p-3">
+                <h5 class="mb-3">Tin tuyển dụng đã ứng tuyển</h5>
+                <div class="jobs-list">
+                    <div class="job-item">
+                        <img src="https://via.placeholder.com/40" alt="Company Logo">
+                        <div>
+                            <h6 class="mb-0">Symfony PHP Dev</h6>
+                            <small>Công ty TNHH...</small>
+                        </div>
+                        <button class="btn btn-success btn-sm">Nhắn tin</button>
+                    </div>
+
+                    <div class="job-item">
+                        <img src="https://via.placeholder.com/40" alt="Company Logo">
+                        <div>
+                            <h6 class="mb-0">Intern PHP Dev</h6>
+                            <small>Công ty Cổ phần...</small>
+                        </div>
+                        <button class="btn btn-success btn-sm">Nhắn tin</button>
+                    </div>
+
+                    <!-- Add more job items as needed -->
+
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Display a warning toast, with no title
-        toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!')
-
-        // Display a success toast, with a title
-        toastr.success('Have fun storming the castle!', 'Miracle Max Says')
-
-        // Display an error toast, with a title
-        toastr.error('I do not think that word means what you think it means.', 'Inconceivable!')
-
-        // Immediately remove current toasts without using animation
-        toastr.remove()
-
-        // Remove current toasts using animation
-        toastr.clear()
-
-        // Override global options
-        toastr.success('We do have the Kapua suite available.', 'Turtle Bay Resort', { timeOut: 5000 })
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

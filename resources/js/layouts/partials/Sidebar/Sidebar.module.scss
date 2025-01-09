@@ -1,0 +1,23 @@
+.border-right {
+    border-right: 1px solid #eee;
+}
+
+.logo {
+    width: 150px;
+
+    img {
+        width: 100%;
+    }
+}
+
+.action {
+    .action__button--home {
+        background-color: rgba(0, 0, 0, .04);
+        color: #555;
+        padding: 3px 10px;
+        border-radius: 25px;
+        border: transparent;
+        text-align: center;
+        vertical-align: middle;
+    }
+}
