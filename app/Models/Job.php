@@ -19,7 +19,8 @@ class Job extends Model
         'detail',
         'status',
         'major_id',
-        'company_id'
+        'company_id',
+        'is_active'
     ];
 
     public $date = ['deleted_at'];

@@ -36,6 +36,10 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             $query = $query->where('status', $filters['status']);
         }
 
+        if (isset($filters['is_active'])) {
+            $query = $query->where('is_active', $filters['is_active']);
+        }
+
         if (!empty($filters['search'])) {
             $search = '%' . $filters['search'] . '%';
             $query = $query->where(function ($q) use ($search) {
@@ -336,7 +340,8 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
                     'company.fields:id,name',
                     'major:id,name',
                     'skills:id,name'
-                ]);
+                ]
+            );
 
         // Tìm kiếm theo tên job
         $query->where(function ($query) use ($keySearch, $fields, $skills) {
@@ -424,5 +429,23 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
         } else {
             return null;
         }
+    }
+
+    public function updateToggleActive(int $id, array $data)
+    {
+        $result = $this->model->find($id);
+        if ($result->update(['is_active' => $data['is_active']])) {
+            return $result;
+        }
+
+        return false;
+    }
+
+    public function getJobsByIds(array $jobIds)
+    {
+        return $this->model
+            ->whereIn('id', $jobIds)
+            ->where('status', STATUS_PENDING)
+            ->get();
     }
 }
