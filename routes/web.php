@@ -32,6 +32,6 @@ Route::middleware('web')->group(function () {
     Route::get('viec-lam/{slug}', [JobsController::class, 'index'])->name('detailJob');
     Route::get('workshop', [HomeController::class, 'workshop'])->name('workshop');
     Route::get('chi-tiet-workshop/{slug}', [WorkshopsController::class, 'index'])->name('detailWorkShop');
-    Route::get('viec-lam', [HomeController::class, 'chat'])->name('search');
+    Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
     Route::get('tro-truyen', [ConversationsController::class, 'conversations'])->name('conversations');
 });

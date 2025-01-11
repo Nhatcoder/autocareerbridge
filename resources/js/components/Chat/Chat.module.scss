@@ -1,0 +1,48 @@
+// chat
+.item_message {
+    position: relative;
+    display: flex;
+    margin-bottom: 2px;
+
+    &.right {
+        justify-content: flex-end;
+    }
+}
+
+.box__message {
+    margin: 0 25px 0 50px;
+    height: 100%;
+    max-width: 70%;
+    align-items: center;
+    background-color: #23c0e9;
+    border-radius: 25px;
+    color: #fff;
+
+    .message {
+        padding: 8px 15px;
+        margin-bottom: 0;
+        text-align: justify;
+    }
+}
+
+.user_you {
+    position: absolute;
+    left: 5px;
+    width: 40px;
+    border-radius: 50%;
+    bottom: 0;
+}
+
+.send {
+    position: absolute;
+    right: 5px;
+    color: #d4d3d3;
+    bottom: 0;
+
+    .send_pending,
+    .send_succes {
+        display: flex;
+        margin-left: 5px;
+        padding-top: 22px;
+    }
+}

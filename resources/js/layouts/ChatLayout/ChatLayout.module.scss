@@ -1,41 +1,86 @@
-
 .sidebar {
     background-color: #f8f9fa;
     height: 100vh;
 }
 
-.content {
+.slogan {
+    border-bottom: 1px solid #eee !important;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0;
+
+    .text-primary {
+        color: #23c0e9;
+    }
+}
+
+.user {
+    padding: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .050980392156862744);
+    border-bottom: 1px solid #eee;
+
+    .user__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+    }
+}
+
+// chat
+.chats {
+    padding-top: 50px;
+    overflow-y: auto; // Kích hoạt thanh cuộn
+    height: calc(100vh - 170px); // Giữ chiều cao cố định
+    scroll-behavior: smooth; // Hiệu ứng cuộn mượt
+}
+
+
+// chat message
+.user_send__message {
+    background-color: #f7f7f7;
+}
+
+.more_icon,
+.btn_send_message {
+    cursor: pointer;
+    font-size: 24px;
+    color: #23c0e9;
+}
+
+.user_send {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #ffffff;
+    margin: 0 10px;
 }
 
-.no-chat img {
-    max-width: 100px;
+.chat__input {
+    flex: 1;
+    transition: height 0.1s ease-in;
+    resize: none;
+    overflow-y: auto; // Cho phép thanh cuộn khi vượt quá max-height
+    max-height: 150px; // Giới hạn chiều cao tối đa
+    min-height: 40px; // Chiều cao tối thiểu
+    box-sizing: border-box;
+    border: none;
+    background-color: #eee;
+    outline: none;
+    padding: 6px 10px;
+    border-radius: 10px;
 }
 
-.jobs-list {
-    max-height: 100vh;
-    overflow-y: auto;
-}
 
-.job-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.job-item img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.job-item button {
-    margin-left: auto;
+.emoji-picker-container {
+    position: absolute;
+    bottom: 66px;
+    left: 8px;
+    z-index: 9999;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 350px;
 }

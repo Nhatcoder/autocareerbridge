@@ -1,50 +1,129 @@
+import { useState, useRef } from 'react';
 import classNames from "classnames/bind";
 import styles from "./ChatLayout.module.scss";
-import Sidebar from "@/layouts/partials/sidebar";
+import EmojiPicker from 'emoji-picker-react';
 
-
+import Sidebar from "@/layouts/partials/Sidebar";
+import JobList from "@/layouts/partials/JobList";
+import Chat from "@/components/Chat";
 
 const cx = classNames.bind(styles);
 
 function ChatLayout() {
+    const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+    const refChat = useRef(null);
+
+    const handleEmojiClick = (emojiData) => {
+        const input = document.querySelector(`.${cx("chat__input")}`);
+        input.value += emojiData.emoji;
+    };
+
+    const toggleEmojiPicker = () => {
+        setEmojiPickerOpen(prevState => !prevState);
+    };
+    const handleSendMessage = (e) => {
+        const target = e.target;
+        const inputValue = target.value.trim();
+
+        if (inputValue === "") {
+            target.style.height = "40px";
+        } else {
+            target.style.height = "auto";
+            const newHeight = target.scrollHeight;
+
+            // Giới hạn chiều cao của textarea không vượt quá 68px
+            const maxHeight = 100;
+            target.style.height = `${Math.min(newHeight, maxHeight)}px`;
+        }
+
+        // Cập nhật chiều cao của `chats` dựa trên chiều cao của textarea
+        if (refChat.current) {
+            const baseHeight = 170;
+            const minTextareaHeight = 40;
+
+            let extraHeight = 0;
+
+            if (inputValue !== "") {
+                extraHeight = Math.min(target.scrollHeight - minTextareaHeight, 100 - minTextareaHeight);
+            }
+
+            refChat.current.style.height = `calc(100vh - ${baseHeight + extraHeight}px)`;
+
+            // Cuộn xuống cuối nếu có nội dung
+            if (inputValue !== "") {
+                refChat.current.scrollTop = refChat.current.scrollHeight;
+            } else {
+                refChat.current.scrollTop = 0;
+            }
+        }
+    };
+
     return (
         <div className={cx("container-fluid")}>
             <div className={cx("row")}>
-                {/* Sidebar */}
                 <Sidebar />
-                {/* Main Content */}
-                <div className={cx("col-md-7", "content")}>
-                    <h4 className={cx("text-center")}>New way to follow your chance. <span className={cx("text-success")}>More engage, more success</span></h4>
-                    <div className={cx("no-chat", "text-center")}>
-                        <img src="https://via.placeholder.com/100" alt="No Chat" />
-                        <p className={cx("text-muted")}>Bạn không có cuộc trò chuyện nào...</p>
+                <div className={cx("col-md-6 col-sm-12 position-relative px-0")}>
+                    <h4 className={cx("slogan")}>Cách mới để theo đuổi cơ hội của bạn. <span className={cx("text-primary")}>Tham gia nhiều hơn, thành công hơn</span></h4>
+
+                    <div className={cx("user", "d-flex", "align-items-center")}>
+                        <img className={cx("user__avatar")} src="https://i.pinimg.com/736x/96/6a/8b/966a8b525b6ed406fde4520424f058be.jpg" alt="User" />
+                        <div className="user_info">
+                            <h6 className={cx("mb-0")}>Tuyển dụng</h6>
+                            <small>Công ty TNHH...</small>
+                        </div>
+                    </div>
+
+                    <div className={cx("chats")} ref={refChat}>
+                        <Chat> </Chat>
+                    </div>
+
+                    {/* <div className={cx("no_chat")}>
+                        <div className={cx("no_chat__content", "text-center")}>
+                            <img className={cx("no_chat__img")} src="clients/images/no-chat.png" alt="No Chat" />
+                            <p className={cx("text-muted")}>Bạn không có cuộc trò chuyện nào...</p>
+                        </div>
+                    </div> */}
+
+                    {/* Trình chọn emoji */}
+                    {emojiPickerOpen && (
+                        <div className={cx("emoji-picker-container")} onMouseLeave={toggleEmojiPicker}>
+                            <EmojiPicker
+                                onEmojiClick={handleEmojiClick}
+                                disableSkinTonePicker={false}
+                                disableSearchBar={false}
+                                locale="vi"
+                            />
+                        </div>
+                    )}
+
+                    <div className={cx("user_send__message", "d-flex align-items-end justify-content-between px-4")}>
+                        {/* Biểu tượng cảm xúc */}
+                        <div className={cx("more_icon")} onClick={toggleEmojiPicker}>
+                            <i className="fa-solid fa-face-smile"></i>
+                        </div>
+
+                        <div className={cx("user_send")}>
+                            <textarea
+                                cols="1"
+                                rows="1"
+                                className={cx("chat__input")}
+                                onInput={(e) => {
+                                    handleSendMessage(e);
+                                }}
+                                type="text"
+                                placeholder="Aa"
+                            />
+
+                        </div>
+
+                        <div className={cx("btn_send_message")}>
+                            <i className="fa-solid fa-paper-plane"></i>
+                        </div>
                     </div>
                 </div>
-                {/* Job List */}
-                <div className={cx("col-md-3", "p-3")}>
-                    <h5 className={cx("mb-3")}>Tin tuyển dụng đã ứng tuyển</h5>
-                    <div className={cx("jobs-list")}>
-                        <div className={cx("job-item")}>
-                            <img src="https://via.placeholder.com/40" alt="Company Logo" />
-                            <div>
-                                <h6 className={cx("mb-0")}>Symfony PHP Dev</h6>
-                                <small>Công ty TNHH...</small>
-                            </div>
-                            <button className={cx("btn", "btn-success", "btn-sm")}>Nhắn tin</button>
-                        </div>
-                        <div className={cx("job-item")}>
-                            <img src="https://via.placeholder.com/40" alt="Company Logo" />
-                            <div>
-                                <h6 className={cx("mb-0")}>Intern PHP Dev</h6>
-                                <small>Công ty Cổ phần...</small>
-                            </div>
-                            <button className={cx("btn", "btn-success", "btn-sm")}>Nhắn tin</button>
-                        </div>
-                        {/* Add more job items as needed */}
-                    </div>
-                </div>
+                <JobList />
             </div>
-        </div>
+        </div >
 
     );
 }
