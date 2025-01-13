@@ -332,6 +332,7 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
     {
         $query = $this->model->query()
             ->where('status', STATUS_APPROVED)
+            ->where('is_active', ACTIVE)
             ->whereRaw('DATEDIFF(end_date, CURDATE()) >= 0')
             ->with(
                 [
@@ -431,6 +432,13 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
         }
     }
 
+    /**
+     *
+     * @param int $id The ID of the record to be updated.
+     * @param array $data The data to update, including the 'is_active' key.
+     *
+     * @return \Illuminate\Database\Eloquent\Model|false
+     */
     public function updateToggleActive(int $id, array $data)
     {
         $result = $this->model->find($id);
@@ -441,6 +449,13 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
         return false;
     }
 
+    /**
+     * Retrieves a list of jobs based on their IDs.
+     *
+     * @param array $jobIds The array of job IDs to query.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getJobsByIds(array $jobIds)
     {
         return $this->model

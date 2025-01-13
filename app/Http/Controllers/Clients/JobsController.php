@@ -19,8 +19,15 @@ class JobsController extends Controller
     public function index($slug)
     {
         $job = $this->jobService->findJob($slug);
-        $slug_compay = $job->company->slug;
-        $company = $this->companyService->getCompanyBySlug($slug_compay);
-        return view('client.pages.job.detailJob', compact('job','company'));
+
+        if (!$job || $job->is_active === INACTIVE || $job->status !== STATUS_APPROVED || ($job->end_date && $job->end_date < now())) {
+            abort(404);
+        }
+
+        $slug_company = $job->company->slug;
+        $company = $this->companyService->getCompanyBySlug($slug_company);
+
+        // Trả về view
+        return view('client.pages.job.detailJob', compact('job', 'company'));
     }
 }

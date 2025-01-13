@@ -270,95 +270,82 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
+            const $selectAllCheckbox = $('#selectAll');
+            const $jobCheckboxes = $('input[name="job_ids[]"]');
+            const $actionDropdown = $('#actionDropdown');
+            const $approveAllButton = $('#approve-all');
+            const $rejectAllButton = $('#reject-all');
 
-            const selectAllCheckbox = document.getElementById('selectAll');
-            const jobCheckboxes = document.querySelectorAll('input[name="job_ids[]"]');
-            const actionDropdown = document.getElementById('actionDropdown');
-            const approveAllButton = document.getElementById('approve-all');
-            const rejectAllButton = document.getElementById('reject-all');
-
-            // Xử lý checkbox "Chọn tất cả"
-            selectAllCheckbox.addEventListener('change', function() {
-                jobCheckboxes.forEach(function(checkbox) {
-                    checkbox.checked = selectAllCheckbox.checked;
-                });
+            $selectAllCheckbox.on('change', function() {
+                $jobCheckboxes.prop('checked', $(this).is(':checked'));
                 toggleActionDropdown();
             });
 
-            // Xử lý sự thay đổi trên các checkbox công việc
-            jobCheckboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    toggleActionDropdown();
-                });
+            $jobCheckboxes.on('change', function() {
+                toggleActionDropdown();
             });
 
-            // Kiểm tra và hiển thị dropdown nếu có ít nhất một checkbox được chọn
             function toggleActionDropdown() {
-                const selectedJobs = Array.from(jobCheckboxes).filter(checkbox => checkbox.checked);
-                actionDropdown.style.display = selectedJobs.length > 0 ? 'block' : 'none';
+                const selectedJobs = $jobCheckboxes.filter(':checked');
+                $actionDropdown.toggle(selectedJobs.length > 0);
             }
 
-            // Phê duyệt tất cả công việc đã chọn
-            approveAllButton.addEventListener('click', function() {
+            $approveAllButton.on('click', function() {
                 handleAction('approve');
             });
 
-            // Từ chối tất cả công việc đã chọn
-            rejectAllButton.addEventListener('click', function() {
+            $rejectAllButton.on('click', function() {
                 handleAction('reject');
             });
 
             function handleAction(action) {
-                const selectedJobs = Array.from(jobCheckboxes).filter(checkbox => checkbox.checked);
-                const jobIds = selectedJobs.map(checkbox => checkbox.value);
+                const selectedJobs = $jobCheckboxes.filter(':checked');
+                const jobIds = selectedJobs.map(function() {
+                    return $(this).val();
+                }).get();
 
                 if (jobIds.length === 0) {
-                    toastr.error('Vui lòng chọn ít nhất một công việc.');
                     return;
                 }
 
-                const status = action === 'approve' ? 2 : 3;
+                const status = action === 'approve' ? '{{ STATUS_APPROVED }}' : '{{ STATUS_REJECTED }}';
 
                 let hasRejectedJobs = false;
                 let hasApprovedJobs = false;
 
-                // Lọc chỉ các công việc có trạng thái "pending"
-                const validJobs = selectedJobs.filter(function(checkbox) {
-                    const row = checkbox.closest('tr');
-                    const currentStatus = row.querySelector('td:nth-child(7) span').innerText.trim();
+                const validJobs = selectedJobs.filter(function() {
+                    const $row = $(this).closest('tr');
+                    const currentStatus = $row.find('td:nth-child(7) span').text().trim();
 
-                    // Kiểm tra trạng thái đã bị từ chối
                     if (currentStatus === '{{ __('label.admin.job.rejected') }}') {
-                        hasRejectedJobs = true; // Đánh dấu có công việc bị từ chối
-                        checkbox.checked = false; // Bỏ chọn checkbox bị từ chối
-                        return false; // Không bao gồm công việc bị từ chối
+                        hasRejectedJobs = true;
+                        $(this).prop('checked', false);
+                        return false;
                     }
 
-                    // Kiểm tra trạng thái đã phê duyệt
                     if (currentStatus === '{{ __('label.admin.job.approved') }}') {
-                        hasApprovedJobs = true; // Đánh dấu có công việc đã phê duyệt
-                        checkbox.checked = false; // Bỏ chọn checkbox đã phê duyệt
-                        return false; // Không bao gồm công việc đã phê duyệt
+                        hasApprovedJobs = true;
+                        $(this).prop('checked', false);
+                        return false;
                     }
 
-                    // Chỉ chọn các công việc có trạng thái "pending"
                     return currentStatus === '{{ __('label.admin.job.pending') }}';
                 });
 
-                // Nếu không còn công việc hợp lệ
                 if (validJobs.length === 0) {
-                    toastr.error('Công việc đã được phê duyệt hoặc bị từ chối');
+                    toastr.error('{{ __('label.admin.job.approved_or_rejected') }}');
                     toggleActionDropdown();
-                    return; // Không tiếp tục nếu không có công việc "pending"
+                    return;
                 }
 
-                // Gửi yêu cầu AJAX để phê duyệt hoặc từ chối
                 $.ajax({
                     url: '{{ route('admin.jobs.updateStatusBulk') }}',
                     method: 'POST',
                     data: {
-                        job_ids: validJobs.map(checkbox => checkbox.value), // Chỉ gửi công việc "pending"
+                        job_ids: validJobs.map(function() {
+                            return $(this).val();
+                        }).get(),
                         status: status,
                         _token: '{{ csrf_token() }}'
                     },
@@ -366,59 +353,52 @@
                         if (response.success) {
                             toastr.success(response.message);
 
-                            // Cập nhật trạng thái trực tiếp trên bảng
-                            validJobs.forEach(function(checkbox) {
-                                const row = checkbox.closest('tr');
-                                const statusApproveCell = row.querySelector(
-                                    'td:nth-child(7)'); // Cột trạng thái phê duyệt
-                                const statusActiveCell = row.querySelector(
-                                    'td:nth-child(8)'); // Cột trạng thái kích hoạt
+                            validJobs.each(function() {
+                                const $checkbox = $(this);
+                                const $row = $checkbox.closest('tr');
+                                const $statusApproveCell = $row.find('td:nth-child(7)');
+                                const $statusActiveCell = $row.find('td:nth-child(8)');
 
-                                // Cập nhật trạng thái phê duyệt
-                                if (status === 2) {
-                                    statusApproveCell.innerHTML =
-                                        `<span class="badge bg-success">{{ __('label.admin.job.approved') }}</span>`;
-                                } else if (status === 3) {
-                                    statusApproveCell.innerHTML =
-                                        `<span class="badge bg-danger">{{ __('label.admin.job.rejected') }}</span>`;
+                                if (status === '{{ STATUS_APPROVED }}') {
+                                    $statusApproveCell.html(
+                                        `<span class="badge bg-success">{{ __('label.admin.job.approved') }}</span>`
+                                    );
+                                } else if (status === '{{ STATUS_REJECTED }}') {
+                                    $statusApproveCell.html(
+                                        `<span class="badge bg-danger">{{ __('label.admin.job.rejected') }}</span>`
+                                    );
                                 }
 
-                                // Cập nhật trạng thái kích hoạt (tùy logic, ví dụ kích hoạt khi phê duyệt)
-                                if (status === 2) {
-                                    statusActiveCell.innerHTML = `
-                            <button class="btn btn-sm btn-success btn-toggle-status"
-                                data-id="${checkbox.value}"
-                                data-status="inactive">{{ __('label.admin.job.active') }}</button>
-                        `;
+                                if (status === '{{ STATUS_APPROVED }}') {
+                                    $statusActiveCell.html(`
+                                <button class="btn btn-sm btn-success btn-toggle-status"
+                                    data-id="${$checkbox.val()}"
+                                    data-status="inactive">{{ __('label.admin.job.active') }}</button>
+                            `);
                                 } else {
-                                    statusActiveCell.innerHTML = `
-                            <button class="btn btn-sm btn-danger btn-toggle-status"
-                                data-id="${checkbox.value}"
-                                data-status="active">{{ __('label.admin.job.inactive') }}</button>
-                        `;
+                                    $statusActiveCell.html(`
+                                <button class="btn btn-sm btn-danger btn-toggle-status"
+                                    data-id="${$checkbox.val()}"
+                                    data-status="active">{{ __('label.admin.job.inactive') }}</button>
+                            `);
                                 }
 
-                                // Bỏ chọn checkbox
-                                checkbox.checked = false;
+                                $checkbox.prop('checked', false);
                             });
 
-                            // Ẩn dropdown hành động nếu không còn hàng nào được chọn
                             toggleActionDropdown();
-                        } else {
-                            toastr.error(response.message);
                         }
                     },
                     error: function() {
-                        toastr.error('Có lỗi xảy ra. Vui lòng thử lại!');
+                        toastr.error(response.message);
                     }
                 });
             }
+        });
 
 
 
-
-
-
+        document.addEventListener('DOMContentLoaded', function() {
 
             // Bắt sự kiện khi nhấn vào nút "Chi tiết"
             document.querySelectorAll('.btn-show-details').forEach(function(button) {

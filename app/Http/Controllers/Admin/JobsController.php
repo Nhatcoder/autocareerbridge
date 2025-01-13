@@ -84,11 +84,13 @@ class JobsController extends Controller
         try {
             $job = $this->jobService->updateToggleActive($request->id, $request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => __('label.admin.status_update'),
-                'new_status' => $job->is_active == ACTIVE ? 'active' : 'inactive',
-            ]);
+            if ($job) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('label.admin.status_update'),
+                    'new_status' => $job->is_active == ACTIVE ? 'active' : 'inactive',
+                ]);
+            }
         } catch (Exception $exception) {
             Log::error(__('label.admin.status_update_failed') . ': ' . $exception->getMessage());
             return response()->json([
@@ -98,7 +100,8 @@ class JobsController extends Controller
         }
     }
 
-    public function updateStatusBulk(Request $request){
+    public function updateStatusBulk(Request $request)
+    {
         $jobIds = $request->input('job_ids');
         $status = $request->input('status');
 
@@ -111,20 +114,14 @@ class JobsController extends Controller
             if ($updated) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Trạng thái công việc đã được cập nhật thành công.'
+                    'message' =>  __('label.admin.status_update')
                 ]);
             }
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Không có công việc nào được cập nhật.'
-            ]);
-
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Có lỗi xảy ra khi cập nhật trạng thái.'
+                'message' => __('label.admin.status_update_failed')
             ]);
         }
     }

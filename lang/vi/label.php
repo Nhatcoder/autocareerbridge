@@ -151,6 +151,7 @@ return [
             'size' => 'Quy mô',
             'approve' => 'Phê duyệt',
             'reject' => 'Từ chối',
+            'approved_or_rejected' => 'Công việc đã được phê duyệt hoặc bị từ chối',
         ],
 
         'workshop' => [

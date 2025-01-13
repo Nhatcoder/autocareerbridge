@@ -148,6 +148,7 @@ return [
             'size' => 'Size',
             'approve' => 'Approve',
             'reject' => 'Reject',
+            'approved_or_rejected' => 'Job Approved or Rejected',
         ],
 
         'workshop' => [

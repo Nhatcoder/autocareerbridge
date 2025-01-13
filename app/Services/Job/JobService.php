@@ -219,6 +219,7 @@ class JobService
             'user_id' => Auth::guard('admin')->user()->id,
             'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
             'status' => STATUS_PENDING,
+            'is_active' => INACTIVE
         ];
         $detail = $this->jobRepository->create($job);
         $detail->skills()->detach();
