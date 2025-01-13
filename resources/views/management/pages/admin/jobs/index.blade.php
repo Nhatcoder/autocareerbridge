@@ -396,8 +396,6 @@
             }
         });
 
-
-
         document.addEventListener('DOMContentLoaded', function() {
 
             // Bắt sự kiện khi nhấn vào nút "Chi tiết"
