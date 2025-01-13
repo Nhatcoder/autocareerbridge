@@ -435,7 +435,7 @@
 
                             Toast.fire({
                                 icon: "error",
-                                title: "Không tìm thấy bài tuyển dụng."
+                                title: "{{ __('message.company.job.job_not_found') }}"
                             });
                         });
                 });
@@ -482,7 +482,7 @@
                         }
                     },
                     error: function() {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
+                        toastr.error(response.message);
                     }
                 });
             });

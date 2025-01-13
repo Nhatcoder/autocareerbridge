@@ -450,13 +450,13 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
     }
 
     /**
-     * Retrieves a list of jobs based on their IDs.
+     * Retrieves a list of pending jobs based on their IDs.
      *
      * @param array $jobIds The array of job IDs to query.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getJobsByIds(array $jobIds)
+    public function getPendingJobsByIds(array $jobIds)
     {
         return $this->model
             ->whereIn('id', $jobIds)

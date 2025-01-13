@@ -46,6 +46,6 @@ interface JobRepositoryInterface extends BaseRepositoryInterface
 
     public function updateToggleActive(int $id, array $data);
 
-    public function getJobsByIds(array $jobIds);
+    public function getPendingJobsByIds(array $jobIds);
 
 }

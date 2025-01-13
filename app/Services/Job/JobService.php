@@ -361,7 +361,7 @@ class JobService
     {
         DB::beginTransaction();
         try {
-            $jobs = $this->jobRepository->getJobsByIds($jobIds);
+            $jobs = $this->jobRepository->getPendingJobsByIds($jobIds);
 
             foreach ($jobs as $job) {
                 $this->updateStatus($job, $dataRequest);

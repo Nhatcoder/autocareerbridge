@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('jobs', function (Blueprint $table) {
-            $table->tinyInteger('is_active')->default(INACTIVE);
+            $table->dropColumn('is_active');
         });
     }
 };
