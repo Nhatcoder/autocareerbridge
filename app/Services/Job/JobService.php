@@ -16,6 +16,7 @@ use App\Repositories\Job\JobRepositoryInterface;
 use App\Repositories\Major\MajorRepositoryInterface;
 use App\Repositories\Notification\NotificationRepositoryInterface;
 use App\Repositories\University\UniversityRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 use App\Services\Notification\NotificationService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ class JobService
     protected $universityRepository;
     protected $notificationService;
     protected $companyRepository;
+    protected $userRepository;
 
     public function __construct(
         CompanyRepositoryInterface       $companyRepository,
@@ -39,7 +41,8 @@ class JobService
         CollaborationRepositoryInterface $collaborationRepository,
         NotificationRepositoryInterface  $notificationRepository,
         UniversityRepositoryInterface    $universityRepository,
-        NotificationService              $notificationService
+        NotificationService              $notificationService,
+        UserRepositoryInterface          $userRepository
     ) {
         $this->companyRepository = $companyRepository;
         $this->jobRepository = $jobRepository;
@@ -48,6 +51,7 @@ class JobService
         $this->notificationRepository = $notificationRepository;
         $this->universityRepository = $universityRepository;
         $this->notificationService = $notificationService;
+        $this->userRepository = $userRepository;
     }
 
     public function getAll()
@@ -218,7 +222,20 @@ class JobService
             'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
             'status' => STATUS_PENDING,
         ];
+
+        $admin = $this->userRepository->getAdmin();
         $detail = $this->jobRepository->create($job);
+        $company = $detail->company;
+
+        $notification = $this->notificationRepository->create([
+            'title' => $company->name . ' vừa tạo công việc ' . $detail->name,
+            'link' => route('admin.jobs.show', $detail->slug),
+            'type' => TYPE_COMPANY,
+            'admin_id' => $admin->id,
+        ]);
+
+        $this->notificationService->renderNotificationRealtime($notification, $admin->id);
+
         $detail->skills()->detach();
         foreach ($skills as $skill) {
             $detail->skills()->attach($skill);

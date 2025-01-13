@@ -30,7 +30,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         if (isset($filters['active']) && in_array($filters['active'], [INACTIVE, ACTIVE])) {
             $query->where('active', (int) $filters['active']);
-        }        
+        }
 
         if (!empty($filters['date_range'])) {
             $dateRange = explode(" to ", $filters['date_range']);
@@ -60,5 +60,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             return $result;
         }
         return false;
+    }
+
+    public function getAdmin(){
+        return $this->model->where('role', ROLE_ADMIN)->first();
     }
 }

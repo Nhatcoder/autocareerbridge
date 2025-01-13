@@ -92,7 +92,7 @@
                                 <a href="javascript:void(0);" class="d-none"><i class="flaticon-381-settings-6"></i></a>
                             </div>
 
-                            <div id="DZ_W_Notification1" class="widget-media dlab-scroll p-3" style="height:380px;">
+                            <div id="DZ_W_Notification1" class="widget-media dlab-scroll p-3" style="max-height:380px;">
                                 <ul class="timeline" id="notificationsHeader"
                                     data-id-chanel="{{ $valueId['company'] ?? ($valueId['university'] ?? (0 ?? ROLE_ADMIN)) }}">
                                     @forelse ($notificationsHeader as $item)
@@ -243,7 +243,7 @@
                                     </svg>
                                     <span class="ms-2">{{ __('label.admin.header.notification') }} </span>
                                 </a>
-                                
+
                                 <form action="{{ route('management.logout', Auth::guard('admin')->user()->id) }}"
                                     method="post">
                                     @csrf

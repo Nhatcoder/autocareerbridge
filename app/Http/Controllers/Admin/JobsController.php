@@ -77,4 +77,11 @@ class JobsController extends Controller
             return response()->json($e->getMessage(), 500);
         }
     }
+
+    public function show($id){
+        $data = $this->jobService->findJob($id);
+        if($data){
+            return view('management.pages.admin.jobs.detail',compact('data'));
+        }
+    }
 }
