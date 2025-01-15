@@ -122,6 +122,10 @@ return [
             'title_list' => 'Job Post List',
             'job_company_name' => 'Job Name or Company Name',
             'status' => 'Status',
+            'status_approve' => 'Approve',
+            'status_active' => 'Active',
+            'active' => 'Active',
+            'inactive' => 'Inactive',
             'major' => 'Major',
             'title' => 'Title',
             'action' => 'Action',
@@ -144,6 +148,7 @@ return [
             'size' => 'Size',
             'approve' => 'Approve',
             'reject' => 'Reject',
+            'approved_or_rejected' => 'Job Approved or Rejected',
         ],
 
         'workshop' => [

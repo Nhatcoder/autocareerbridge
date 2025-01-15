@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Job\JobService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * The JobsController is responsible for managing job-related operations within the admin panel.
@@ -33,7 +34,7 @@ class JobsController extends Controller
 
     public function index(Request $request)
     {
-        $data = $request->only(['search', 'status', 'major']);
+        $data = $request->only(['search', 'status', 'major', 'is_active']);
         try {
             $jobs = $this->jobService->getJobs($data);
             $majors = $this->jobService->getMajors();
@@ -75,6 +76,53 @@ class JobsController extends Controller
             return response()->json($dataJobs, 200);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function toggleActive(Request $request)
+    {
+        try {
+            $job = $this->jobService->updateToggleActive($request->id, $request->all());
+
+            if ($job) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('label.admin.status_update'),
+                    'new_status' => $job->is_active == ACTIVE ? 'active' : 'inactive',
+                ]);
+            }
+        } catch (Exception $exception) {
+            Log::error(__('label.admin.status_update_failed') . ': ' . $exception->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('label.admin.status_update_failed'),
+            ]);
+        }
+    }
+
+    public function updateStatusBulk(Request $request)
+    {
+        $jobIds = $request->input('job_ids');
+        $status = $request->input('status');
+
+        try {
+            $updated = $this->jobService->bulkUpdateStatusJobs($jobIds, [
+                'status' => $status,
+                'is_active' => $status == STATUS_APPROVED ? ACTIVE : INACTIVE
+            ]);
+
+            if ($updated) {
+                return response()->json([
+                    'success' => true,
+                    'message' =>  __('label.admin.status_update')
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('label.admin.status_update_failed')
+            ]);
         }
     }
 }
