@@ -234,7 +234,7 @@ class JobService
             'admin_id' => $admin->id,
         ]);
 
-        $this->notificationService->renderNotificationRealtime($notification, $admin->id);
+        $this->notificationService->renderNotificationRealtime($notification, null, null, $admin->id);
 
         $detail->skills()->detach();
         foreach ($skills as $skill) {

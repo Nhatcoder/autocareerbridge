@@ -116,11 +116,12 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             $query->where('university_id', $universityId);
         }
 
-        if ($universityId) {
-            $query->where('admin_id', $universityId);
+        if ($adminId) {
+            $query->where('admin_id', $adminId);
         }
 
         $query->where('is_seen', UNSEEN);
+        // dd($query->count());
 
         return $query->count();
     }

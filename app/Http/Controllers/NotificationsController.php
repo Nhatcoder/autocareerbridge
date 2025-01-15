@@ -76,6 +76,8 @@ class NotificationsController extends Controller
             $args['university'] = $user->university->id;
         } elseif ($user->role == ROLE_COMPANY) {
             $args['company'] = $user->company->id;
+        } elseif ($user->role == ROLE_ADMIN) {
+            $args['admin'] = $user->id;
         } else {
             return redirect()->back()->with('status_fail', 'Bạn không có quyền!');
         }
