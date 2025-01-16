@@ -212,6 +212,15 @@ class JobService
         }
     }
 
+    /**
+     * Creates a new job and sends a notification to the admin.
+     *
+     * @param array $data The job data, including name, slug, details, major, end date, and related information.
+     * @param array $skills The list of skills to associate with the job.
+     * @return bool Returns `true` if the job is created successfully, `false` if there is an error during the creation process.
+     *
+     * @throws \Exception If an error occurs during the transaction or job creation.
+     */
     public function createJob(array $data, array $skills)
     {
         DB::beginTransaction();
