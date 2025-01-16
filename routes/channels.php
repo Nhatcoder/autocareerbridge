@@ -18,7 +18,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('admin.{id}', function ($user, $id) {
-    return $user->getAdmin() && (int) $user->id === (int) $id;
+    return $user->isAdmin() && (int) $user->id === (int) $id;
 }, ['guards' => ['admin']]);
 
 Broadcast::channel('company.{id}', function ($user, $id) {

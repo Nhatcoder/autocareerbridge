@@ -32,12 +32,8 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             } else {
                 return [];
             }
-        } elseif ($user->role == ROLE_ADMIN) {
-            if (isset($user->id)) {
-                $filters['admin'] = $user->id;
-            } else {
-                return [];
-            }
+        } elseif (isset($user->id) && $user->role == ROLE_ADMIN) {
+            $filters['admin'] = $user->id;
         } else {
             return [];
         }
@@ -78,12 +74,8 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             } else {
                 return [];
             }
-        } elseif ($user->role == ROLE_ADMIN) {
-            if (isset($user->id)) {
-                $filters['admin'] = $user->id;
-            } else {
-                return [];
-            }
+        } elseif (isset($user->id) && $user->role == ROLE_ADMIN) {
+            $filters['admin'] = $user->id;
         } else {
             return [];
         }
@@ -121,7 +113,6 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
         }
 
         $query->where('is_seen', UNSEEN);
-        // dd($query->count());
 
         return $query->count();
     }

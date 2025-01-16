@@ -214,34 +214,50 @@ class JobService
 
     public function createJob(array $data, array $skills)
     {
-        $job = [
-            'name' => $data['name'],
-            'slug' => $data['slug'],
-            'detail' => $data['detail'],
-            'major_id' => $data['major_id'],
-            'end_date' => $data['end_date'],
-            'user_id' => Auth::guard('admin')->user()->id,
-            'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
-            'status' => STATUS_PENDING,
-            'is_active' => INACTIVE
-        ];
+        DB::beginTransaction();
+        try {
 
-        $admin = $this->userRepository->getAdmin();
-        $detail = $this->jobRepository->create($job);
-        $company = $detail->company;
+            $job = [
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+                'detail' => $data['detail'],
+                'major_id' => $data['major_id'],
+                'end_date' => $data['end_date'],
+                'user_id' => Auth::guard('admin')->user()->id,
+                'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
+                'status' => STATUS_PENDING,
+                'is_active' => INACTIVE
+            ];
 
-        $notification = $this->notificationRepository->create([
-            'title' => $company->name . ' vừa tạo công việc ' . $detail->name,
-            'link' => route('admin.jobs.show', $detail->slug),
-            'type' => TYPE_COMPANY,
-            'admin_id' => $admin->id,
-        ]);
+            $admin = $this->userRepository->getAdmin();
+            if (!$admin) {
+                return false;
+            }
+            $detail = $this->jobRepository->create($job);
+            if (!$detail) {
+                return false;
+            }
+            $company = $detail->company;
 
-        $this->notificationService->renderNotificationRealtime($notification, null, null, $admin->id);
+            $notification = $this->notificationRepository->create([
+                'title' => $company->name . ' vừa tạo công việc ' . $detail->name,
+                'link' => route('admin.jobs.show', $detail->slug),
+                'type' => TYPE_COMPANY,
+                'admin_id' => $admin->id,
+            ]);
 
-        $detail->skills()->detach();
-        foreach ($skills as $skill) {
-            $detail->skills()->attach($skill);
+            $this->notificationService->renderNotificationRealtime($notification, null, null, $admin->id);
+
+            $detail->skills()->detach();
+            foreach ($skills as $skill) {
+                $detail->skills()->attach($skill);
+            }
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Lỗi tạo bài tuyển dụng', $e->getMessage());
+            return false;
         }
     }
 

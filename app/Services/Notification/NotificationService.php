@@ -4,6 +4,7 @@ namespace App\Services\Notification;
 
 use App\Events\NotifyJobChangeStatusEvent;
 use App\Repositories\Notification\NotificationRepositoryInterface;
+
 class NotificationService
 {
     protected $notificationRepository;

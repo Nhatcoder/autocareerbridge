@@ -95,15 +95,12 @@ class JobsController extends Controller
      */
     public function store(JobRequest $request)
     {
-        DB::beginTransaction();
         try {
             $skills = $this->skillService->createSkill($request->skill_name);
             $this->jobService->createJob($request->all(), $skills);
 
-            DB::commit();
             return redirect()->route('company.manageJob')->with('status_success', __('message.company.job.create_job'));
         } catch (\Exception $exception) {
-            DB::rollBack();
             Log::error('Lỗi tạo bài tuyển dụng: ' . $exception->getMessage());
             return redirect()->back()->with('status_fail', __('message.company.job.error_create'));
         }
