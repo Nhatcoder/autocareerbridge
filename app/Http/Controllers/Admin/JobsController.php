@@ -79,6 +79,20 @@ class JobsController extends Controller
         }
     }
 
+    /**
+     * Display the details of a specific job.
+     *
+     * @param int $id The ID of the job to be displayed.
+     * @return \Illuminate\View\View|null The view for the job details page or null if not found.
+     */
+    public function show($id)
+    {
+        $data = $this->jobService->findJob($id);
+        if ($data) {
+            return view('management.pages.admin.jobs.detail', compact('data'));
+        }
+    }
+
     public function toggleActive(Request $request)
     {
         try {

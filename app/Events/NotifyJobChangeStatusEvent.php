@@ -17,14 +17,16 @@ class NotifyJobChangeStatusEvent implements ShouldBroadcast
     protected $notification;
     protected $idChanel;
     protected $countNotificationUnSeen;
+    protected $role;
     /**
      * Create a new event instance.
      */
-    public function __construct($notification, $idChanel, $countNotificationUnSeen)
+    public function __construct($notification, $idChanel, $countNotificationUnSeen, $role)
     {
         $this->notification = $notification;
         $this->idChanel = $idChanel;
         $this->countNotificationUnSeen = $countNotificationUnSeen;
+        $this->role = $role;
     }
 
     /**
@@ -33,7 +35,7 @@ class NotifyJobChangeStatusEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('company.' . $this->idChanel);
+        return new PrivateChannel("{$this->role}.{$this->idChanel}");
     }
 
     public function broadcastWith()
@@ -41,7 +43,8 @@ class NotifyJobChangeStatusEvent implements ShouldBroadcast
         return [
             'notification' => $this->notification,
             'idChanel' => $this->idChanel,
-            'countNotificationUnSeen' => $this->countNotificationUnSeen
+            'countNotificationUnSeen' => $this->countNotificationUnSeen,
+            'role' => $this->role,
         ];
     }
 }

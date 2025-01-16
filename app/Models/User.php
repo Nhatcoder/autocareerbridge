@@ -72,4 +72,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Job::class, 'user_id', 'id');
     }
+
+    public function isAdmin(){
+        return $this->role === ROLE_ADMIN;
+    }
 }
