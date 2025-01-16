@@ -20,6 +20,7 @@ use App\Repositories\User\UserRepositoryInterface;
 use App\Services\Notification\NotificationService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -85,6 +86,7 @@ class JobService
 
     public function updateStatus($job, $dataRequest)
     {
+        $dataRequest['is_active'] = ($dataRequest['status'] == STATUS_APPROVED) ? ACTIVE : INACTIVE;
         $companyId = $job->company_id;
         $collaborations = $this->collaborationRepository->getUniversityCollaboration($companyId);
         $company = $job->company->user;
@@ -221,6 +223,7 @@ class JobService
             'user_id' => Auth::guard('admin')->user()->id,
             'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
             'status' => STATUS_PENDING,
+            'is_active' => INACTIVE
         ];
 
         $admin = $this->userRepository->getAdmin();
@@ -334,7 +337,6 @@ class JobService
                 $this->notificationService->renderNotificationRealtime($notification, null, $universityId);
             }
             return $this->jobRepository->updateStatusUniversityJob($id, $status);
-            // return $this->jobRepository->updateStatusUniversityJob($id, 1);
         } catch (Exception $e) {
             Log::error($e->getFile() . ':' . $e->getLine() . ' - ' . 'Lỗi khi xử lý ứng tuyển: ' . ' - ' . $e->getMessage());
             return null;
@@ -364,5 +366,30 @@ class JobService
             'jobDelete' => $jobDelete,
             'date' => $date
         ];
+    }
+
+    public function updateToggleActive(int $id, array $data)
+    {
+        $data['is_active'] = $data['status'] == 'active' ? ACTIVE : INACTIVE;
+        return $this->jobRepository->updateToggleActive($id, $data);
+    }
+
+    public function bulkUpdateStatusJobs($jobIds, $dataRequest)
+    {
+        DB::beginTransaction();
+        try {
+            $jobs = $this->jobRepository->getPendingJobsByIds($jobIds);
+
+            foreach ($jobs as $job) {
+                $this->updateStatus($job, $dataRequest);
+            }
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getFile() . ':' . $e->getLine() . ' - Lỗi khi xử lý job: ' . $e->getMessage());
+            return false;
+        }
     }
 }

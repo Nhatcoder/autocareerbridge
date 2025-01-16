@@ -101,11 +101,11 @@ class JobsController extends Controller
             $this->jobService->createJob($request->all(), $skills);
 
             DB::commit();
-            return redirect()->route('company.manageJob')->with('status_success', 'Tạo bài tuyển dụng thành công');
+            return redirect()->route('company.manageJob')->with('status_success', __('message.company.job.create_job'));
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error('Lỗi tạo bài tuyển dụng: ' . $exception->getMessage());
-            return redirect()->back()->with('status_fail', 'Lỗi tạo bài tuyển dụng');
+            return redirect()->back()->with('status_fail', __('message.company.job.error_create'));
         }
     }
 
@@ -116,12 +116,14 @@ class JobsController extends Controller
     {
         $job = $this->jobService->getJob($slug);
 
-        if (empty($job) || !in_array(Auth::guard('admin')->user()->role, [ROLE_COMPANY, ROLE_HIRING]) ||
+        if (
+            empty($job) || !in_array(Auth::guard('admin')->user()->role, [ROLE_COMPANY, ROLE_HIRING]) ||
             (Auth::guard('admin')->user()->role === ROLE_COMPANY && $job->company_id !== Auth::guard('admin')->user()->company->id) ||
-            (Auth::guard('admin')->user()->role === ROLE_HIRING && $job->company_id !== Auth::guard('admin')->user()->hiring->company_id)) {
-            return empty($job) ? 
-                redirect()->route('company.manageJob')->with('status_fail', 'Không tìm thấy bài tuyển dụng') : 
-                abort(403, 'Bạn không có quyền xem bài tuyển dụng này');
+            (Auth::guard('admin')->user()->role === ROLE_HIRING && $job->company_id !== Auth::guard('admin')->user()->hiring->company_id)
+        ) {
+            return empty($job) ?
+                redirect()->route('company.manageJob')->with('status_fail', __('message.company.job.job_not_found')) :
+                abort(403,  __('message.company.job.job_not_permission'));
         }
 
         $jobUniversities = $job->universities()
@@ -139,13 +141,15 @@ class JobsController extends Controller
     public function edit(string $slug)
     {
         $job = $this->jobService->getJob($slug);
-        
-        if (empty($job) || $job->status !== STATUS_PENDING || !in_array(Auth::guard('admin')->user()->role, [ROLE_COMPANY, ROLE_HIRING])
+
+        if (
+            empty($job) || $job->status !== STATUS_PENDING || !in_array(Auth::guard('admin')->user()->role, [ROLE_COMPANY, ROLE_HIRING])
             || (Auth::guard('admin')->user()->role === ROLE_COMPANY && $job->company_id !== Auth::guard('admin')->user()->company->id)
-            || (Auth::guard('admin')->user()->role === ROLE_HIRING && $job->company_id !== Auth::guard('admin')->user()->hiring->company_id)) {
-            return empty($job) ? 
-                redirect()->route('company.manageJob')->with('status_fail', 'Không tìm thấy bài tuyển dụng') : 
-                abort(403, 'Bạn không có quyền sửa bài tuyển dụng này');
+            || (Auth::guard('admin')->user()->role === ROLE_HIRING && $job->company_id !== Auth::guard('admin')->user()->hiring->company_id)
+        ) {
+            return empty($job) ?
+                redirect()->route('company.manageJob')->with('status_fail', __('message.company.job.job_not_found')) :
+                abort(403,  __('message.company.job.job_not_permission'));
         }
 
         $majors = $this->jobService->getMajors();
@@ -166,11 +170,11 @@ class JobsController extends Controller
             $this->jobService->updateJob($id, $request->all(), $skills);
 
             DB::commit();
-            return redirect()->route('company.manageJob')->with('status_success', 'Cập nhật bài tuyển dụng thành công');
+            return redirect()->route('company.manageJob')->with('status_success', __('message.company.job.update_job'));
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error('Lỗi cập nhật bài tuyển dụng: ' . $exception->getMessage());
-            return redirect()->back()->with('status_fail', 'Lỗi cập nhật bài tuyển dụng');
+            return redirect()->back()->with('status_fail', __('message.company.job.error_update'));
         }
     }
 
@@ -182,19 +186,21 @@ class JobsController extends Controller
         try {
             $jobExists = $this->jobService->find($id);
 
-            if (!$jobExists || !in_array(Auth::guard('admin')->user()->role, [ROLE_COMPANY, ROLE_HIRING]) ||
+            if (
+                !$jobExists || !in_array(Auth::guard('admin')->user()->role, [ROLE_COMPANY, ROLE_HIRING]) ||
                 (Auth::guard('admin')->user()->role === ROLE_COMPANY && $jobExists->company_id !== Auth::guard('admin')->user()->company->id) ||
-                (Auth::guard('admin')->user()->role === ROLE_HIRING && $jobExists->company_id !== Auth::guard('admin')->user()->hiring->company_id)) {
-                return empty($jobExists) ? 
-                    redirect()->back()->with('status_fail', 'Không tìm thấy bài tuyển dụng, không thể xóa!') : 
+                (Auth::guard('admin')->user()->role === ROLE_HIRING && $jobExists->company_id !== Auth::guard('admin')->user()->hiring->company_id)
+            ) {
+                return empty($jobExists) ?
+                    redirect()->back()->with('status_fail', __('message.company.job.job_not_found')) :
                     abort(403, 'Bạn không có quyền xóa bài tuyển dụng này');
             }
-            
+
             $this->jobService->deleteJob($id);
-            return redirect()->route('company.manageJob')->with('status_success', 'Xóa bài tuyển dụng thành công');
+            return redirect()->route('company.manageJob')->with('status_success', __('message.company.job.delete_job'));
         } catch (\Exception $exception) {
             Log::error('Lỗi xóa bài tuyển dụng: ' . $exception->getMessage());
-            return redirect()->back()->with('status_fail', 'Lỗi xóa bài tuyển dụng');
+            return redirect()->back()->with('status_fail', __('message.company.job.error_delete'));
         }
     }
 
@@ -239,10 +245,10 @@ class JobsController extends Controller
     {
         try {
             $this->jobService->updateStatusUniversityJob($id, $status);
-            return redirect()->back()->with('status_success', 'Cập nhật trạng thái thành công');;
+            return redirect()->back()->with('status_success', __('message.company.job.update_status_job'));
         } catch (\Exception $exception) {
             Log::error('Lỗi : ' . $exception->getMessage());
-            return redirect()->back()->with('status_fail', 'Lỗi');
+            return redirect()->back()->with('status_fail', __('message.company.job.error_status_job'));
         }
     }
 }

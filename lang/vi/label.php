@@ -125,7 +125,10 @@ return [
         'job' => [
             'title_list' => 'Danh sách bài tuyển dụng',
             'job_company_name' => 'Tên job hoặc tên doanh nghiệp',
-            'status' => 'Trạng thái',
+            'status_approve' => 'Trạng thái phê duyệt',
+            'status_active' => 'Trạng thái hoạt động',
+            'active' => 'Hoạt động',
+            'inactive' => 'Không hoạt động',
             'major' => 'Chuyên ngành',
             'title' => 'Tiêu đề',
             'created_at' => 'Ngày đăng',
@@ -148,6 +151,7 @@ return [
             'size' => 'Quy mô',
             'approve' => 'Phê duyệt',
             'reject' => 'Từ chối',
+            'approved_or_rejected' => 'Công việc đã được phê duyệt hoặc bị từ chối',
         ],
 
         'workshop' => [
