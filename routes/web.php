@@ -3,6 +3,7 @@
 use App\Http\Controllers\Clients\CompaniesController;
 use App\Http\Controllers\Clients\HomeController;
 use App\Http\Controllers\Clients\JobsController;
+use App\Http\Controllers\Clients\ResumeController;
 use App\Http\Controllers\Company\CollaborationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
@@ -21,7 +22,7 @@ use App\Http\Controllers\Clients\WorkshopsController;
 */
 
 Route::middleware('web')->group(function () {
-    Route::get('/',[HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('doanh-nghiep', [CompaniesController::class, 'listCompanies'])->name('listCompany');
     Route::get('doanh-nghiep/{slug}', [CompaniesController::class, 'detailCompany'])->name('detailCompany');
     Route::get('change-language/{language}', [LanguageController::class, 'change'])->name('language.change');
@@ -32,4 +33,13 @@ Route::middleware('web')->group(function () {
     Route::get('workshop', [HomeController::class, 'workshop'])->name('workshop');
     Route::get('chi-tiet-workshop/{slug}', [WorkshopsController::class, 'index'])->name('detailWorkShop');
     Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
+
+    // cv client
+    Route::get('ho-so', [ResumeController::class, 'file'])->name('file');
+    Route::get('danh-sach-cv', [ResumeController::class, 'listCv'])->name('listCv');
+    Route::post('view-pdf', [ResumeController::class, 'viewPDF'])->name('viewPDF');
+
+    // thêm thông tin cập nhật hồ sơ
+    Route::get('cap-nhat-cv/{slug}', [ResumeController::class, 'edit'])->name('editCv');
+    Route::put('cap-nhat-cv/{slug}/update', [ResumeController::class, 'update'])->name('updateCv');
 });

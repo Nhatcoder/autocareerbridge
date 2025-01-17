@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Cá Nhân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 40px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-info h2 {
+            margin: 0;
+        }
+
+        .contact-info {
+            margin-top: 10px;
+        }
+
+        .contact-info span {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .skill {
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .work-experience {
+            font-size: 14px;
+        }
+
+        .work-experience p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="avatar">
+                <img src="https://t4.ftcdn.net/jpg/06/08/55/73/360_F_608557356_ELcD2pwQO9pduTRL30umabzgJoQn5fnd.jpg"
+                    alt="Profile Picture">
+            </div>
+            <div class="header-info">
+                <h2>Hà Danh</h2>
+                <p>GIÁM ĐỐC</p>
+                <div class="contact-info d-flex">
+                    <div class="me-5">
+                        <p>📞 0987654321</p>
+                        <p>📧 ha.danh.jvb@gmail.com</p>
+                        <p>🌐 <a href="https://topcv.vn/mau-cv" class="text-white">topcv.vn/mau-cv</a></p>
+                    </div>
+                    <div class="ms-5">
+                        <p>🎂 17/11/1998</p>
+                        <p>📍 &nbsp; Hoài Đức, Hà Nội</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Giới Thiệu -->
+            <div class="section">
+                <div class="section-title">Giới thiệu</div>
+                <p><strong>Chuyên Viên Đào Tạo Nội Bộ</strong></p>
+                <ul>
+                    <li>Biên soạn và cập nhật 100+ tài liệu đào tạo theo lộ trình</li>
+                    <li>Phân tích nhu cầu và lập kế hoạch đào tạo cho 500 nhân viên</li>
+                    <li>Xây dựng, giám sát và cải tiến quy trình đào tạo theo định hướng của công ty</li>
+                    <li>Theo dõi, đánh giá học viên sau đào tạo sử dụng phương pháp SMART</li>
+                    <li>Trực tiếp đứng lớp 10 chương trình đào tạo theo kế hoạch</li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <!-- Học Vấn -->
+            <div class="section">
+                <div class="section-title">Học vấn</div>
+                <p><strong>Đại Học Back Khoa</strong></p>
+                <p>01/2000 - HIỆN TẠI | Thợ Xây</p>
+                <p><i>Không có gì</i></p>
+            </div>
+
+            <hr>
+
+            <!-- Kỹ Năng -->
+            <div class="section">
+                <div class="section-title">Kỹ năng</div>
+                <div class="skills">
+                    <div class="skill">Xách vữa</div>
+                    <div class="skill">Đào vữa</div>
+                    <div class="skill">Ném gạch</div>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Kinh Nghiệm Làm Việc -->
+            <div class="section">
+                <div class="section-title">Kinh nghiệm làm việc</div>
+                <div class="work-experience">
+                    <p><strong>GIÁM ĐỐC CÔNG NGHỆ | Cty Thợ Xây</strong></p>
+                    <p>01/2000 - 06/2006</p>
+                    <p><strong>Chuyên Viên Đào Tạo</strong></p>
+                    <ul>
+                        <li>Biên soạn và cập nhật 100+ tài liệu đào tạo theo lộ trình</li>
+                        <li>Phân tích nhu cầu và lập kế hoạch đào tạo cho 500 nhân viên</li>
+                        <li>Xây dựng, giám sát và cải tiến quy trình đào tạo theo định hướng của công ty</li>
+                        <li>Theo dõi, đánh giá học viên sau đào tạo sử dụng phương pháp SMART</li>
+                        <li>Trực tiếp đứng lớp 10 chương trình đào tạo theo kế hoạch</li>
+                    </ul>
+                    <p><strong>Link dự án: </strong><a href="topcv.vn/mau-cv" class="text-black"
+                            target="_blank">topcv.vn/mau-cv</a></p>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Chứng chỉ -->
+            <div class="section">
+                <div class="section-title">Chứng chỉ</div>
+                <p><strong>Thợ Chính</strong></p>
+                <p>05/2020 | Fc Xây Dựng Việt Nam</p>
+                <p><strong>Link chứng chỉ: </strong><a href="topcv.vn/mau-cv" class="text-black"
+                        target="_blank">topcv.vn/mau-cv</a></p>
+                <ul>
+                    <li>Biên soạn và cập nhật 100+ tài liệu đào tạo theo lộ trình</li>
+                    <li>Phân tích nhu cầu và lập kế hoạch đào tạo cho 500 nhân viên</li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <!-- Giải thưởng -->
+            <div class="section">
+                <div class="section-title">Giải thưởng</div>
+                <p><strong>Thợ Xây Pro</strong></p>
+                <p>03/2020 | Fc Xây Dựng Việt Nam</p>
+                <p><strong>Chuyên Viên Đào Tạo Nội Bộ</strong></p>
+                <ul>
+                    <li>Biên soạn và cập nhật 100+ tài liệu đào tạo theo lộ trình</li>
+                    <li>Phân tích nhu cầu và lập kế hoạch đào tạo cho 500 nhân viên</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

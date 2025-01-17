@@ -279,8 +279,12 @@
                                             {{ __('label.admin.header.profile') }}</a>
                                     @endif
 
+                                    <a href="{{ route('file') }}" class="dropdown-item"> <i class="fas fa-file"></i>
+                                        {{ __('label.admin.header.cv') }}</a>
+
                                     <a href="" class="dropdown-item"> <i class="fas fa-bell"></i>
                                         {{ __('label.admin.header.notification') }}</a>
+
                                     @if (Auth::guard('admin')->user()->role === ROLE_ADMIN || Auth::guard('admin')->user()->role === ROLE_SUB_ADMIN)
                                         <a href="{{ route('admin.home') }}" class="dropdown-item"> <i
                                                 class="fa-solid fa-screwdriver-wrench"></i>
