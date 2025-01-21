@@ -43,6 +43,17 @@ return [
             'revoke_success' => 'Revoke successfully',
             'change_status_success' => 'Status updated successfully',
             'change_status_fail' => 'Status update failed'
+        ],
+        'job' => [
+            'create_job' => 'Created job successfully',
+            'job_not_found' => 'Job not found',
+            'job_not_permission' => 'You do not have permission',
+            'update_job' => 'Updated job successfully',
+            'error_create' => 'Error creating job',
+            'error_update' => 'Error updating job',
+            'delete_job' => 'Deleted job successfully',
+            'update_status_job' => 'Updated status job successfully',
+            'error_status_job' => 'Error updating status job',
         ]
     ],
     'errors' => [

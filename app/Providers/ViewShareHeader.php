@@ -34,6 +34,8 @@ class ViewShareHeader extends ServiceProvider
                 $valueId['university'] = $user->university->id ?? $user->academicAffair->university_id ?? null;
             } elseif (in_array($user->role, [ROLE_COMPANY, ROLE_HIRING])) {
                 $valueId['company'] = $user->company->id ?? $user->hiring->company_id ?? null;
+            } elseif ($user->role === ROLE_ADMIN) {
+                $valueId['admin'] = $user->id ?? null;
             }
 
             $view->with([

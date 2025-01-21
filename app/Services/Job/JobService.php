@@ -16,9 +16,11 @@ use App\Repositories\Job\JobRepositoryInterface;
 use App\Repositories\Major\MajorRepositoryInterface;
 use App\Repositories\Notification\NotificationRepositoryInterface;
 use App\Repositories\University\UniversityRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 use App\Services\Notification\NotificationService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -31,6 +33,7 @@ class JobService
     protected $universityRepository;
     protected $notificationService;
     protected $companyRepository;
+    protected $userRepository;
 
     public function __construct(
         CompanyRepositoryInterface       $companyRepository,
@@ -39,7 +42,8 @@ class JobService
         CollaborationRepositoryInterface $collaborationRepository,
         NotificationRepositoryInterface  $notificationRepository,
         UniversityRepositoryInterface    $universityRepository,
-        NotificationService              $notificationService
+        NotificationService              $notificationService,
+        UserRepositoryInterface          $userRepository
     ) {
         $this->companyRepository = $companyRepository;
         $this->jobRepository = $jobRepository;
@@ -48,6 +52,7 @@ class JobService
         $this->notificationRepository = $notificationRepository;
         $this->universityRepository = $universityRepository;
         $this->notificationService = $notificationService;
+        $this->userRepository = $userRepository;
     }
 
     public function getAll()
@@ -81,6 +86,7 @@ class JobService
 
     public function updateStatus($job, $dataRequest)
     {
+        $dataRequest['is_active'] = ($dataRequest['status'] == STATUS_APPROVED) ? ACTIVE : INACTIVE;
         $companyId = $job->company_id;
         $collaborations = $this->collaborationRepository->getUniversityCollaboration($companyId);
         $company = $job->company->user;
@@ -206,22 +212,61 @@ class JobService
         }
     }
 
+    /**
+     * Creates a new job and sends a notification to the admin.
+     *
+     * @param array $data The job data, including name, slug, details, major, end date, and related information.
+     * @param array $skills The list of skills to associate with the job.
+     * @return bool Returns `true` if the job is created successfully, `false` if there is an error during the creation process.
+     *
+     * @throws \Exception If an error occurs during the transaction or job creation.
+     */
     public function createJob(array $data, array $skills)
     {
-        $job = [
-            'name' => $data['name'],
-            'slug' => $data['slug'],
-            'detail' => $data['detail'],
-            'major_id' => $data['major_id'],
-            'end_date' => $data['end_date'],
-            'user_id' => Auth::guard('admin')->user()->id,
-            'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
-            'status' => STATUS_PENDING,
-        ];
-        $detail = $this->jobRepository->create($job);
-        $detail->skills()->detach();
-        foreach ($skills as $skill) {
-            $detail->skills()->attach($skill);
+        DB::beginTransaction();
+        try {
+
+            $job = [
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+                'detail' => $data['detail'],
+                'major_id' => $data['major_id'],
+                'end_date' => $data['end_date'],
+                'user_id' => Auth::guard('admin')->user()->id,
+                'company_id' => Auth::guard('admin')->user()->hiring->company_id ?? Auth::guard('admin')->user()->company->id,
+                'status' => STATUS_PENDING,
+                'is_active' => INACTIVE
+            ];
+
+            $admin = $this->userRepository->getAdmin();
+            if (!$admin) {
+                return false;
+            }
+            $detail = $this->jobRepository->create($job);
+            if (!$detail) {
+                return false;
+            }
+            $company = $detail->company;
+
+            $notification = $this->notificationRepository->create([
+                'title' => $company->name . ' vừa tạo công việc ' . $detail->name,
+                'link' => route('admin.jobs.show', $detail->slug),
+                'type' => TYPE_COMPANY,
+                'admin_id' => $admin->id,
+            ]);
+
+            $this->notificationService->renderNotificationRealtime($notification, null, null, $admin->id);
+
+            $detail->skills()->detach();
+            foreach ($skills as $skill) {
+                $detail->skills()->attach($skill);
+            }
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Lỗi tạo bài tuyển dụng', $e->getMessage());
+            return false;
         }
     }
 
@@ -317,7 +362,6 @@ class JobService
                 $this->notificationService->renderNotificationRealtime($notification, null, $universityId);
             }
             return $this->jobRepository->updateStatusUniversityJob($id, $status);
-            // return $this->jobRepository->updateStatusUniversityJob($id, 1);
         } catch (Exception $e) {
             Log::error($e->getFile() . ':' . $e->getLine() . ' - ' . 'Lỗi khi xử lý ứng tuyển: ' . ' - ' . $e->getMessage());
             return null;
@@ -347,5 +391,30 @@ class JobService
             'jobDelete' => $jobDelete,
             'date' => $date
         ];
+    }
+
+    public function updateToggleActive(int $id, array $data)
+    {
+        $data['is_active'] = $data['status'] == 'active' ? ACTIVE : INACTIVE;
+        return $this->jobRepository->updateToggleActive($id, $data);
+    }
+
+    public function bulkUpdateStatusJobs($jobIds, $dataRequest)
+    {
+        DB::beginTransaction();
+        try {
+            $jobs = $this->jobRepository->getPendingJobsByIds($jobIds);
+
+            foreach ($jobs as $job) {
+                $this->updateStatus($job, $dataRequest);
+            }
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getFile() . ':' . $e->getLine() . ' - Lỗi khi xử lý job: ' . $e->getMessage());
+            return false;
+        }
     }
 }

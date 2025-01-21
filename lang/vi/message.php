@@ -55,6 +55,18 @@ return [
             'revoke_success' => 'Thu hồi yêu cầu thành công',
             'change_status_success' => 'Cập nhật trạng thái thành công',
             'change_status_fail' => 'Cập nhật trạng thái thất bại'
+        ],
+        'job' => [
+            "create_job" => 'Tạo bài tuyển dụng thành công',
+            "job_not_found" => 'Không tìm thấy bài tuyển dụng',
+            'job_not_permission' => 'Bạn không có quyền xem bài tuyển dụng này',
+            'update_job' => 'Cập nhật bài tuyển dụng thành công',
+            'error_create' => 'Lỗi tạo bài tuyển dụng',
+            'error_update' =>  'Lỗi cập nhật bài tuyển dụng',
+            'error_delete' =>  'Lỗi xoá bài tuyển dụng',
+            'delete_job' => 'Xóa bài tuyển dụng thành công',
+            'update_status_job' => 'Cập nhật trạng thái thành công',
+            'error_status_job' => 'Lỗi cập nhật trạng thái',
         ]
     ],
     'errors' => [

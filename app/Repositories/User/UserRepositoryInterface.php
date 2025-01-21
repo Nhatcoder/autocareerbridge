@@ -10,4 +10,5 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
     public function getUsers(array $filters);
     public function getUserById($id);
     public function updateToggleStatus(int $id, array $data);
+    public function getAdmin();
 }

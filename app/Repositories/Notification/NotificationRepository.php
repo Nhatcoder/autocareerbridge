@@ -32,6 +32,8 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             } else {
                 return [];
             }
+        } elseif (isset($user->id) && $user->role == ROLE_ADMIN) {
+            $filters['admin'] = $user->id;
         } else {
             return [];
         }
@@ -43,6 +45,10 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
 
         if (isset($filters['university'])) {
             $query->where('university_id', $filters['university']);
+        }
+
+        if (isset($filters['admin'])) {
+            $query->where('admin_id', $filters['admin']);
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(LIMIT_10);
@@ -68,6 +74,8 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             } else {
                 return [];
             }
+        } elseif (isset($user->id) && $user->role == ROLE_ADMIN) {
+            $filters['admin'] = $user->id;
         } else {
             return [];
         }
@@ -81,12 +89,16 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             $query->where('university_id', $filters['university']);
         }
 
+        if (isset($filters['admin'])) {
+            $query->where('admin_id', $filters['admin']);
+        }
+
         $query->where('is_seen', UNSEEN);
 
         return $query->count();
     }
 
-    public function getCountNotificationRealtime($companyId = null, $universityId = null)
+    public function getCountNotificationRealtime($companyId = null, $universityId = null, $adminId = null)
     {
         $query = $this->model->select('*');
         if ($companyId) {
@@ -94,6 +106,10 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
         }
         if ($universityId) {
             $query->where('university_id', $universityId);
+        }
+
+        if ($adminId) {
+            $query->where('admin_id', $adminId);
         }
 
         $query->where('is_seen', UNSEEN);
@@ -111,6 +127,10 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
 
         if (isset($args['university'])) {
             $query = $query->where('university_id', $args['university']);
+        }
+
+        if (isset($args['admin'])) {
+            $query = $query->where('admin_id', $args['admin']);
         }
 
         if (isset($args['id'])) {
