@@ -1,20 +1,30 @@
+import { useState } from "react";
+import { Link } from "@inertiajs/react";
+
+import { formatDate } from "@/utils";
+import { useChat } from "@/contexts/chat-context";
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
+
+    const { data } = useChat();
+    const receiver = data?.receiver || [];
+    const user = data?.user;
+    const userChats = data?.userChats || [];
+
     return (
         <div className={cx("col-md-3", "sidebar", "border-right", "p-3")}>
             <div className={cx("top_sidebar d-flex justify-content-between align-items-center")}>
                 <a href={route('home')} className={cx("logo")}>
-                    <img src="clients/images/header/logo2.png" alt="Logo"
+                    <img src={`${window.location.origin}/clients/images/header/logo2.png`} alt="Logo"
                         title="Autocareerbridge" />
                 </a>
 
                 <div className={cx("action", "d-flex")}>
                     <a href={route('home')} className={cx("action__button--home")}>Về trang chủ</a>
-                    {/* <button className={cx("btn btn-success btn-sm")}>😂</button> */}
                 </div>
             </div>
 
@@ -24,20 +34,27 @@ function Sidebar() {
             </div>
 
             <div className={cx("jobs-list")}>
-                <div className={cx("job-item")}>
-                    <img src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/cong-ty-co-phan-phan-mem-vitex-viet-nam-612f11ca86189.jpg" alt="Company Logo" />
-                    <div>
-                        <h6 className={cx("mb-0")}>Symfony PHP Dev</h6>
-                        <small>Công ty TNHH...</small>
-                    </div>
-                </div>
-                <div className={cx("job-item")}>
-                    <img src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/cong-ty-co-phan-phan-mem-vitex-viet-nam-612f11ca86189.jpg" alt="Company Logo" />
-                    <div>
-                        <h6 className={cx("mb-0")}>Intern PHP Dev</h6>
-                        <small>Công ty Cổ phần...</small>
-                    </div>
-                </div>
+                {userChats && userChats.map((userChat, index) => {
+                    const avatar = userChat.from_id == user.id ? `${window.location.origin}/${userChat.receiver_avatar || ""}` : `${window.location.origin}/${userChat.sender_avatar || ""}`;
+                    const name = userChat.from_id == user.id ? userChat.receiver_name : userChat.sender_name;
+                    const message = userChat.message;
+                    const sentTime = formatDate(userChat.sent_time);
+                    const you = userChat.from_id == user.id ? "Bạn: " : "";
+                    const idChat = userChat.from_id != user.id ? userChat.from_id : userChat.to_id;
+                    return (
+                        <Link href={route('conversations', idChat)} className={cx("job-item")} key={index}>
+                            <img src={avatar} alt={name} />
+                            <div >
+                                <h6 className={cx("mb-0")}>{name.slice(0, 20)}{name.length > 20 ? "..." : ""}</h6>
+                                <div className="d-flex align-items-center">
+                                    <small className={cx("fw-2")}>{you}{message.slice(0, 25)}{message.length > 25 ? "..." : ""}</small>
+                                    <i className={cx("fa-solid fa-circle", "icon-time")} ></i>
+                                    <small className={cx("fw-2")}>{sentTime}</small>
+                                </div>
+                            </div>
+                        </Link>
+                    )
+                })}
             </div>
         </div>
     );

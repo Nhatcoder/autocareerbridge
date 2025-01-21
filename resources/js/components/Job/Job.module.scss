@@ -1,19 +1,13 @@
-.border-left {
-    border-left: 1px solid #eee;
-    height: 100vh;
-}
-
-.jobs-list {
-    max-height: 100vh;
-    overflow-y: auto;
-}
-
 .job-item {
     display: flex;
     align-items: center;
     padding: 10px;
 
-    &::hover {
+    .name {
+        max-width: 300px;
+    }
+
+    &:hover {
         cursor: pointer;
         background-color: #f5f5f5;
     }
@@ -25,7 +19,7 @@
         margin-right: 10px;
     }
 
-    button {
+    a {
         margin-left: auto;
     }
 

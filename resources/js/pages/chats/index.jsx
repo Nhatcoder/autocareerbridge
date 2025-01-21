@@ -1,8 +1,14 @@
+import { ChatProvider } from "@/contexts/chat-context";
+
+import Content from '@/components/Content';
 import ChatLayout from "@/layouts/ChatLayout";
 
-export default function Index() {
+export default function Index({data}) {
     return (
-        <ChatLayout>
-        </ChatLayout>
+        <ChatProvider data={data}>
+            <ChatLayout>
+                <Content></Content>
+            </ChatLayout>
+        </ChatProvider>
     );
 }

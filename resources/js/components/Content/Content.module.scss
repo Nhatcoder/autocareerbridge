@@ -1,0 +1,163 @@
+.slogan {
+    border-bottom: 1px solid #eee !important;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0;
+
+    .text-primary {
+        color: #23c0e9;
+    }
+}
+
+// chat
+.chats {
+    padding-top: 50px;
+    overflow-y: auto;
+    height: calc(100vh - 178px);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+
+    &.active {
+        display: flex;
+        flex-direction: column-reverse;
+        padding-bottom: 20px;
+    }
+}
+
+// css infinite-scroll-component
+.infinite-scroll-component {
+    overflow: hidden;
+}
+
+.new__chat {
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+.timestamp {
+    text-align: center;
+    color: gray;
+    font-size: 0.8rem;
+    margin: 10px 0;
+}
+
+// chat message
+.user_send__message {
+    background-color: #f7f7f7;
+}
+
+.attachments_message {
+    display: flex;
+    padding: 15px 25px 0 25px;
+    overflow-x: auto;
+    width: 100%;
+
+    .item_attachment {
+        position: relative;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .file_attachment {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: #eee;
+        border-radius: 10px;
+        gap: 10px;
+        width: 120px;
+        height: 100px;
+        word-wrap: break-word;
+        overflow: hidden;
+    }
+
+    .file_icon {
+        font-size: 30px;
+        flex-shrink: 0;
+    }
+
+    .file_name {
+        flex-grow: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        white-space: normal;
+        line-height: 1.2;
+    }
+
+
+    .img_attachment {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .remove_img {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+    }
+}
+
+.more_icon,
+.btn_send_message {
+    cursor: pointer;
+    font-size: 24px;
+    color: #23c0e9;
+}
+
+.user_send {
+    width: 100%;
+    // display: flex;
+    margin: 0 10px;
+}
+
+.chat__input {
+    margin-top: 6px;
+    transition: height 0.1s ease-in;
+    resize: none;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 150px;
+    min-height: 40px;
+    box-sizing: border-box;
+    border: none;
+    background-color: #eee;
+    outline: none;
+    padding: 6px 10px;
+    border-radius: 10px;
+}
+
+.emoji-picker-container {
+    position: absolute;
+    bottom: 66px;
+    left: 8px;
+    z-index: 9999;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 350px;
+}

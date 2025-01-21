@@ -1,4 +1,6 @@
 import "../scss/app.scss";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 import "./boostrap";
 
 import { createRoot } from "react-dom/client";
@@ -16,3 +18,4 @@ createInertiaApp({
         root.render(<App {...props} />);
     },
 });
+

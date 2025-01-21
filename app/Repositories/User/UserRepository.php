@@ -18,7 +18,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             ->whereIn('role', [ROLE_SUB_ADMIN, ROLE_COMPANY, ROLE_UNIVERSITY]);
 
         if (!empty($filters['search'])) {
-            $query->where(function($query) use ($filters) {
+            $query->where(function ($query) use ($filters) {
                 $query->where('user_name', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('email', 'like', '%' . $filters['search'] . '%');
             });
@@ -30,7 +30,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         if (isset($filters['active']) && in_array($filters['active'], [INACTIVE, ACTIVE])) {
             $query->where('active', (int) $filters['active']);
-        }        
+        }
 
         if (!empty($filters['date_range'])) {
             $dateRange = explode(" to ", $filters['date_range']);
@@ -49,12 +49,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $query->paginate(LIMIT_10)->withQueryString();
     }
 
-    public function getUserById(int $id)
+    public function getUserById($id)
     {
+        if (empty($id)) {
+            return null;
+        }
         return $this->model->find($id);
     }
 
-    public function updateToggleStatus(int $id, array $data){
+    public function updateToggleStatus(int $id, array $data)
+    {
         $result = $this->model->find($id);
         if ($result->update($data)) {
             return $result;

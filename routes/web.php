@@ -33,5 +33,8 @@ Route::middleware('web')->group(function () {
     Route::get('workshop', [HomeController::class, 'workshop'])->name('workshop');
     Route::get('chi-tiet-workshop/{slug}', [WorkshopsController::class, 'index'])->name('detailWorkShop');
     Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
-    Route::get('tro-truyen', [ConversationsController::class, 'conversations'])->name('conversations');
+
+    Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
+    Route::post('chat-store', [ConversationsController::class, 'chatStore'])->name('chatStore');
+    Route::get('history-file', [ConversationsController::class, 'historyFile'])->name('historyFile');
 });

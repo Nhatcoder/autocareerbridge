@@ -56,4 +56,14 @@ class Company extends Model
     {
         return $this->hasMany(Job::class);
     }
+
+    public function chatMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'from_id', 'id');
+    }
+
+    public function chatMessage()
+    {
+        return $this->hasOne(ChatMessage::class, 'from_id', 'id')->select('from_id', 'to_id', 'message', 'created_at AS sent_time');
+    }
 }
