@@ -9,5 +9,8 @@ interface ChatMessageRepositoryInterface extends BaseRepositoryInterface
     public function userChats();
 
     public function chats($id);
+
+    public function historyImage($id);
+
     public function getHistoryFile($id);
 }

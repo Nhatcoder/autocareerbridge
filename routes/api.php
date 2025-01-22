@@ -1,9 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\FieldsController;
-use App\Http\Controllers\Clients\ConversationsController;
-use App\Http\Controllers\Company\CollaborationsController;
-use App\Http\Controllers\Company\CompaniesController;
 use App\Http\Controllers\Company\MajorsController as CompanyMajorsController;
 use App\Http\Controllers\Location\LocationController;
 use App\Http\Controllers\University\MajorsController;
@@ -35,6 +32,3 @@ Route::get('majorsAll', [MajorsController::class, 'getMajorsAll']);
 
 Route::get('company-majors', [CompanyMajorsController::class, 'getAvailableMajorsForCompany']);
 
-Route::prefix('chat')->group(function () {
-    Route::get('search-user', [ConversationsController::class, 'searchUserChat'])->name('searchUserChat');
-});

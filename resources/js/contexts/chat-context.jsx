@@ -5,12 +5,15 @@ const ChatContext = createContext();
 export function ChatProvider({ children, ...props }) {
     const [images, setImages] = useState([]);
     const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const value = {
         images,
         setImages,
         files,
         setFiles,
+        loading,
+        setLoading,
     };
     return (
         <ChatContext.Provider value={{ ...props, ...value }}>

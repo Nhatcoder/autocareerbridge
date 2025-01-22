@@ -47,3 +47,5 @@ define('LESS_THAN_OR_EQUAL', '<=');
 
 define('TYPE_IMAGE', 1);
 define('TYPE_FILE', 2);
+
+define('NAME_COMPANY', 'NTD');

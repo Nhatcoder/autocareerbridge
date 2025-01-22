@@ -59,6 +59,7 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
                 DB::raw('COALESCE(receiver_company.avatar_path, receiver_user.avatar_path) as receiver_avatar'),
                 DB::raw('COALESCE(receiver_company.name, receiver_user.user_name) as receiver_name')
             )
+            ->where('cm.deleted_at', null)
             ->orderBy('cm.created_at', 'desc')
             ->get();
         return $userChats;
@@ -71,28 +72,29 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
         $user = $this->userRepository->find($id);
 
         $partnerId = $company ? $company->id : $user->id;
-        $partnerName = $company ? $company->name : 'NTD';
+        $userCurrentId = $userCurrent->id;
+        $partnerName = $company ? $company->name : NAME_COMPANY;
         $chats = ChatMessage::query()
             ->selectRaw("
             CASE
                 WHEN chat_messages.from_id = ? THEN ?
                 ELSE ?
-            END AS from_id", [$userCurrent->id, $userCurrent->id, $partnerId])
+            END AS from_id", [$userCurrentId, $userCurrentId, $partnerId])
             ->selectRaw("
             CASE
                 WHEN chat_messages.to_id = ? THEN ?
                 ELSE ?
-            END AS to_id", [$userCurrent->id, $userCurrent->id, $partnerId])
+            END AS to_id", [$userCurrentId, $userCurrentId, $partnerId])
             ->selectRaw("
             CASE
                 WHEN chat_messages.from_id = ? THEN 'Khách hàng'
                 ELSE ?
-            END AS sender_name", [$userCurrent->id, $partnerName])
+            END AS sender_name", [$userCurrentId, $partnerName])
             ->selectRaw("
             CASE
                 WHEN chat_messages.to_id = ? THEN 'Khách hàng'
                 ELSE ?
-            END AS receiver_name", [$userCurrent->id, $partnerName])
+            END AS receiver_name", [$userCurrentId, $partnerName])
             ->select('chat_messages.id', 'chat_messages.message AS message', 'chat_messages.created_at AS sent_time', 'chat_messages.from_id', 'chat_messages.to_id')
             ->leftJoin('users AS users_from', 'chat_messages.from_id', '=', 'users_from.id')
             ->leftJoin('users AS users_to', 'chat_messages.to_id', '=', 'users_to.id')
@@ -100,14 +102,14 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
                 $join->on('chat_messages.from_id', '=', 'companies.user_id')
                     ->orOn('chat_messages.to_id', '=', 'companies.user_id');
             })
-            ->where(function ($query) use ($partnerId, $userCurrent) {
-                $query->where(function ($q) use ($partnerId, $userCurrent) {
-                    $q->where('chat_messages.from_id', $userCurrent->id)
+            ->where(function ($query) use ($partnerId, $userCurrentId) {
+                $query->where(function ($q) use ($partnerId, $userCurrentId) {
+                    $q->where('chat_messages.from_id', $userCurrentId)
                         ->where('chat_messages.to_id', $partnerId);
                 })
-                    ->orWhere(function ($q) use ($partnerId, $userCurrent) {
+                    ->orWhere(function ($q) use ($partnerId, $userCurrentId) {
                         $q->where('chat_messages.from_id', $partnerId)
-                            ->where('chat_messages.to_id', $userCurrent->id);
+                            ->where('chat_messages.to_id', $userCurrentId);
                     });
             })
             ->whereNull('chat_messages.deleted_at')
@@ -117,9 +119,9 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
         return $chats;
     }
 
-    public function getHistoryFile($id)
+    public function historyImage($id)
     {
-        $images = ChatMessage::where(function ($query) use ($id) {
+        $images = $this->model->where(function ($query) use ($id) {
             $query->where('from_id', $id)
                 ->orWhere('to_id', $id);
         })
@@ -128,26 +130,20 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
             ->where("attachments.type", TYPE_IMAGE)
             ->orderByDesc('chat_messages.created_at')
             ->paginate(PAGINATE_CHATMESSAGE);
-        $groupedImages = $images->getCollection()
-            ->groupBy(function ($item) {
-                return Carbon::parse($item->created_at)->format('Y-m'); // Nhóm theo tháng
-            });
-        $images->setCollection($groupedImages);
+        return $images;
+    }
 
-        $files = ChatMessage::where(function ($query) use ($id) {
+    public function getHistoryFile($id)
+    {
+        $files = $this->model->where(function ($query) use ($id) {
             $query->where('from_id', $id)
                 ->orWhere('to_id', $id);
         })
             ->join('attachments', 'attachments.chat_id', '=', 'chat_messages.id')
             ->where('attachments.type', TYPE_FILE)
-            ->whereNull('chat_messages.deleted_at') // To handle the deleted_at check
             ->select('attachments.name', 'attachments.type', 'attachments.file_path', 'chat_messages.created_at')
             ->orderByDesc('chat_messages.created_at')
             ->paginate(PAGINATE_CHATMESSAGE);
-
-        return [
-            'images' => $images,
-            'files' => $files
-        ];
+        return $files;
     }
 }

@@ -139,12 +139,12 @@ function Content() {
     };
 
     const handleSendMessage = () => {
-        const messageText = messageValue.trim();
+        const messageText = messageValue?.trim();
         const formData = new FormData();
 
         if (messageText !== "" || images.length > 0 || files.length > 0) {
             const newMessage = {
-                message: messageText,
+                message: messageText || "",
                 from_id: user?.id,
                 to_id: receiver?.id,
             };

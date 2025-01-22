@@ -36,5 +36,6 @@ Route::middleware('web')->group(function () {
 
     Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
     Route::post('chat-store', [ConversationsController::class, 'chatStore'])->name('chatStore');
-    Route::get('history-file', [ConversationsController::class, 'historyFile'])->name('historyFile');
+    Route::get('history-file/{id}', [ConversationsController::class, 'historyFile'])->name('historyFile');
+    Route::get('history-image/{id}', [ConversationsController::class, 'historyImage'])->name('historyImage');
 });

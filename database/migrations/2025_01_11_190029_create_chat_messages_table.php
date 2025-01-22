@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('from_id')->unsigned();
             $table->bigInteger('to_id')->unsigned();
             $table->json('seen_id')->nullable();
-            $table->longText('message');
+            $table->longText('message')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->softDeletes();
             $table->timestamps();

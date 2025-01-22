@@ -7,7 +7,7 @@ import styles from "./User.module.scss";
 const cx = classNames.bind(styles);
 
 function User() {
-    const { data, setImages, setFiles } = useChat();
+    const { data, setImages, setLoading, setFiles } = useChat();
     const receiver = data?.receiver || [];
     const user = data?.user;
     const checkRole = roleUser.includes(user?.role);
@@ -15,16 +15,26 @@ function User() {
     const handleHistoryFileToggle = () => {
         const jobApplyList = document.querySelector(".job_apply_list");
         const historyFile = document.querySelector(".history_file");
-        
+
         jobApplyList?.classList.toggle("d-none");
         historyFile?.classList.toggle("d-none");
 
         if (jobApplyList?.classList.contains("d-none")) {
             try {
                 const handleHistory = async () => {
-                    const attachments = await historyFileService.historyFile(receiver.id);
-                    setImages(attachments.data.images);
-                    setFiles(attachments.data.files);
+                    try {
+                        setLoading(true);
+                        const [attachmentFiles, attachmentImage] = await Promise.all([
+                            historyFileService.historyFile(receiver.id),
+                            historyFileService.historyImage(receiver.id)
+                        ]);
+                        setImages(attachmentImage.data);
+                        setFiles(attachmentFiles.data);
+                    } catch (error) {
+                        console.log('Error fetching history:', error);
+                    } finally {
+                        setLoading(false);
+                    }
                 }
                 handleHistory()
             } catch (error) {
@@ -43,7 +53,7 @@ function User() {
                         <small>Hoạt động ngàn năm trước</small>
                     </div>
                 </div>
-               {checkRole != true ? (<div className={cx("user__action", "flex-end")} onClick={handleHistoryFileToggle}>
+                {checkRole != true ? (<div className={cx("user__action", "flex-end")} onClick={handleHistoryFileToggle}>
                     <i className="fa-solid fa-bars"></i>
                 </div>) : ("")}
             </div>

@@ -5,6 +5,7 @@ namespace App\Services\ChatMessage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\ChatMessage\ChatMessageRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class ChatMessageService
 {
@@ -29,7 +30,7 @@ class ChatMessageService
     {
         DB::beginTransaction();
         try {
-            $newMessage = $data['message'];
+            $newMessage = $data['message'] ?? "";
             $images = $data['images'];
             $files = $data['files'];
 
@@ -70,11 +71,15 @@ class ChatMessageService
             return $data;
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e->getFile() . ':' . $e->getLine() . ' - ' . $e->getMessage());
             throw $e;
         }
     }
 
     public function getHistoryFile($id){
         return $this->chatMessageRepository->getHistoryFile($id);
+    }
+    public function historyImage($id){
+        return $this->chatMessageRepository->historyImage($id);
     }
 }

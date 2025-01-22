@@ -1,18 +1,75 @@
+import { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { groupByMonthAndYear } from "@/utils";
 import { roleUser } from "@/constants";
 import { useChat } from "@/contexts/chat-context";
 import classNames from "classnames/bind";
 import styles from "./RightSidebar.module.scss";
 import Job from "@/components/Job";
+import Loader from "@/components/Loader";
 
 const cx = classNames.bind(styles);
 
 function RightSidebar() {
-    const { data, images, files } = useChat();
+    const [hasMoreFile, setMoreFile] = useState(true);
+    const [currentPage, setCurrentPage] = useState(2);
+    const [hasMoreImage, setMoreImage] = useState(true);
+    const [currentPageImage, setCurrentPageImage] = useState(2);
+    const [file, setFile] = useState([]);
+    const [image, setImage] = useState([]);
+
+    const { data, loading, images, files } = useChat();
     const jobApply = data?.getUserApplyJob;
     const dataImages = images?.data;
     const dataFiles = files?.data;
     const user = data?.user;
     const checkRole = roleUser.includes(user?.role);
+
+
+
+    const groupedData = groupByMonthAndYear(image);
+
+    useEffect(() => {
+        if (dataFiles || dataImages) {
+            setFile(dataFiles);
+            setImage(dataImages);
+        }
+    }, [dataFiles, dataImages]);
+
+    console.log(image, images);
+
+    const handleScrollFile = async () => {
+        try {
+            const response = await axios.get(`${files.path}?page=${currentPage}`);
+            const newData = response.data.data;
+
+            setFile((prevItems) => [...prevItems, ...newData.data]);
+            setCurrentPage(currentPage + 1);
+
+            if (currentPage >= files.last_page) {
+                setMoreFile(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleScrollImage = async () => {
+        try {
+            const response = await axios.get(`${images.path}?page=${currentPageImage}`);
+            const newData = response.data.data;
+            console.log(newData);
+
+            setImage((prevItems) => [...prevItems, ...newData.data]);
+            setCurrentPageImage(currentPageImage + 1);
+
+            if (currentPageImage >= images.last_page) {
+                setMoreImage(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div className={cx("col-md-3", "p-3", "border-left")}>
@@ -36,50 +93,61 @@ function RightSidebar() {
                     </nav>
                     <div className="tab-content" id="nav-tabContent">
                         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabIndex={0}>
-                            {dataImages && Object.keys(dataImages).length > 0 ? (
-                                Object.keys(dataImages).map((monthKey, index) => {
-                                    const imageMoth = dataImages[monthKey];
-                                    return (
+                            <div className={cx("attachment_image")} id="scrollableImage">
+                                <InfiniteScroll
+                                    dataLength={groupedData}
+                                    next={handleScrollImage}
+                                    hasMore={hasMoreImage}
+                                    style={{ overflow: 'hidden' }}
+                                    loader={<div className={cx("text-center")}><Loader /></div>}
+                                    scrollableTarget="scrollableImage"
+                                    scrollThreshold={0.6}
+                                >
+                                    {Object.keys(groupedData).map((groupKey, index) => (
                                         <div key={index} className={cx("mb-3")}>
-                                            <h6 className={cx("fs-6 mt-2", "text-uppercase")}>
-                                                {`${new Date(imageMoth[0].created_at).toLocaleString('default', { month: 'long' })} / ${new Date(imageMoth[0].created_at).getFullYear()}`}
-                                            </h6>
+                                            <h6 className={cx("fs-6 mt-2", "text-uppercase")}>{groupKey}</h6>
+
                                             <div className={cx("list_images")}>
-                                                {imageMoth.map((image, i) => (
+                                                {groupedData[groupKey].map((item, i) => (
                                                     <div key={i} className={cx("item_image")}>
                                                         <img
                                                             className={cx('item__image_img')}
-                                                            src={image.file_path}
-                                                            alt={image.name || "Image"}
+                                                            src={item.file_path}
+                                                            alt={item.name || `Image ${i}`}
                                                         />
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
-                                    );
-                                })
-                            ) :
-                                (
-                                    <div className={cx("no_data")}>
-                                        <h6 className={cx("fs-6 mt-2", "text-uppercase")}>Không có dữ liệu</h6>
-                                    </div>
-                                )}
+                                    ))}
+                                </InfiniteScroll>
+                            </div>
 
                         </div>
+
                         <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabIndex={0}>
-                            {dataFiles && dataFiles.length > 0 ? (
-                                <ul className={cx("list_files")}>
-                                    {dataFiles.map((file, i) => (
-                                        <li key={i} className={cx("item_file")}>
-                                            <span className={cx("icon_file")}>
-                                                <i className="fa-regular fa-file-lines">
-                                                </i>
-                                            </span>
-                                            <span className={cx("name_file")}>
-                                                {file.name}
-                                            </span>
-                                        </li>
-                                    ))}
+                            {file && file.length > 0 ? (
+                                <ul className={cx("list_files")} id="scrollableFiles">
+                                    <InfiniteScroll
+                                        dataLength={file.length}
+                                        next={handleScrollFile}
+                                        hasMore={hasMoreFile}
+                                        style={{ overflow: 'hidden' }}
+                                        loader={<div className={cx("text-center")}><Loader /></div>}
+                                        scrollableTarget="scrollableFiles"
+                                        scrollThreshold={0.8}
+                                    >
+                                        {file.map((file, i) => (
+                                            <li key={i} className={cx("item_file")}>
+                                                <span className={cx("icon_file")}>
+                                                    <i className="fa-regular fa-file-lines"></i>
+                                                </span>
+                                                <span className={cx("name_file")}>
+                                                    {file.name}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </InfiniteScroll>
                                 </ul>
                             ) : (
                                 <div className={cx("no_data")}>

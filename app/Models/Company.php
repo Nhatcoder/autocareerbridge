@@ -64,6 +64,7 @@ class Company extends Model
 
     public function chatMessage()
     {
-        return $this->hasOne(ChatMessage::class, 'from_id', 'id')->select('from_id', 'to_id', 'message', 'created_at AS sent_time');
+        return $this->hasOne(ChatMessage::class, 'from_id', 'id')
+        ->select('from_id', 'to_id', 'message', 'created_at AS sent_time');
     }
 }

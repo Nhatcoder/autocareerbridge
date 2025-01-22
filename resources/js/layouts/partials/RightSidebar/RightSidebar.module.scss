@@ -9,10 +9,13 @@
 }
 
 // History file
-.list_images {
+.attachment_image {
     max-height: 88vh;
     overflow-y: auto;
     margin-top: 10px;
+}
+
+.list_images {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -35,7 +38,6 @@
 }
 
 .list_files {
-    // max-height: 100vh;
     max-height: 88vh;
     overflow-y: auto;
     margin: 0;
@@ -68,4 +70,10 @@
     background-color: #f5f5f5;
     color: #aaa;
     border-radius: 5px;
+}
+
+// Scroll
+
+.infinite-scroll-component {
+    overflow: hidden;
 }

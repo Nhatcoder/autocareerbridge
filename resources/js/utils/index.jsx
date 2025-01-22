@@ -65,3 +65,19 @@ export const formatDate = (date) => {
         return dateObj.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
 };
+
+// Nhóm tháng và năm các item trong mảng dữ liệu
+export const groupByMonthAndYear = (data) => {
+    return data.reduce((result, item) => {
+        const date = new Date(item.created_at);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const key = `Tháng ${month} năm ${year}`;
+
+        if (!result[key]) {
+            result[key] = [];
+        }
+        result[key].push(item);
+        return result;
+    }, {});
+}
