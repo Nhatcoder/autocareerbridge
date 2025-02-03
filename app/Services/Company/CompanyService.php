@@ -205,22 +205,14 @@ class CompanyService
                 $district = $address->district;  // Tương tự với district và ward
                 $ward = $address->ward;
 
-                \Log::info('district', [$district]);
-                \Log::info('province', [$province]);
-                \Log::info('ward', [$ward]);
-
-                // Tạo địa chỉ đầy đủ
                 $fullAddress = $address->specific_address . ', '
                     . ($ward ? $ward->name . ', ' : '')
                     . ($district ? $district->name . ', ' : '')
                     . ($province ? $province->name : '');
 
-                \Log::info('addresses', [$fullAddress]);
-
                 return $fullAddress;
             });
         });
-        \Log::info('addresses', [$addresses]);
 
         return new LengthAwarePaginator(
             $currentItems, // Dữ liệu phân trang
@@ -244,5 +236,10 @@ class CompanyService
     public function getCompaniesWithFilters($query, $provinceId, $sortOrder)
     {
         return $this->companyRepository->getCompaniesWithFilters($query, $provinceId, $sortOrder);
+    }
+
+    public function getCompanyById($id)
+    {
+        return $this->companyRepository->find($id);
     }
 }

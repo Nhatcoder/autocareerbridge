@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\FieldsController;
-use App\Http\Controllers\Company\CollaborationsController;
-use App\Http\Controllers\Company\CompaniesController;
 use App\Http\Controllers\Company\MajorsController as CompanyMajorsController;
 use App\Http\Controllers\Location\LocationController;
 use App\Http\Controllers\University\MajorsController;
@@ -28,10 +26,9 @@ Route::get('provinces', [LocationController::class, 'getProvinces']);
 Route::get('districts/{provinceId}', [LocationController::class, 'getDistricts']);
 Route::get('wards/{districtId}', [LocationController::class, 'getWards']);
 
-Route::get('fields',[FieldsController::class, 'getAllFields']);
-Route::get('majors',[MajorsController::class, 'getMajorsAll']);
-Route::get('majorsAll',[MajorsController::class, 'getMajorsAll']);
+Route::get('fields', [FieldsController::class, 'getAllFields']);
+Route::get('majors', [MajorsController::class, 'getMajorsAll']);
+Route::get('majorsAll', [MajorsController::class, 'getMajorsAll']);
 
 Route::get('company-majors', [CompanyMajorsController::class, 'getAvailableMajorsForCompany']);
 
-//Route::post('collaboration-store', [CollaborationsController::class, 'createRequest'])->name('collaborationStore');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Clients\ConversationsController;
 use App\Http\Controllers\Clients\CompaniesController;
 use App\Http\Controllers\Clients\HomeController;
 use App\Http\Controllers\Clients\JobsController;
@@ -21,7 +22,7 @@ use App\Http\Controllers\Clients\WorkshopsController;
 */
 
 Route::middleware('web')->group(function () {
-    Route::get('/',[HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('doanh-nghiep', [CompaniesController::class, 'listCompanies'])->name('listCompany');
     Route::get('doanh-nghiep/{slug}', [CompaniesController::class, 'detailCompany'])->name('detailCompany');
     Route::get('change-language/{language}', [LanguageController::class, 'change'])->name('language.change');
@@ -32,4 +33,9 @@ Route::middleware('web')->group(function () {
     Route::get('workshop', [HomeController::class, 'workshop'])->name('workshop');
     Route::get('chi-tiet-workshop/{slug}', [WorkshopsController::class, 'index'])->name('detailWorkShop');
     Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
+
+    Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
+    Route::post('chat-store', [ConversationsController::class, 'chatStore'])->name('chatStore');
+    Route::get('history-file/{id}', [ConversationsController::class, 'historyFile'])->name('historyFile');
+    Route::get('history-image/{id}', [ConversationsController::class, 'historyImage'])->name('historyImage');
 });

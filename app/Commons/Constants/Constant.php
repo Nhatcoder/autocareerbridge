@@ -17,6 +17,7 @@ define('FEMALE_GENDER', 0);
 define('SEEN', 1);
 define('UNSEEN', 0);
 
+define('PAGINATE_CHATMESSAGE', 25);
 define('PAGINATE_WORKSHOP', 10);
 define('PAGINATE_WORKSHOP_CLIENT', 12);
 define('PAGINATE_JOB', 10);
@@ -24,8 +25,8 @@ define('PAGINATE_COLLAB', 10);
 define('PAGINATE_LIST_COMPANY', 10);
 define('PAGINATE_FIELD', 10);
 define('PAGINATE_MAJOR', 10);
-define('PAGINATE_LIST_COMPANY_CLIENT',6);
-define('PAGINATE_DETAIL_JOB_UNIVERSITY',5);
+define('PAGINATE_LIST_COMPANY_CLIENT', 6);
+define('PAGINATE_DETAIL_JOB_UNIVERSITY', 5);
 
 define('STATUS_PENDING', 1);
 define('STATUS_APPROVED', 2);
@@ -43,3 +44,8 @@ define('TYPE_WORKSHOPS', 5);
 
 define('GREATER_THAN_OR_EQUAL', '>=');
 define('LESS_THAN_OR_EQUAL', '<=');
+
+define('TYPE_IMAGE', 1);
+define('TYPE_FILE', 2);
+
+define('NAME_COMPANY', 'NTD');

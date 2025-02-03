@@ -1,0 +1,157 @@
+// chat
+.item_message {
+    position: relative;
+    display: flex;
+    margin-bottom: 2px;
+
+    &.right {
+        justify-content: flex-end;
+
+        .box__message {
+            background-color: #23c0e9; // Màu tin nhắn của user
+            align-self: flex-end;
+
+            &.alone {
+                border-radius: 25px;
+            }
+
+            &.first {
+                border-radius: 18px 18px 5px 18px;
+            }
+
+            &.middle {
+                border-radius: 18px 5px 5px 18px;
+            }
+
+            &.last {
+                border-radius: 18px 5px 18px 18px;
+            }
+        }
+
+    }
+
+    &.left {
+        .box__message {
+            background-color: #6c757d; // Màu tin nhắn của người khác
+
+            &.alone {
+                border-radius: 25px;
+            }
+
+            &.first {
+                border-radius: 18px 18px 18px 5px;
+            }
+
+            &.middle {
+                border-radius: 5px 18px 18px 5px;
+            }
+
+            &.last {
+                border-radius: 5px 18px 18px 18px;
+            }
+
+        }
+    }
+}
+
+.box__message {
+    margin: 0 25px 0 40px;
+    height: 100%;
+    max-width: 70%;
+    align-items: center;
+    background-color: #23c0e9;
+    color: #fff;
+
+
+    .message {
+        padding: 8px 15px;
+        margin-bottom: 0;
+        text-align: justify;
+    }
+
+
+}
+
+.user_you {
+    position: absolute;
+    left: 5px;
+    width: 28px;
+    border-radius: 50%;
+    bottom: 0;
+}
+
+.send {
+    position: absolute;
+    right: 5px;
+    color: #d4d3d3;
+    bottom: 0;
+
+    .send_pending,
+    .send_succes {
+        display: flex;
+        margin-left: 5px;
+        padding-top: 22px;
+    }
+}
+
+// attachments
+.attachments {
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+    gap: 2px;
+
+    &.right {
+        justify-content: flex-end;
+        margin: 4px 26px;
+    }
+
+    &.left {
+        justify-content: flex-start;
+        margin: 4px 40px;
+    }
+
+    .attachment_image {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        .attachment_image__img {
+            max-height: 100%;
+            min-width: 100%;
+            object-fit: cover;
+            vertical-align: bottom;
+        }
+    }
+}
+
+.attachment_file {
+    display: flex;
+    align-items: center;
+    background-color: #f0f2f5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    max-width: 250px;
+
+    &:hover {
+        background-color: #e4e6eb;
+    }
+
+    .icon_file {
+        font-size: 18px;
+        color: #666;
+        margin-right: 8px;
+    }
+
+    .attachment_file__name {
+        font-size: 14px;
+        color: #1877f2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
