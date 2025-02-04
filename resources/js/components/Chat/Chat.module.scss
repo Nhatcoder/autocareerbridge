@@ -8,48 +8,17 @@
         justify-content: flex-end;
 
         .box__message {
-            background-color: #23c0e9; // Màu tin nhắn của user
+            background-color: #23c0e9;
             align-self: flex-end;
-
-            &.alone {
-                border-radius: 25px;
-            }
-
-            &.first {
-                border-radius: 18px 18px 5px 18px;
-            }
-
-            &.middle {
-                border-radius: 18px 5px 5px 18px;
-            }
-
-            &.last {
-                border-radius: 18px 5px 18px 18px;
-            }
+            border-radius: 8px 8px 1px 8px;
         }
 
     }
 
     &.left {
         .box__message {
-            background-color: #6c757d; // Màu tin nhắn của người khác
-
-            &.alone {
-                border-radius: 25px;
-            }
-
-            &.first {
-                border-radius: 18px 18px 18px 5px;
-            }
-
-            &.middle {
-                border-radius: 5px 18px 18px 5px;
-            }
-
-            &.last {
-                border-radius: 5px 18px 18px 18px;
-            }
-
+            background-color: #6c757d;
+            border-radius: 8px 8px 8px 1px;
         }
     }
 }

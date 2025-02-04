@@ -57,7 +57,7 @@ class ConversationsController extends Controller
     public function conversations(Request $request, $id = null)
     {
         try {
-            $userCurrent = auth('admin')->user();
+            $userCurrent = auth('admin')->user()->company ?? auth('admin')->user();
             $company = $this->companyService->getCompanyById($id);
 
             $user = null;
@@ -67,7 +67,6 @@ class ConversationsController extends Controller
 
             $getUserApplyJob = $this->userJobService->getJobUserApply();
             $userChats = $this->chatMessageService->userChats();
-
             if ($company || $user) {
                 $chats = $this->chatMessageService->chats($id);
             }

@@ -1,18 +1,30 @@
 .border-left {
     border-left: 1px solid #eee;
-    height: 88vh;
 }
 
 .jobs-list {
-    max-height: 88vh;
+    max-height: 80vh;
     overflow-y: auto;
 }
 
 // History file
 .attachment_image {
-    max-height: 88vh;
+    max-height: 80vh;
     overflow-y: auto;
     margin-top: 10px;
+}
+
+.btn_attachment {
+    background-color: #23c0e9;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: #1d9db6;
+        color: #fff;
+    }
 }
 
 .list_images {
@@ -38,7 +50,7 @@
 }
 
 .list_files {
-    max-height: 88vh;
+    max-height: 80vh;
     overflow-y: auto;
     margin: 0;
     padding: 0;

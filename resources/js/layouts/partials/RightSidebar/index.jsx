@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { groupByMonthAndYear } from "@/utils";
-import { roleUser } from "@/constants";
+import { ROLE_USER } from "@/constants";
 import { useChat } from "@/contexts/chat-context";
 import classNames from "classnames/bind";
 import styles from "./RightSidebar.module.scss";
@@ -23,7 +23,7 @@ function RightSidebar() {
     const dataImages = images?.data;
     const dataFiles = files?.data;
     const user = data?.user;
-    const checkRole = roleUser.includes(user?.role);
+    const checkRole = ROLE_USER.includes(user?.role);
 
 
 
@@ -35,8 +35,6 @@ function RightSidebar() {
             setImage(dataImages);
         }
     }, [dataFiles, dataImages]);
-
-    console.log(image, images);
 
     const handleScrollFile = async () => {
         try {
@@ -87,8 +85,8 @@ function RightSidebar() {
                 <div>
                     <nav>
                         <div className={cx("nav", "nav-tabs")} id="nav-tab" role="tablist">
-                            <button className={cx("nav-link", "active")} id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Tệp hình ảnh</button>
-                            <button className={cx("nav-link")} id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">File</button>
+                            <button className={cx("btn_attachment", "nav-link", "active")} id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Tệp hình ảnh</button>
+                            <button className={cx("btn_attachment", "nav-link")} id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">File</button>
                         </div>
                     </nav>
                     <div className="tab-content" id="nav-tabContent">
@@ -122,7 +120,6 @@ function RightSidebar() {
                                     ))}
                                 </InfiniteScroll>
                             </div>
-
                         </div>
 
                         <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabIndex={0}>

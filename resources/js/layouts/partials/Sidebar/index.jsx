@@ -35,14 +35,16 @@ function Sidebar() {
 
             <div className={cx("jobs-list")}>
                 {userChats && userChats.map((userChat, index) => {
-                    const avatar = userChat.from_id == user.id ? `${window.location.origin}/${userChat.receiver_avatar || ""}` : `${window.location.origin}/${userChat.sender_avatar || ""}`;
+                    const avatar = userChat.from_id == user.id
+                        ? (userChat.receiver_avatar?.startsWith('http') ? userChat.receiver_avatar : `${window.location.origin}/${userChat.receiver_avatar || ""}`)
+                        : (userChat.sender_avatar?.startsWith('http') ? userChat.sender_avatar : `${window.location.origin}/${userChat.sender_avatar || ""}`);
                     const name = userChat.from_id == user.id ? userChat.receiver_name : userChat.sender_name;
                     const message = userChat.message;
                     const sentTime = formatDate(userChat.sent_time);
                     const you = userChat.from_id == user.id ? "Bạn: " : "";
                     const idChat = userChat.from_id != user.id ? userChat.from_id : userChat.to_id;
                     return (
-                        <Link href={route('conversations', idChat)} className={cx("job-item")} key={index}>
+                        <Link href={route('conversations', idChat)} className={cx("job-item", { active: userChat.to_id === receiver.id })} key={index}>
                             <img src={avatar} alt={name} />
                             <div >
                                 <h6 className={cx("mb-0")}>{name.slice(0, 20)}{name.length > 20 ? "..." : ""}</h6>

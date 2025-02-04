@@ -63,7 +63,7 @@
 @import url("../icons/flaticon/flaticon.css");
 @import url("../icons/flaticon-1/font/flaticon-1.css");
 @import url(../vendor/metismenu/css/metisMenu.min.css);
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root {
     --primary: #23c0e9;
     --danger: #fd5353;
@@ -357,10 +357,10 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     --bs-dark-border-subtle: #adb5bd;
     --bs-white-rgb: 255, 255, 255;
     --bs-black-rgb: 0, 0, 0;
-    --bs-font-sans-serif: "Inter", serif;
-    --bs-font-monospace: "Inter", serif;
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-    --bs-body-font-family: "Inter", serif;
+    --bs-body-font-family: "Poppins", sans-serif;
     --bs-body-font-size: 0.875rem;
     --bs-body-font-weight: 400;
     --bs-body-line-height: 1.5;
@@ -15400,7 +15400,6 @@ ul {
 .nav-header img {
     object-fit: cover;
 }
-
 @media only screen and (max-width: 87.5rem) {
     .nav-header .brand-logo {
         padding-left: 1.25rem;
@@ -40560,9 +40559,7 @@ a.btn.dlab-load-more {
     color: #717579;
     font-size: 14px;
     font-weight: 300;
-}
-
-.author-profile .info-list li p:last-child {
+}.author-profile .info-list li p:last-child {
     color: #717579;
     font-size: 16px;
     font-weight: 500;

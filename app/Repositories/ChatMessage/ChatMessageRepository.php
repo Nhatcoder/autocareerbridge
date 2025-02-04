@@ -34,7 +34,7 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
 
     public function userChats()
     {
-        $userCurrent = auth('admin')->user();
+        $userCurrent = auth('admin')->user()->company ?? auth('admin')->user();
         $userChats = DB::table('chat_messages as cm')
             ->joinSub($this->latestMessages(), 'latest', function ($join) {
                 $join->on(DB::raw('GREATEST(cm.from_id, cm.to_id)'), '=', 'latest.participant_a')
@@ -67,7 +67,7 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
 
     public function chats($id)
     {
-        $userCurrent = auth('admin')->user();
+        $userCurrent = auth('admin')->user()->company ?? auth('admin')->user();
         $company = $this->companyRepository->find($id);
         $user = $this->userRepository->find($id);
 
