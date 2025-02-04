@@ -15,7 +15,7 @@
 .chats {
     padding-top: 50px;
     overflow-y: auto;
-    height: calc(100vh - 178px);
+    height: calc(100vh - 180px);
     overflow-x: hidden;
     scroll-behavior: smooth;
 
@@ -53,6 +53,7 @@
 }
 
 .attachments_message {
+    bottom: 0;
     display: flex;
     padding: 15px 25px 0 25px;
     overflow-x: auto;

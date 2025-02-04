@@ -14,7 +14,9 @@ import 'tippy.js/dist/tippy.css';
 import axios from 'axios';
 
 const cx = classNames.bind(styles);
-
+const MAX_TEXTAREA_HEIGHT = 100;
+const BASE_CHAT_HEIGHT = 180;
+const ATTACHMENT_HEIGHT = 120;
 function Content() {
     const { data } = useChat();
     const chatMessages = data?.chats || [];
@@ -28,22 +30,40 @@ function Content() {
     const [chatMessage, setChatMessage] = useState(chatMessages.data || []);
     const [hasMoreChat, setHasMoreChat] = useState(chatMessages.current_page < chatMessages.last_page);
     const [currentPage, setCurrentPage] = useState(2);
+    const [online, setOnline] = useState(false);
 
     const containerMessageRef = useRef(null);
     const refChat = useRef(null);
     const messageRef = useRef(null);
 
     // Lắng nghe sự kiện từ Pusher
+    const channelName = `chat.${Math.min(user.id, receiver.id)}.${Math.max(user.id, receiver.id)}`;
+    const channel = window.Echo.join(channelName);
     useEffect(() => {
-        const channel = window.Echo.channel('chat');
+        channel.here((users) => {
+            const userOnline = users.find((u) => u.id === receiver.id);
+            if (userOnline) {
+                setOnline(true);
+            }
+        });
+
+        channel.joining((user) => {
+            console.log(user);
+        })
+
+        channel.leaving((user) => {
+            console.log(user);
+        })
+
         channel.listen("SendMessage", (e) => {
+            console.log(e);
             const newMessage = e.message;
             setChatMessage((prevItems) => [newMessage, ...prevItems]);
         });
         return () => {
             channel.stopListening("SendMessage");
         };
-    }, [chatMessage]);
+    }, [chatMessage, receiver]);
 
     // Scoll chatMessage
     const getChatsScroll = async () => {
@@ -73,69 +93,77 @@ function Content() {
         setMessageValue((prevValue) => prevValue + emojiData.emoji);
     };
 
-    // Get message
-    const handleGetMessage = (e, baseHeight = 178) => {
-        setMessageValue(e?.target?.value);
-
-        const target = e?.target || messageRef.current;
+    const handleGetMessage = (e) => {
+        setMessageValue(e.target.value);
+        const target = e.target;
         const inputValue = target.value.trim();
 
         if (inputValue === "") {
             target.style.height = "40px";
+            let totalHeight = BASE_CHAT_HEIGHT;
+            refChat.current.style.height = `calc(100vh - ${totalHeight}px)`;
+            return;
         } else {
-            target.style.height = "auto";
-            const newHeight = target.scrollHeight;
-
-            const maxHeight = 100;
-            target.style.height = `${Math.min(newHeight, maxHeight)}px`;
+            const newHeight = Math.min(target.scrollHeight, MAX_TEXTAREA_HEIGHT);
+            target.style.height = `${newHeight}px`;
         }
 
-        if (refChat.current) {
-            const minTextareaHeight = 40;
-            let extraHeight = 0;
-
-            if (inputValue !== "") {
-                extraHeight = Math.min(target.scrollHeight - minTextareaHeight, 100 - minTextareaHeight);
-            }
-
-            refChat.current.style.height = `calc(100vh - ${baseHeight + extraHeight}px)`;
-
-            // Cuộn xuống cuối nếu có nội dung
-            if (inputValue !== "") {
-                refChat.current.scrollTop = refChat.current.scrollHeight;
-            } else {
-                refChat.current.scrollTop = 0;
-            }
-        }
+        updateChatHeight();
     };
 
-    // Get file and image
     const handleGetFile = (fileList) => {
         const selectedImages = [];
         const selectedFiles = [];
 
         Array.from(fileList).forEach((file) => {
             if (file.type.startsWith("image/")) {
-                selectedImages.push({
-                    preview: URL.createObjectURL(file),
-                    file: file,
-                });
+                selectedImages.push({ preview: URL.createObjectURL(file), file: file });
             } else {
                 selectedFiles.push(file);
             }
         });
 
-        setImages((prevImages) => [...prevImages, ...selectedImages]);
-        setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-        handleGetMessage(messageRef, 320);
+        setImages((prev) => [...prev, ...selectedImages]);
+        setFiles((prev) => [...prev, ...selectedFiles]);
+    };
+
+    useEffect(() => {
+        updateChatHeight();
+    }, [images, files]);
+
+    const updateChatHeight = () => {
+        if (refChat.current) {
+            let totalHeight = BASE_CHAT_HEIGHT;
+
+            if (images.length > 0 || files.length > 0) {
+                totalHeight += ATTACHMENT_HEIGHT;
+            }
+
+            if (messageRef.current) {
+                totalHeight += Math.max(Math.min(messageRef.current.scrollHeight, MAX_TEXTAREA_HEIGHT) - 40, 0);
+            }
+
+            if (messageValue.trim() === "" && images.length === 0 && files.length === 0) {
+                totalHeight = BASE_CHAT_HEIGHT;
+            }
+            refChat.current.style.height = `calc(100vh - ${totalHeight}px)`;
+        }
     };
 
     const handleRemoveImage = (index) => {
-        setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+        setImages((prevImages) => {
+            const updatedImages = prevImages.filter((_, i) => i !== index);
+            updateChatHeight();
+            return updatedImages;
+        });
     };
 
     const handleRemoveFile = (index) => {
-        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+        setFiles((prevFiles) => {
+            const updatedFiles = prevFiles.filter((_, i) => i !== index);
+            updateChatHeight();
+            return updatedFiles;
+        });
     };
 
     const handleSendMessage = () => {
@@ -181,7 +209,7 @@ function Content() {
             </h4>
 
             {receiver && (
-                <User />
+                <User online={online} />
             )}
 
             <div className={cx("chats", { active: chatMessages.last_page > 1 })} id="scrollableChats" ref={refChat}>
@@ -199,16 +227,29 @@ function Content() {
                             const previousMessage = chatMessage[index - 1] || null;
                             const nextMessage = chatMessage[index + 1] || null;
 
-                            const isAlone = index === chatMessage.length - 1;
                             const currentTime = new Date(message.sent_time);
                             const previousTime = previousMessage ? new Date(previousMessage.sent_time) : null;
+                            const nextTime = nextMessage ? new Date(nextMessage.sent_time) : null;
 
-                            const showTimestamp = !previousMessage ||
-                                (currentTime - previousTime) / (1000 * 60) > 10;
+                            // Kiểm tra nếu cần hiển thị timestamp (cách nhau > 5 phút)
+                            const showTime = index === 0 || (previousTime && (currentTime - previousTime) > 5 * 60 * 1000);
+
+                            // Kiểm tra nếu tin nhắn tiếp theo hoặc trước đó là của người khác hoặc cách nhau > 5 phút
+                            const isDifferentSenderPrev = !previousMessage || previousMessage.user_id !== message.user_id;
+                            const isTimeGapPrev = previousMessage && (currentTime - previousTime) > 5 * 60 * 1000;
+
+                            const isDifferentSenderNext = !nextMessage || nextMessage.user_id !== message.user_id;
+                            const isTimeGapNext = nextMessage && (nextTime - currentTime) > 5 * 60 * 1000;
 
                             return (
-                                <div key={index}>
-                                    {showTimestamp && (
+                                <div
+                                    key={index}
+                                    style={{
+                                        marginTop: (isDifferentSenderPrev || isTimeGapPrev) ? "16px" : "2px",
+                                        marginBottom: (isDifferentSenderNext || isTimeGapNext) ? "16px" : "2px",
+                                    }}
+                                >
+                                    {showTime && (
                                         <div className={cx("timestamp")}>
                                             {formatDateChat(message.sent_time)}
                                         </div>
@@ -216,8 +257,6 @@ function Content() {
                                     <Chat
                                         message={message}
                                         user={user}
-                                        isAlone={isAlone}
-                                        previousMessage={previousMessage}
                                         nextMessage={nextMessage}
                                     />
                                 </div>
@@ -302,6 +341,12 @@ function Content() {
                                     className={cx("chat__input")}
                                     value={messageValue}
                                     onChange={handleGetMessage}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleSendMessage();
+                                        }
+                                    }}
                                     placeholder="Aa"
                                 />
                             </div>

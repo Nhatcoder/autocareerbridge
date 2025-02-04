@@ -7,11 +7,10 @@ import styles from "./Chat.module.scss";
 const cx = classNames.bind(styles);
 
 function Chat({ ...props }) {
-    const { user, message, isAlone, previousMessage, nextMessage } = props;
+    const { user, message, nextMessage } = props;
+
     const checkUser = user.id == message.from_id
-    const isSameSenderAsPrevious = previousMessage && previousMessage.from_id === message.from_id;
     const isSameSenderAsNext = nextMessage && nextMessage.from_id === message.from_id;
-    const isFirst = !isSameSenderAsPrevious;
     const isLast = !isSameSenderAsNext;
 
     const date = new Date(message.sent_time);
@@ -22,22 +21,19 @@ function Chat({ ...props }) {
             {message.message.length > 0 &&
                 <div className={cx("item_message", (checkUser ? "right" : "left"))}>
                     <div className={cx("box__message", {
-                        alone: isAlone,
-                        first: isFirst && !isAlone,
-                        last: isLast && !isAlone,
-                        middle: isSameSenderAsPrevious && isSameSenderAsNext,
                     })}>
-                        {!checkUser && isLast && < img src="https://i.pinimg.com/236x/45/15/88/451588be068e6a042693e33686ab6d34.jpg" alt="" className={cx("user_you")} />}
-                        {/* {!checkUser && isLast && < img src={user.avatar_path ? `${window.location.origin}/${user.avatar_path}` : `${window.location.origin}/clients/images/no-avatar.png`} alt="" className={cx("user_you")} />} */}
+
+                        {!checkUser && isLast && < img src={user.avatar_path?.startsWith('http') ? user.avatar_path : `${window.location.origin}/${user.avatar_path}`} alt="avt" className={cx("user_you")} />}
+
                         <Tippy
                             interactive={true}
                             delay={[0, 200]}
                             content={formattedDate}
                             placement={user ? "left" : "right"}
                         >
-                            <div className={cx("message")}
-                                dangerouslySetInnerHTML={{ __html: message.message }}
-                            ></div>
+                            <div className={cx("message")}>
+                                {message.message}
+                            </div>
                         </Tippy>
 
                         <div className={cx("send")}>

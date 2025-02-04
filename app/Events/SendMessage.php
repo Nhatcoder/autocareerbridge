@@ -32,11 +32,13 @@ class SendMessage implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        Log::info($this->message['to_id']);
+        $from_id = $this->message['from_id'];
+        $to_id = $this->message['to_id'];
+
+        $channelName = 'chat.' . min($from_id, $to_id) . '.' . max($from_id, $to_id);
 
         return [
-            // new Channel('chat.' . $this->message['to_id']),
-            new Channel('chat'),
+            new PresenceChannel($channelName),
         ];
     }
 
