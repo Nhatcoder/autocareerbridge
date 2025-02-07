@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\Custommer\CustommerController;
 use App\Http\Controllers\Clients\ConversationsController;
 use App\Http\Controllers\Clients\CompaniesController;
 use App\Http\Controllers\Clients\HomeController;
@@ -34,8 +35,22 @@ Route::middleware('web')->group(function () {
     Route::get('chi-tiet-workshop/{slug}', [WorkshopsController::class, 'index'])->name('detailWorkShop');
     Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
 
-    Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
-    Route::post('chat-store', [ConversationsController::class, 'chatStore'])->name('chatStore');
-    Route::get('history-file/{id}', [ConversationsController::class, 'historyFile'])->name('historyFile');
-    Route::get('history-image/{id}', [ConversationsController::class, 'historyImage'])->name('historyImage');
+    Route::middleware('check.login')
+        ->group(function () {
+            Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
+            Route::post('chat-store', [ConversationsController::class, 'chatStore'])->name('chatStore');
+            Route::get('history-file/{id}', [ConversationsController::class, 'historyFile'])->name('historyFile');
+            Route::get('history-image/{id}', [ConversationsController::class, 'historyImage'])->name('historyImage');
+        });
+
+    Route::middleware('check.login')
+        ->group(function () {
+            Route::get('dang-ky', [CustommerController::class, 'viewRegister'])->name('viewRegister');
+            Route::get('dang-nhap', [CustommerController::class, 'viewLogin'])->name('viewLogin');
+            Route::post('register', [CustommerController::class, 'register'])->name('register');
+            Route::post('login', [CustommerController::class, 'login'])->name('login');
+            Route::post('logout', [CustommerController::class, 'logout'])->name('logout');
+            Route::get('login-by-google', [CustommerController::class, 'viewLoginWithGoogle'])->name('viewLoginWithGoogle');
+            Route::get('login-google/callback', [CustommerController::class, 'loginWithGoogle'])->name('loginWithGoogle');
+        });
 });

@@ -81,3 +81,25 @@ if (avatarElement) {
     avatarElement.style.backgroundColor = getRandomColor();
 }
 
+// login with google
+$('.btn_login_google').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: e.target.href,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var width = 500;
+            var height = 600;
+            var left = (screen.width - width) / 2;
+            var top = (screen.height - height) / 2;
+
+            window.open(data.url, 'GoogleLoginPopup',
+                `width=${width},height=${height},top=${top},left=${left},resizable=no,scrollbars=no,status=no`
+            );
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+});

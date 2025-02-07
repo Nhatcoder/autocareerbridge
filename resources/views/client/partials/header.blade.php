@@ -75,7 +75,6 @@
                         </div>
                         <!-- mainmenu end -->
 
-
                         <!-- mobile menu area start -->
                         <header class="mobail_menu">
                             <div class="container-fluid">
@@ -246,7 +245,7 @@
                                     }
                                 </style>
 
-                                <a href="{{ route('conversations', ['id'=>1]) }}" class="chat-company">
+                                <a href="{{ route('conversations', ['id' => 1]) }}" class="chat-company">
                                     <i class="icon_message fa-solid fa-message"></i>
                                 </a>
                                 <a href="javascript:void(0);" role="button" class="menu-link"
@@ -308,7 +307,7 @@
                                                 class="fa-solid fa-screwdriver-wrench"></i>
                                             Vào trang quản trị</a>
                                     @endif
-                                    <form action="{{ route('management.logout', Auth::guard('admin')->user()->id) }}"
+                                    <form action="{{ route('management.logout', Auth::guard('web')->user()->id) }}"
                                         method="post">
                                         @csrf
                                         <button type="submit" class="dropdown-item logout-button"><i
@@ -317,12 +316,43 @@
                                     </form>
                                 </div>
                             @else
-                                <li><a href="{{ route('management.register') }}"><i class="fa fa-user"></i>&nbsp;
-                                        Đăng ký
-                                    </a></li>
-                                <li><a href="{{ route('management.login') }}"><i class="fa fa-sign-in"></i>&nbsp;
-                                        Đăng nhập</a>
-                                </li>
+                                @if (Auth::guard('web')->user())
+                                    <a href="{{ route('conversations', ['id' => Auth::guard('web')->user()->id]) }}"
+                                        class="chat-company">
+                                        <i class="icon_message fa-solid fa-message"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" role="button" class="menu-link"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <li class="gc_main_navigation d-inline-flex">
+                                            <div class="img_thumb">
+                                                <img class="img_thumb_item"
+                                                    src="{{ Auth::guard('web')->user()->avatar_path ? (filter_var(Auth::guard('web')->user()->avatar_path, FILTER_VALIDATE_URL) ? Auth::guard('web')->user()->avatar_path : asset(Auth::guard('web')->user()->avatar_path)) : asset('clients/images/no-image.jpg') }}"
+                                                    alt="avatar">
+                                            </div>
+                                        </li>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('company.profile') }}" class="dropdown-item"><i
+                                                class="fas fa-user-circle"></i>
+                                            {{ __('label.admin.header.profile') }}</a>
+
+                                        <form action="{{ route('logout', '12') }}" method="post">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item logout-button"><i
+                                                    class="fas fa-sign-out-alt"></i>{{ __('label.admin.header.logout') }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <li><a href="{{ route('viewRegister') }}"><i class="fa fa-user"></i>&nbsp;
+                                            Đăng ký
+                                        </a></li>
+                                    <li><a href="{{ route('viewLogin') }}"><i class="fa fa-sign-in"></i>&nbsp;
+                                            Đăng nhập</a>
+                                    </li>
+                                    <li><a target="_blank" href="{{ route('management.login') }}">Nhà quản lý</a>
+                                    </li>
+                                @endif
                             @endif
                         </ul>
 

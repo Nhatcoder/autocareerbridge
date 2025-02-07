@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
         'check.university.isEmpty' => \App\Http\Middleware\CheckUniversityEmpty::class,
         'check.company.isEmpty' => \App\Http\Middleware\checkCompanyIsEmpty::class,
         'check.hiring.or.company' => \App\Http\Middleware\CheckHiringOrCompany::class,
+        'check.login' => \App\Http\Middleware\CheckAuthentication::class,
     ];
 }

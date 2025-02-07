@@ -264,7 +264,8 @@ ul {
 .header-area {
     padding-top: 15px;
     width: 100%;
-    /* text-align: center; */
+    display: flex;
+    justify-content: start;
     z-index: 9999;
     -webkit-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
@@ -1918,7 +1919,7 @@ ul {
     -ms-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
-    border-radius:0px 0px 15px 15px ;
+    border-radius: 0px 0px 15px 15px;
 }
 
 .jp_job_post_keyword_wrapper li {
@@ -5060,9 +5061,7 @@ ul {
     transition: all 0.5s;
 }
 
-.jp_form_btn_wrapper li a i {
-
-}
+.jp_form_btn_wrapper li a i {}
 
 .jp_banner_main_jobs_wrapper {
     float: left;
@@ -6108,6 +6107,7 @@ input[type="checkbox"]:checked+label:after {
     padding-top: 50px;
     padding-bottom: 50px;
 }
+
 .jp_job_res {
     float: left;
     width: 100%;
@@ -6245,6 +6245,7 @@ input[type="checkbox"]:checked+label:after {
     padding-top: 50px;
     padding-bottom: 50px;
 }
+
 .jp_listing_left_bottom_sidebar_social_wrapper li {
     float: left;
     margin-left: 10px;
@@ -8033,11 +8034,26 @@ input[type="checkbox"]:checked+label:after {
     float: left;
     width: 100%;
     background: #f7f7f7;
-    padding: 50px;
+    padding: 15px;
     margin-bottom: 20px;
 }
 
-.login_wrapper a.btn {
+.register_wrapper {
+    float: left;
+    width: 100%;
+    background: #f7f7f7;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.register_wrapper a i {
+    float: right;
+    margin: 0;
+    line-height: 35px;
+}
+
+.login_wrapper a.btn,
+.register_wrapper a.btn {
     color: #fff;
     width: 100%;
     height: 50px;
@@ -8051,7 +8067,8 @@ input[type="checkbox"]:checked+label:after {
     border: 1px solid #23c0e9;
 }
 
-.login_wrapper a.btn:hover {
+.login_wrapper a.btn:hover,
+.register_wrapper a.btn:hover {
     background-color: #00b5e4;
     border-color: #00b5e4;
     -webkit-transition: all 0.5s;
@@ -8095,12 +8112,14 @@ input[type="checkbox"]:checked+label:after {
     line-height: 35px;
 }
 
-.login_wrapper a.google-plus {
+.login_wrapper a.google-plus,
+.register_wrapper a.google-plus {
     background: #db4c3e;
     border: 1px solid #db4c3e;
 }
 
-.login_wrapper a.google-plus:hover {
+.login_wrapper a.google-plus:hover,
+.register_wrapper a.google-plus:hover {
     background: #bd4033;
     border-color: #bd4033;
     -webkit-transition: all 0.5s;
@@ -8110,7 +8129,8 @@ input[type="checkbox"]:checked+label:after {
     transition: all 0.5s;
 }
 
-.login_wrapper h2 {
+.login_wrapper h2,
+.register_wrapper h2 {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 20px;
@@ -8131,11 +8151,23 @@ input[type="checkbox"]:checked+label:after {
     top: 50%;
 }
 
-.login_wrapper h2::before {
+.register_wrapper h2::before,
+.register_wrapper h2::after {
+    content: "";
+    background: #e4e4e4;
+    width: 100px;
+    height: 1px;
+    position: absolute;
+    top: 50%;
+}
+
+.login_wrapper h2::before,
+.register_wrapper h2::before {
     right: 60%;
 }
 
-.login_wrapper h2::after {
+.login_wrapper h2::after,
+.register_wrapper h2::after {
     left: 60%;
 }
 
@@ -8267,6 +8299,11 @@ input[type="checkbox"]:checked+label:after {
     border-bottom: 1px solid #e4e4e4;
 }
 
+.register_btn_wrapper {
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
 .login_btn_wrapper a.login_btn {
     text-align: center;
     text-transform: uppercase;
@@ -8329,8 +8366,8 @@ input[type="checkbox"]:checked+label:after {
 .register_section {
     float: left;
     width: 100%;
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 37px;
+    padding-bottom: 50px;
 }
 
 .register_form_wrapper {
@@ -8457,7 +8494,6 @@ input[type="checkbox"]:checked+label:after {
     display: block;
     width: 100%;
     background: #ffffff;
-    text-transform: capitalize;
     font-size: 15px;
     line-height: 26px;
     color: #888888;
@@ -9345,6 +9381,7 @@ input[type="checkbox"]:checked+label:after {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -9362,11 +9399,13 @@ input[type="checkbox"]:checked+label:after {
         transform: translateY(5px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
     }
 }
+
 .foppy-loader {
     display: flex;
     justify-content: center;
@@ -9392,9 +9431,12 @@ input[type="checkbox"]:checked+label:after {
 }
 
 @keyframes bounce {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-10px);
     }
@@ -9413,7 +9455,8 @@ input[type="checkbox"]:checked+label:after {
     font-size: 17px;
     cursor: pointer;
     color: gray;
-    display: none; /* Ẩn nút x mặc định */
+    display: none;
+    /* Ẩn nút x mặc định */
 }
 
 .clear-btn:hover {
@@ -9422,7 +9465,7 @@ input[type="checkbox"]:checked+label:after {
     border-radius: 40px;
 }
 
-input:not(:placeholder-shown) + .clear-btn {
+input:not(:placeholder-shown)+.clear-btn {
     display: block;
 }
 
@@ -9434,16 +9477,20 @@ input:not(:placeholder-shown) + .clear-btn {
     background-color: #FFFFFF;
     text-align: center;
 }
+
 .clear-filter-btn a {
     width: 100%;
     height: 25px;
 }
-input:not(:placeholder-shown) + .clear-filter-btn {
+
+input:not(:placeholder-shown)+.clear-filter-btn {
     display: block;
 }
-.jp_filter_wrapper h4{
+
+.jp_filter_wrapper h4 {
     font-weight: 600;
 }
-.jp_filter_wrapper{
+
+.jp_filter_wrapper {
     margin-top: 20px;
 }
