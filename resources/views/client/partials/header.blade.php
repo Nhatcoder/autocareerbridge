@@ -236,25 +236,13 @@
                     <div class="jp_navi_right_btn_wrapper float-end ">
                         <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
                             @if (Auth::guard('admin')->user())
-                                <style>
-                                    .icon_message {
-                                        color: #fff;
-                                        padding: 15px;
-                                        border-radius: 50%;
-                                        background: #3b4774;
-                                    }
-                                </style>
-
-                                <a href="{{ route('conversations', ['id' => 1]) }}" class="chat-company">
+                                <a href="{{ route('conversations', ['id' => Auth::guard('admin')->user()->company()->id ?? Auth::guard('admin')->user()->id]) }}"
+                                    class="chat-company">
                                     <i class="icon_message fa-solid fa-message"></i>
                                 </a>
                                 <a href="javascript:void(0);" role="button" class="menu-link"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <li class="gc_main_navigation d-inline-flex">
-
-                                        {{-- <p class="gc_main_navigation m-3">
-                                            {{ $userName }}
-                                        </p> --}}
                                         <div class="img_thumb">
                                             @if (Auth::guard('admin')->user()->role === ROLE_ADMIN)
                                                 <div id="avatar" data-avatar="{{ $userName }}"
@@ -307,7 +295,7 @@
                                                 class="fa-solid fa-screwdriver-wrench"></i>
                                             Vào trang quản trị</a>
                                     @endif
-                                    <form action="{{ route('management.logout', Auth::guard('web')->user()->id) }}"
+                                    <form action="{{ route('management.logout', Auth::guard('admin')->user()->id) }}"
                                         method="post">
                                         @csrf
                                         <button type="submit" class="dropdown-item logout-button"><i
