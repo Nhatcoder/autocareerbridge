@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css';
 
@@ -11,8 +12,30 @@ const cx = classNames.bind(styles);
 
 function User({ online }) {
     const { data, setImages, setLoading, setFiles } = useChat();
+    const user = data?.user || [];
     const receiver = data?.receiver || [];
-    const checkRole = ROLE_USER.includes(receiver?.role);
+    const checkRole = ROLE_USER.includes(user?.role);
+
+    useEffect(() => {
+        if (receiver?.id) {
+            setLoading(true);
+            const fetchData = async () => {
+                try {
+                    const [attachmentFiles, attachmentImage] = await Promise.all([
+                        historyFileService.historyFile(receiver.id),
+                        historyFileService.historyImage(receiver.id)
+                    ]);
+                    setImages(attachmentImage.data);
+                    setFiles(attachmentFiles.data);
+                } catch (error) {
+                    console.log('Error fetching history:', error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+            fetchData();
+        }
+    }, [receiver?.id]);
 
     const handleHistoryFileToggle = () => {
         const jobApplyList = document.querySelector(".job_apply_list");

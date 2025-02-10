@@ -25,8 +25,6 @@ function RightSidebar() {
     const user = data?.user;
     const checkRole = ROLE_USER.includes(user?.role);
 
-
-
     const groupedData = groupByMonthAndYear(image);
 
     useEffect(() => {
@@ -56,7 +54,6 @@ function RightSidebar() {
         try {
             const response = await axios.get(`${images.path}?page=${currentPageImage}`);
             const newData = response.data.data;
-            console.log(newData);
 
             setImage((prevItems) => [...prevItems, ...newData.data]);
             setCurrentPageImage(currentPageImage + 1);

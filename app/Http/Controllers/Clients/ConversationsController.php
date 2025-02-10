@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Clients;
 
 use App\Events\SendMessage;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Services\ChatMessage\ChatMessageService;
 use App\Services\Company\CompanyService;
 use App\Services\User\UserService;
@@ -57,12 +56,13 @@ class ConversationsController extends Controller
     public function conversations(Request $request, $id = null)
     {
         try {
-            $userCurrent = auth('admin')->user()->company ?? auth('admin')->user();
+            $userCurrent = auth('admin')->user()->company ?? auth('web')->user();
             $company = $this->companyService->getCompanyById($id);
 
             $user = null;
             if ($id) {
                 $user = $this->userService->getUserById($id);
+                $this->chatMessageService->updateSeenMessage($id);
             }
 
             $getUserApplyJob = $this->userJobService->getJobUserApply();
@@ -151,5 +151,17 @@ class ConversationsController extends Controller
         return response()->json([
             'data' => $data
         ], 200);
+    }
+
+    /**
+     * Fetches the user's chat history.
+     */
+    public function getUserChat()
+    {
+        $userChats = $this->chatMessageService->userChats();
+        return response()->json([
+            'success' => true,
+            'data' => $userChats
+        ]);
     }
 }

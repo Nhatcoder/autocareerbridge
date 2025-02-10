@@ -37,10 +37,14 @@ Route::middleware('web')->group(function () {
 
     Route::middleware('check.login')
         ->group(function () {
+            Route::post('apply-job', [JobsController::class, 'applyJob'])->name('applyJob');
+
             Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
             Route::post('chat-store', [ConversationsController::class, 'chatStore'])->name('chatStore');
             Route::get('history-file/{id}', [ConversationsController::class, 'historyFile'])->name('historyFile');
             Route::get('history-image/{id}', [ConversationsController::class, 'historyImage'])->name('historyImage');
+            Route::get('user-chat', [ConversationsController::class, 'getUserChat'])->name('getUserChat');
+            Route::get('update-seen-message', [ConversationsController::class, 'updateSeenMessage'])->name('updateSeenMessage');
         });
 
     Route::middleware('check.login')

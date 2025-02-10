@@ -66,7 +66,10 @@
     padding: 15px 10px;
     color: var(--text-color);
     text-decoration: none;
-    // border-bottom: 1px solid #ddd;
+
+    .seen {
+        font-weight: 600;
+    }
 
     &.active {
         background-color: #f5f5f5;
