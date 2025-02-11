@@ -94,7 +94,7 @@ class CustommerService
         }
 
         auth()->guard('web')->login($user);
-        
+
         return ['success' => true, 'message' => 'Đăng nhập thành công.', 'user' => $user];
     }
 }
