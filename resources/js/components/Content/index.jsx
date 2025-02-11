@@ -18,7 +18,7 @@ const MAX_TEXTAREA_HEIGHT = 100;
 const BASE_CHAT_HEIGHT = 180;
 const ATTACHMENT_HEIGHT = 120;
 function Content() {
-    const { data } = useChat();
+    const { data, setMessageCt } = useChat();
     const chatMessages = data?.chats || [];
     const receiver = data?.receiver;
     const user = data?.user;
@@ -56,8 +56,12 @@ function Content() {
         })
 
         channel.listen("SendMessage", (e) => {
-            console.log(e);
             const newMessage = e.message;
+            console.log(newMessage);
+
+            setMessageCt(() => {
+                return newMessage;
+            });
             setChatMessage((prevItems) => [newMessage, ...prevItems]);
         });
         return () => {
@@ -208,7 +212,7 @@ function Content() {
                 <span className={cx("text-primary")}>Tham gia nhiều hơn, thành công hơn</span>
             </h4>
 
-            {receiver && (
+            {receiver.id !== user.id && (
                 <User online={online} />
             )}
 
@@ -257,13 +261,14 @@ function Content() {
                                     <Chat
                                         message={message}
                                         user={user}
+                                        receiver={receiver}
                                         nextMessage={nextMessage}
                                     />
                                 </div>
                             );
                         })
                     ) : (
-                        !receiver && <NoChat />
+                        !receiver.id !== user.id && <NoChat />
                     )}
                 </InfiniteScroll>
             </div >
@@ -282,7 +287,7 @@ function Content() {
             }
 
             {
-                receiver && (
+                receiver && receiver.id !== user.id && (
                     <div className={cx("user_send__message")} ref={containerMessageRef}>
                         {(images.length > 0 || files.length > 0) && <div className={cx("attachments_message")}>
                             {images.length > 0 && images.map((image, index) => (<div className={cx("item_attachment")} key={index}>

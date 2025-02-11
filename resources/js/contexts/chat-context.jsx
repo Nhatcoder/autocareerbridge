@@ -6,6 +6,7 @@ export function ChatProvider({ children, ...props }) {
     const [images, setImages] = useState([]);
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [messageCt, setMessageCt] = useState({});
 
     const value = {
         images,
@@ -14,6 +15,8 @@ export function ChatProvider({ children, ...props }) {
         setFiles,
         loading,
         setLoading,
+        messageCt,
+        setMessageCt,
     };
     return (
         <ChatContext.Provider value={{ ...props, ...value }}>

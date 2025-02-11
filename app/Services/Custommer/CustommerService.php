@@ -80,6 +80,7 @@ class CustommerService
         if (!$user) {
             $user = $this->userReponsitory->create([
                 'name' => $googleUser->name,
+                'avatar_path' => $googleUser->avatar,
                 'email' => $googleUser->email,
                 'password' => Hash::make(Str::random()),
                 'role' => ROLE_USER,

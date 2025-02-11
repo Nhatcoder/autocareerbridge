@@ -235,8 +235,8 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs hidden-sm">
                     <div class="jp_navi_right_btn_wrapper float-end ">
                         <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
-                            @if (Auth::guard('admin')->user())
-                                <a href="{{ route('conversations', ['id' => Auth::guard('admin')->user()->company()->id ?? Auth::guard('admin')->user()->id]) }}"
+                            @if (Auth::guard('admin')->check())
+                                <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('admin')->company()->id]) }}"
                                     class="chat-company">
                                     <i class="icon_message fa-solid fa-message"></i>
                                 </a>
@@ -304,8 +304,8 @@
                                     </form>
                                 </div>
                             @else
-                                @if (Auth::guard('web')->user())
-                                    <a href="{{ route('conversations', ['id' => Auth::guard('web')->user()->id]) }}"
+                                @if (Auth::guard(name: 'web')->user())
+                                    <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('web')->user()->id]) }}"
                                         class="chat-company">
                                         <i class="icon_message fa-solid fa-message"></i>
                                     </a>

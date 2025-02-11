@@ -76,10 +76,27 @@ class ChatMessageService
         }
     }
 
-    public function getHistoryFile($id){
+    public function getHistoryFile($id)
+    {
         return $this->chatMessageRepository->getHistoryFile($id);
     }
-    public function historyImage($id){
+
+    public function historyImage($id)
+    {
         return $this->chatMessageRepository->historyImage($id);
+    }
+
+    public function updateSeenMessage($id)
+    {
+        $chat = $this->chatMessageRepository->firstChat($id);
+        if (empty($chat)) {
+            return null;
+        }
+        $chat->update([
+            'seen_id' => json_encode([
+                auth('admin')->user()->company->id ?? auth('web')->user()->id
+            ]),
+        ]);
+        return $chat;
     }
 }

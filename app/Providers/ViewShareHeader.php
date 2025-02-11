@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\ChatMessage\ChatMessageRepositoryInterface;
 use App\Repositories\Notification\NotificationRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -21,9 +22,10 @@ class ViewShareHeader extends ServiceProvider
     /**
      * Bootstrap services.
      */
-    public function boot(NotificationRepositoryInterface $notificationRepository): void
+    public function boot(NotificationRepositoryInterface $notificationRepository, ChatMessageRepositoryInterface $chatMessageRepository): void
     {
         $notificationRepository = app(NotificationRepositoryInterface::class);
+        $chatMessageRepository = app(ChatMessageRepositoryInterface::class);
 
         View::composer(['management.partials.header'], function ($view) use ($notificationRepository) {
             $notificationsHeader = $notificationRepository->getNotifications();
@@ -44,6 +46,14 @@ class ViewShareHeader extends ServiceProvider
                 'notificationsHeader' => $notificationsHeader,
                 'notificationCount' => $notificationRepository->getNotificationCount()
             ]);
+        });
+
+        View::composer(['client.partials.header'], function ($view) use ($chatMessageRepository) {
+            if (auth()->guard('admin')->check() || auth()->guard('web')->check()) {
+                $view->with([
+                    'userChatHeader' => $chatMessageRepository->userChat()
+                ]);
+            }
         });
     }
 }

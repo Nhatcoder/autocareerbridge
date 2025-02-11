@@ -7,7 +7,7 @@ import styles from "./Chat.module.scss";
 const cx = classNames.bind(styles);
 
 function Chat({ ...props }) {
-    const { user, message, nextMessage } = props;
+    const { user, receiver, message, nextMessage } = props;
 
     const checkUser = user.id == message.from_id
     const isSameSenderAsNext = nextMessage && nextMessage.from_id === message.from_id;
@@ -22,8 +22,7 @@ function Chat({ ...props }) {
                 <div className={cx("item_message", (checkUser ? "right" : "left"))}>
                     <div className={cx("box__message", {
                     })}>
-
-                        {!checkUser && isLast && < img src={user.avatar_path?.startsWith('http') ? user.avatar_path : `${window.location.origin}/${user.avatar_path}`} alt="avt" className={cx("user_you")} />}
+                        {!checkUser && isLast && < img src={receiver.avatar_path?.startsWith('http') ? receiver.avatar_path : `${window.location.origin}/${receiver.avatar_path}`} alt="avt" className={cx("user_you")} />}
 
                         <Tippy
                             interactive={true}

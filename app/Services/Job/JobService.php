@@ -2,27 +2,24 @@
 
 namespace App\Services\Job;
 
-use App\Events\NotifyJobChangeStatusEvent;
-use App\Mail\NewJobPostedMail;
-use App\Mail\SendMailApprovedJobCompany;
-use App\Mail\SendMailRejectJobCompany;
-use App\Mail\SendMailStudent;
-use App\Mail\SendMailUniversityApplyJob;
-use App\Models\UniversityJob;
-use App\Models\WorkShop;
-use App\Repositories\Collaboration\CollaborationRepositoryInterface;
-use App\Repositories\Company\CompanyRepositoryInterface;
-use App\Repositories\Job\JobRepositoryInterface;
-use App\Repositories\Major\MajorRepositoryInterface;
-use App\Repositories\Notification\NotificationRepositoryInterface;
-use App\Repositories\University\UniversityRepositoryInterface;
-use App\Repositories\User\UserRepositoryInterface;
-use App\Services\Notification\NotificationService;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\SendMailStudent;
+use App\Mail\NewJobPostedMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMailRejectJobCompany;
+use App\Mail\SendMailUniversityApplyJob;
+use App\Repositories\Job\JobRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
+use App\Services\Notification\NotificationService;
+use App\Repositories\Major\MajorRepositoryInterface;
+use App\Repositories\Company\CompanyRepositoryInterface;
+use App\Repositories\UserJob\UserJobRepositoryInterface;
+use App\Repositories\University\UniversityRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
+use App\Repositories\Collaboration\CollaborationRepositoryInterface;
 
 class JobService
 {
@@ -34,6 +31,7 @@ class JobService
     protected $notificationService;
     protected $companyRepository;
     protected $userRepository;
+    protected $userJobRepository;
 
     public function __construct(
         CompanyRepositoryInterface       $companyRepository,
@@ -43,7 +41,8 @@ class JobService
         NotificationRepositoryInterface  $notificationRepository,
         UniversityRepositoryInterface    $universityRepository,
         NotificationService              $notificationService,
-        UserRepositoryInterface          $userRepository
+        UserRepositoryInterface          $userRepository,
+        UserJobRepositoryInterface       $userJobRepository
     ) {
         $this->companyRepository = $companyRepository;
         $this->jobRepository = $jobRepository;
@@ -53,6 +52,7 @@ class JobService
         $this->universityRepository = $universityRepository;
         $this->notificationService = $notificationService;
         $this->userRepository = $userRepository;
+        $this->userJobRepository = $userJobRepository;
     }
 
     public function getAll()
@@ -416,5 +416,18 @@ class JobService
             Log::error($e->getFile() . ':' . $e->getLine() . ' - Lỗi khi xử lý job: ' . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Allows a user to apply for a job.
+     *
+     * @param array $data The job application data, including job_id and other relevant details.
+     * @return mixed The result of creating the job application in the repository.
+     */
+    public function userApplyJob($data)
+    {
+        $user = Auth::guard('web')->user()->id;
+        $data['user_id'] = $user;
+        return $this->userJobRepository->create($data);
     }
 }

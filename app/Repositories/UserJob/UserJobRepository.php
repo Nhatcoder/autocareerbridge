@@ -19,7 +19,7 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
 
     public function getJobUserApply()
     {
-        $userCurrent = auth('admin')->user();
+        $userCurrent = auth('admin')->user() ?? auth('web')->user();
         $jobUserApply = UserJob::with('user', 'job.company')->where("user_id", $userCurrent->id)->get();
         return $jobUserApply;
     }

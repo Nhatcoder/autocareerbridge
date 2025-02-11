@@ -54,4 +54,9 @@ class Job extends Model
     {
         return $this->hasMany(UniversityJob::class);
     }
+
+    public function userJob()
+    {
+        return $this->hasMany(UserJob::class, 'job_id', 'id');
+    }
 }
