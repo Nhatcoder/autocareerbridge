@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('achievements', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('cv_id')->unsigned();
+            $table->integer('cv_id')->unsigned();
             $table->string('name')->nullable();
-            $table->string('organization')->nullable();
             $table->string('date')->nullable();
             $table->text('description')->nullable();
             $table->text('url')->nullable();
-            $table->integer('type_title')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

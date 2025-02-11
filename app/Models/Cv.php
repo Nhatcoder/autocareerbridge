@@ -11,34 +11,63 @@ class Cv extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
+        'title',
+        'font',
+        'color',
+        'username',
+        'position',
+        'template',
         'user_id',
-        'slug',
         'email',
         'phone',
-        'position',
+        'address',
         'avatar',
-        'date_birth',
-        'sex',
+        'birthdate',
         'url',
         'introduce',
     ];
 
     protected $with = [
+        'user',
         'educations',
         'experiences',
         'achievements',
+        'certificates',
+        'cv_skill',
+        'referrers',
     ];
 
-    public function educations(){
-        return $this->hasMany(Education::class, );
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 
-    public function experiences(){
+    public function educations()
+    {
+        return $this->hasMany(Education::class,);
+    }
+
+    public function experiences()
+    {
         return $this->hasMany(Experience::class);
     }
 
-    public function achievements(){
+    public function achievements()
+    {
         return $this->hasMany(Achievement::class);
+    }
+
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    public function referrers()
+    {
+        return $this->hasMany(Referrer::class);
+    }
+
+    public function cv_skill()
+    {
+        return $this->hasMany(CvSkill::class);
     }
 }

@@ -12,15 +12,18 @@ return new class extends Migration {
     {
         Schema::create('cvs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('template');
+            $table->string('title');
+            $table->string('username');
+            $table->string('font');
+            $table->string('color');
+            $table->string('position');
             $table->bigInteger('user_id')->unsigned();
-            $table->string('slug', 255)->unique();
             $table->string('email');
             $table->string('phone');
-            $table->string('position');
-            $table->string('avatar')->default('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF5-3YjBcXTqKUlOAeUUtuOLKgQSma2wGG1g&s');
-            $table->string('date_birth');
-            $table->enum('sex', ['male', 'female'])->default('male');
+            $table->string('address');
+            $table->string('avatar')->default('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF5-3YjBcXTqKUlOAeUUtuOLKgQSma2wGG1g&s')->nullable();
+            $table->string('birthdate');
             $table->string('url')->nullable();
             $table->text('introduce');
             $table->timestamps();

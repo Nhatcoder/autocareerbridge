@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ Sơ Cá Nhân</title>
+    <title>CV Layout 4444444</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -15,7 +15,7 @@
         }
 
         .container {
-            width: 800px;
+            max-width: 800px;
             margin: 20px auto;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -138,67 +138,52 @@
     <div class="container">
         <div class="sidebar" style="float: left; width: 30%">
             <div class="avatar">
-                <img src="{{ asset('clients/images/content/blog_single_client3.jpg') }}" alt="Profile Picture"
-                    width="100" height="100">
+                <img src="{{ asset('clients/images/content/blog_single_client3.jpg') }}"
+                    alt="Profile Picture" width="100" height="100">
             </div>
-            <h1>Hà Danh</h1>
-            <p style="font-size: 17px;">Giám Đốc</p>
+            <h1>Khánh Nguyên</h1>
+            <p style="font-size: 17px;">PHP Developer</p>
 
-            <div draggable="true" class="section">
-                <div class="section-title">Thông tin cá nhân</div>
-                <p><strong><img src="{{ asset('clients/images/iconcv/phone.svg') }}" style="width: 16px;"> </strong>
-                    0987654321</p>
-                <p><strong><img src="{{ asset('clients/images/iconcv/email.svg') }}" style="width: 16px;"> </strong>
-                    hadanh.jvb@gmail.com</p>
-                <p><strong><img src="{{ asset('clients/images/iconcv/link.svg') }}" style="width: 16px;"> </strong>
-                    17/11/1998</p>
-                <p><strong><img src="{{ asset('clients/images/iconcv/date.svg') }}" style="width: 16px;"> </strong> Hoài
-                    Đức, Hà Nội</p>
-                <p><strong><img src="{{ asset('clients/images/iconcv/address.svg') }}" style="width: 16px;"> </strong>
-                    topcv.vn/mau-cv</p>
-            </div>
+            <div class="section-title">Thông tin cá nhân</div>
+            <p><strong><img src="{{ asset('clients/images/iconcv/phone.svg') }}" style="width: 16px;"> </strong> 0932476977</p>
+            <p><strong><img src="{{ asset('clients/images/iconcv/email.svg') }}" style="width: 16px;"> </strong> nguyenthega2k2@gmail.com</p>
+            <p><strong><img src="{{ asset('clients/images/iconcv/date.svg') }}" style="width: 16px;"> </strong> 20/4/2002</p>
+            <p><strong><img src="{{ asset('clients/images/iconcv/address.svg') }}" style="width: 16px;"> </strong> Hoài Đức, Hà Nội</p>
+            <p><strong><img src="{{ asset('clients/images/iconcv/link.svg') }}" style="width: 16px;"> </strong> jvb.com</p>
 
-            <div draggable="true" class="section">
-                <div class="section-title">HỌC VẤN</div>
-                <p><strong>Đại Học Bách Khoa</strong></p>
-                <p>01/2000 - Hiện tại</p>
-                <p>Thợ Xây</p>
+            <div class="section-title">HỌC VẤN</div>
+            <p><strong>Đại Học Bách Khoa</strong></p>
+            <p>01/2000 - Hiện tại</p>
+            <p>Thợ Xây</p>
+
+            <div class="section-title">KỸ NĂNG</div>
+            <div class="skills">
+                <div><span>Xách vữa</span></div>
+                <div><span>Đào vữa</span></div>
+                <div><span>Ném gạch</span></div>
             </div>
 
-            <div draggable="true" class="section">
-                <div class="section-title">KỸ NĂNG</div>
-                <div class="skills">
-                    <div><span>Xách vữa</span></div>
-                    <div><span>Đào vữa</span></div>
-                    <div><span>Ném gạch</span></div>
-                </div>
-            </div>
+            <div class="section-title">CHỨNG CHỈ</div>
+            <p><strong>Thợ Chính - 01/2000</strong></p>
+            <p>Fc Xây Dựng Việt Nam</p>
+            <p>Link: <a style="color: white;" href="topcv.vn/mau-cv" target="_blank">topcv.vn/mau-cv</a></p>
+            <ul>
+                <li>Đề xuất các chủ đề đào tạo mới.</li>
+                <li>Thực hiện đào tạo hội nhập cho 50 CBNV mới mỗi tháng.</li>
+            </ul>
 
-            <div draggable="true" class="section">
-                <div class="section-title">CHỨNG CHỈ</div>
-                <p><strong>Thợ Chính - 01/2000</strong></p>
-                <p>Fc Xây Dựng Việt Nam</p>
-                <p>Link: <a style="color: white;" href="topcv.vn/mau-cv" target="_blank">topcv.vn/mau-cv</a></p>
-                <ul>
-                    <li>Đề xuất các chủ đề đào tạo mới.</li>
-                    <li>Thực hiện đào tạo hội nhập cho 50 CBNV mới mỗi tháng.</li>
-                </ul>
-            </div>
-
-            <div draggable="true" class="section">
-                <div class="section-title">Giải thưởng</div>
-                <p><strong>Thợ Chính - 01/2000</strong></p>
-                <p>Fc Xây Dựng Việt Nam</p>
-                <p>Link: <a style="color: white;" href="topcv.vn/mau-cv" target="_blank">topcv.vn/mau-cv</a></p>
-                <ul>
-                    <li>Đề xuất các chủ đề đào tạo mới.</li>
-                    <li>Thực hiện đào tạo hội nhập cho 50 CBNV mới mỗi tháng.</li>
-                </ul>
-            </div>
+            <div class="section-title">Giải thưởng</div>
+            <p><strong>Thợ Chính - 01/2000</strong></p>
+            <p>Fc Xây Dựng Việt Nam</p>
+            <p>Link: <a style="color: white;" href="topcv.vn/mau-cv" target="_blank">topcv.vn/mau-cv</a></p>
+            <ul>
+                <li>Đề xuất các chủ đề đào tạo mới.</li>
+                <li>Thực hiện đào tạo hội nhập cho 50 CBNV mới mỗi tháng.</li>
+            </ul>
         </div>
 
-        <div class="main" style="float: right; width: 70%">
-            <div draggable="true" class="section">
+        <div class="main" style="float: right; width: 55%">
+            <div>
                 <h2>Giới thiệu</h2>
                 <h3>Chuyên Viên Đào Tạo</h3>
                 <ul>
@@ -209,7 +194,7 @@
                 </ul>
             </div>
 
-            <div draggable="true" class="section">
+            <div>
                 <h2>Kinh nghiệm làm việc</h2>
                 <h3>Giám đốc công nghệ | Fc Thợ Xây</h3>
                 <p>01/2000 - 01/2025</p>
@@ -246,56 +231,5 @@
         </div>
     </div>
 </body>
-<script>
-    const sections = document.querySelectorAll('.section');
-
-    let draggedElement = null;
-
-    sections.forEach(section => {
-
-        // Drag start
-        section.addEventListener('dragstart', (e) => {
-            draggedElement = section;
-            section.style.opacity = '0.5';
-            e.dataTransfer.effectAllowed = 'move';
-        });
-
-        // Drag end
-        section.addEventListener('dragend', () => {
-            draggedElement = null;
-            section.style.opacity = '1';
-        });
-
-        // Drag over
-        section.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            section.classList.add('drag-over');
-            e.dataTransfer.dropEffect = 'move';
-        });
-
-        // Drag leave
-        section.addEventListener('dragleave', () => {
-            section.classList.remove('drag-over');
-        });
-
-        // Drop
-        section.addEventListener('drop', (e) => {
-            e.preventDefault();
-            section.classList.remove('drag-over');
-
-            if (draggedElement && draggedElement !== section) {
-                const parent = section.parentNode;
-                const draggedIndex = [...parent.children].indexOf(draggedElement);
-                const targetIndex = [...parent.children].indexOf(section);
-
-                if (draggedIndex < targetIndex) {
-                    parent.insertBefore(draggedElement, section.nextSibling);
-                } else {
-                    parent.insertBefore(draggedElement, section);
-                }
-            }
-        });
-    });
-</script>
 
 </html>

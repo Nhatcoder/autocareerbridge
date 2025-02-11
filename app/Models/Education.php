@@ -10,11 +10,15 @@ class Education extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'educations';
+
     protected $fillable = [
-        'name_university',
         'cv_id',
+        'university_name',
         'major',
-        'date',
+        'start_date',
+        'end_date',
+        'type_graduate',
         'description',
     ];
 }

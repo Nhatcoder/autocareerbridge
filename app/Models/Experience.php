@@ -10,13 +10,15 @@ class Experience extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'experiences';
+
     protected $fillable = [
-        'name_company',
         'cv_id',
-        'name_project',
+        'company_name',
+        'project_name',
         'position',
-        'date',
+        'start_date',
+        'end_date',
         'description',
-        'url',
     ];
 }

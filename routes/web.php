@@ -36,10 +36,22 @@ Route::middleware('web')->group(function () {
 
     // cv client
     Route::get('ho-so', [ResumeController::class, 'file'])->name('file');
-    Route::get('danh-sach-cv', [ResumeController::class, 'listCv'])->name('listCv');
-    Route::post('view-pdf', [ResumeController::class, 'viewPDF'])->name('viewPDF');
+    Route::get('view-pdf', [ResumeController::class, 'viewPDF'])->name('viewPDF');
+
+    Route::get('mau-cv', [ResumeController::class, 'listCv'])->name('listCv');
+    Route::get('my-cv', [ResumeController::class, 'myCv'])->name('myCv');
+    Route::get('/cv/create/{template}', [ResumeController::class, 'createCV'])->name('cv.create');
+
+    Route::get('cv/{id}/download', [ResumeController::class, 'download'])->name('cv.download');
+    Route::get('cv/{id}/view', [ResumeController::class, 'view'])->name('cv.view');
+    Route::get('cv/{id}/edit', [ResumeController::class, 'editCV'])->name('cv.edit');
+
+    Route::get('/api/cv/{id}', [ResumeController::class, 'getCVData']);
+
+
 
     // thêm thông tin cập nhật hồ sơ
-    Route::get('cap-nhat-cv/{slug}', [ResumeController::class, 'edit'])->name('editCv');
-    Route::put('cap-nhat-cv/{slug}/update', [ResumeController::class, 'update'])->name('updateCv');
+    // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
+    Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
+    Route::put('cv/{id}/update', [ResumeController::class, 'update'])->name('updateCv');
 });

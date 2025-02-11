@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\CvSkill;
 use App\Repositories\Collaboration\CollaborationRepository;
 use App\Repositories\Collaboration\CollaborationRepositoryInterface;
 use App\Repositories\Company\CompanyRepository;
@@ -26,11 +27,23 @@ use App\Repositories\AcademicAffairs\AcademicAffairsRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Base\BaseRepository;
 use App\Repositories\Base\BaseRepositoryInterface;
+use App\Repositories\Certificate\CertificateRepository;
+use App\Repositories\Certificate\CertificateRepositoryInterface;
 use App\Repositories\Fields\FieldsRepository;
 use App\Repositories\Fields\FieldsRepositoryInterface;
 use App\Repositories\Hiring\HiringRepositoryInterface;
 use App\Repositories\University\UniversityRepository;
 use App\Repositories\University\UniversityRepositoryInterface;
+use App\Repositories\Cv\CvRepository;
+use App\Repositories\Cv\CvRepositoryInterface;
+use App\Repositories\CvSkill\CvSkillRepository;
+use App\Repositories\CvSkill\CvSkillRepositoryInterface;
+use App\Repositories\Education\EducationRepository;
+use App\Repositories\Education\EducationRepositoryInterface;
+use App\Repositories\Experience\ExperienceRepository;
+use App\Repositories\Experience\ExperienceRepositoryInterface;
+use App\Repositories\Referrer\ReferrerRepository;
+use App\Repositories\Referrer\ReferrerRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -66,6 +79,15 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(FieldsRepositoryInterface::class, FieldsRepository::class);
         $this->app->bind(CollaborationRepositoryInterface::class, CollaborationRepository::class);
         $this->app->bind(NotificationRepositoryInterface::class, NotificationRepository::class);
+        $this->app->bind(CvRepositoryInterface::class, CvRepository::class);
+        $this->app->bind(ExperienceRepositoryInterface::class, ExperienceRepository::class);
+        $this->app->bind(EducationRepositoryInterface::class, EducationRepository::class);
+        $this->app->bind(CvSkillRepositoryInterface::class, CvSkillRepository::class);
+        $this->app->bind(CertificateRepositoryInterface::class, CertificateRepository::class);
+        $this->app->bind(ReferrerRepositoryInterface::class, ReferrerRepository::class);
+
+
+
 
     }
 

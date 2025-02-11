@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('educations', function (Blueprint $table) {
+        Schema::create('referrers', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('cv_id')->unsigned();
-            $table->string('name_university')->nullable();
-            $table->string('major')->nullable();
-            $table->string('date')->nullable();
-            $table->text('description')->nullable();
+            $table->integer('cv_id')->unsigned();
+            $table->string('name');
+            $table->string('company_name');
+            $table->string('position');
+            $table->string('phone');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('education');
+        Schema::dropIfExists('referrers');
     }
 };

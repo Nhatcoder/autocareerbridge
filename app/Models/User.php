@@ -49,7 +49,7 @@ class User extends Authenticatable
     ];
 
     protected $with = [
-        'cv'
+        'cvs'
     ];
 
 
@@ -63,9 +63,9 @@ class User extends Authenticatable
         return $this->hasOne(Hiring::class);
     }
 
-    public function cv()
+    public function cvs()
     {
-        return $this->hasOne(Cv::class);
+        return $this->hasMany(Cv::class);
     }
 
     public function academicAffair()

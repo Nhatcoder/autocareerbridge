@@ -34,30 +34,58 @@
                             ];
                         @endphp
 
-                        @foreach ($view as $item)
-                            <div class="col-md-4">
-                                <div class="card" style="width: 20rem;">
-                                    <img style="object-fit: cover;  object-position: top;" src="{{ asset($item['image']) }}"
-                                        height="350px" class="card-img-top border-bottom rounded-bottom">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $item['title'] }}</h5>
-                                        <form action="{{ route('viewPDF') }}" method="post">
-                                            @csrf
-                                            <button name="{{ $item['name_btn'] }}" class="btn btn-info">Xem
-                                                trước</button>
-                                            <a class="btn btn-primary">Dùng mẫu</a>
-                                        </form>
+                        <div class="row">
+                            @foreach ($view as $index => $item)
+                                <div class="col-md-4">
+                                    <div class="card" style="width: 20rem;">
+                                        <img style="object-fit: cover; object-position: top;"
+                                            src="{{ asset($item['image']) }}" height="350px"
+                                            class="card-img-top border-bottom rounded-bottom">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $item['title'] }}</h5>
+                                            <!-- Nút mở modal -->
+                                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                                data-target="#previewModal-{{ $index }}"
+                                                data-template="{{ $item['name_btn'] }}">
+                                                Xem trước
+                                            </button>
+                                            <a href="{{ route('cv.create', ['template' => $item['name_btn']]) }}" class="btn btn-primary">Dùng mẫu</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+
+                                <!-- Modal riêng cho từng mẫu -->
+                                <div class="modal fade" id="previewModal-{{ $index }}" tabindex="-1"
+                                    aria-labelledby="previewModalLabel-{{ $index }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="previewModalLabel-{{ $index }}">
+                                                    {{ $item['title'] }}
+                                                </h5>
+                                                <button type="button" class="btn-close" data-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center" id="cvModalContent">
+                                                <img src="{{ asset($item['image']) }}" alt="Preview"
+                                                    style="width: 100%; max-height: 500px; object-fit: contain;">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Modal -->
+                            @endforeach
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('css')
