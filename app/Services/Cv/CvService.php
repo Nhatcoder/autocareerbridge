@@ -9,11 +9,6 @@ use App\Repositories\Education\EducationRepositoryInterface;
 use App\Repositories\Experience\ExperienceRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
-use Spatie\Browsershot\Browsershot;
-use Illuminate\Support\Str;
 
 class CvService
 {
@@ -40,9 +35,16 @@ class CvService
         $this->referrerRepository = $referrerRepository;
     }
 
+
+    /**
+     * Create a new CV.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return mixed
+     * @throws \Exception
+     */
     public function createCv($request)
     {
-        // dd($request->all());
         DB::beginTransaction();
 
         try {
@@ -127,8 +129,6 @@ class CvService
                 }
             }
 
-
-
             DB::commit();
             return $cv;
         } catch (\Exception $e) {
@@ -137,6 +137,14 @@ class CvService
         }
     }
 
+    /**
+     * Update an existing CV.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $cvId
+     * @return mixed
+     * @throws \Exception
+     */
     public function updateCv($request, $cvId)
     {
         DB::beginTransaction();
@@ -275,12 +283,12 @@ class CvService
         }
     }
 
-
-
-
-
-
-
+    /**
+     * Retrieve CV by ID.
+     *
+     * @param int $id
+     * @return mixed
+     */
     public function renderCV($id)
     {
         $cv = $this->cvRepository->getCv($id);
