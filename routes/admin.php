@@ -54,8 +54,10 @@ Route::prefix('admin')
         Route::resource('users', UsersController::class)->except('show');
         Route::post('/user/toggle-status', [UsersController::class, 'toggleStatus'])->name('user.toggleStatus');
         Route::resource('jobs', JobsController::class);
+        Route::post('/job/toggle-active', [JobsController::class, 'toggleActive'])->name('job.toggleActive');
         Route::get('jobs/detail/{slug}', [JobsController::class, 'showBySlug'])->name('jobs.slug');
         Route::post('jobs/update-status/', [JobsController::class, 'updateStatus'])->name('jobs.updateStatus');
+        Route::post('jobs/update-many-status/', [JobsController::class, 'updateStatusBulk'])->name('jobs.updateStatusBulk');
         Route::resource('workshops', WorkshopsController::class);
         Route::get('workshops/detail/{slug}', [WorkshopsController::class, 'showBySlug'])->name('workshops.slug');
         Route::patch('fields/change-status', [FieldsController::class, 'changeStatus'])->name('fields.changeStatus');

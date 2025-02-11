@@ -473,14 +473,18 @@ class CompanyRepository extends BaseRepository implements CompanyRepositoryInter
 
     public function getCompaniesWithJobsAndAddresses()
     {
-        return $this->model->with(['addresses.province'])
+        $query = $this->model->select('companies.*')
+            ->with(['addresses.province'])
             ->withCount(['jobs' => function ($query) {
                 $query->where('status', STATUS_APPROVED)
+                    ->where('is_active', ACTIVE)
                     ->whereDate('end_date', GREATER_THAN_OR_EQUAL, Carbon::now()->format('Y-m-d'));
             }])
-            ->get()
-            ->sortByDesc('job_count')
-            ->take(PAGINATE_LIST_COMPANY_CLIENT); // Lấy 6 công ty có số lượng jobs nhiều nhất
+            ->groupBy('companies.id')
+            ->orderByDesc('jobs_count')
+            ->limit(PAGINATE_LIST_COMPANY_CLIENT);
+
+        return $query->get();
     }
 
     public function getCompaniesWithFilters($query, $provinceId, $sortOrder)

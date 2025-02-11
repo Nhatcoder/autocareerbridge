@@ -43,10 +43,11 @@
                                     <a href="{{ route('home') }}" class="gc_main_navigation">
                                         Trang chủ </a>
                                 </li>
-                                <li class="has-mega gc_main_navigation {{ Request::routeIs('search') ? 'active' : '' }}"><a href="{{ route('search') }}" class="gc_main_navigation">
+                                <li
+                                    class="has-mega gc_main_navigation {{ Request::routeIs('search') ? 'active' : '' }}">
+                                    <a href="{{ route('search') }}" class="gc_main_navigation">
                                         Việc làm</a>
                                 </li>
-
 
                                 <li
                                     class="gc_main_navigation parent {{ Request::routeIs('listUniversity') ? 'active' : '' }}">
@@ -73,7 +74,6 @@
                             </ul>
                         </div>
                         <!-- mainmenu end -->
-
 
                         <!-- mobile menu area start -->
                         <header class="mobail_menu">
@@ -234,18 +234,19 @@
                 <!-- mobile menu area end -->
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs hidden-sm">
                     <div class="jp_navi_right_btn_wrapper float-end ">
-                        <ul class="gc_header_wrapper menu-item dropdown ">
-                            @if (Auth::guard('admin')->user())
+                        <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
+                            @if (Auth::guard('admin')->check())
+                                <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('admin')->company()->id]) }}"
+                                    class="chat-company">
+                                    <i class="icon_message fa-solid fa-message"></i>
+                                </a>
                                 <a href="javascript:void(0);" role="button" class="menu-link"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-
                                     <li class="gc_main_navigation d-inline-flex">
-                                        <p class="gc_main_navigation m-3">
-                                            {{ $userName }}
-                                        </p>
                                         <div class="img_thumb">
                                             @if (Auth::guard('admin')->user()->role === ROLE_ADMIN)
-                                                <div id="avatar" data-avatar="{{$userName}}" class="avatar"></div>
+                                                <div id="avatar" data-avatar="{{ $userName }}"
+                                                    class="avatar"></div>
                                             @elseif (Auth::guard('admin')->user()->role === ROLE_COMPANY && optional(Auth::guard('admin')->user()->company)->avatar_path)
                                                 <img class="img_thumb_item"
                                                     src="{{ asset(Auth::guard('admin')->user()->company->avatar_path) }}"
@@ -264,7 +265,6 @@
                                             @else
                                                 <div id="avatar" class="avatar"></div>
                                             @endif
-
                                         </div>
                                     </li>
                                 </a>
@@ -308,12 +308,43 @@
                                     </form>
                                 </div>
                             @else
-                                <li><a href="{{ route('management.register') }}"><i class="fa fa-user"></i>&nbsp;
-                                        Đăng ký
-                                    </a></li>
-                                <li><a href="{{ route('management.login') }}"><i class="fa fa-sign-in"></i>&nbsp;
-                                        Đăng nhập</a>
-                                </li>
+                                @if (Auth::guard(name: 'web')->user())
+                                    <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('web')->user()->id]) }}"
+                                        class="chat-company">
+                                        <i class="icon_message fa-solid fa-message"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" role="button" class="menu-link"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <li class="gc_main_navigation d-inline-flex">
+                                            <div class="img_thumb">
+                                                <img class="img_thumb_item"
+                                                    src="{{ Auth::guard('web')->user()->avatar_path ? (filter_var(Auth::guard('web')->user()->avatar_path, FILTER_VALIDATE_URL) ? Auth::guard('web')->user()->avatar_path : asset(Auth::guard('web')->user()->avatar_path)) : asset('clients/images/no-image.jpg') }}"
+                                                    alt="avatar">
+                                            </div>
+                                        </li>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('company.profile') }}" class="dropdown-item"><i
+                                                class="fas fa-user-circle"></i>
+                                            {{ __('label.admin.header.profile') }}</a>
+
+                                        <form action="{{ route('logout', '12') }}" method="post">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item logout-button"><i
+                                                    class="fas fa-sign-out-alt"></i>{{ __('label.admin.header.logout') }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <li><a href="{{ route('viewRegister') }}"><i class="fa fa-user"></i>&nbsp;
+                                            Đăng ký
+                                        </a></li>
+                                    <li><a href="{{ route('viewLogin') }}"><i class="fa fa-sign-in"></i>&nbsp;
+                                            Đăng nhập</a>
+                                    </li>
+                                    <li><a target="_blank" href="{{ route('management.login') }}">Nhà quản lý</a>
+                                    </li>
+                                @endif
                             @endif
                         </ul>
 
@@ -323,4 +354,3 @@
         </div>
     </div>
 </div>
-

@@ -19,7 +19,8 @@ class Job extends Model
         'detail',
         'status',
         'major_id',
-        'company_id'
+        'company_id',
+        'is_active'
     ];
 
     public $date = ['deleted_at'];
@@ -52,5 +53,10 @@ class Job extends Model
     public function universityJobs()
     {
         return $this->hasMany(UniversityJob::class);
+    }
+
+    public function userJob()
+    {
+        return $this->hasMany(UserJob::class, 'job_id', 'id');
     }
 }

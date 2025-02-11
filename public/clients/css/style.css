@@ -909,8 +909,8 @@ ul {
     height: 50px;
     line-height: 50px;
     color: #ffffff;
-    border: 1px solid #f36969;
-    background: #f36969;
+    border: 1px solid #23c0e9;
+    background: #23c0e9;
     text-align: center;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -924,7 +924,7 @@ ul {
 
 .jp_navi_right_btn_wrapper li:last-child a:hover {
     background: transparent;
-    border: 1px solid #ffffff40;
+    border: 1px solid #23c0e9;
     -webkit-transition: all 0.5s;
     -o-transition: all 0.5s;
     -ms-transition: all 0.5s;
@@ -4383,4 +4383,11 @@ ul {
     font-weight: bold;
     text-transform: uppercase;
     font-family: Arial, sans-serif;
+}
+
+.icon_message {
+    color: #fff;
+    padding: 15px;
+    border-radius: 50%;
+    background: #3b4774;
 }

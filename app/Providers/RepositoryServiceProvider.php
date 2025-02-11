@@ -29,6 +29,8 @@ use App\Repositories\Base\BaseRepository;
 use App\Repositories\Base\BaseRepositoryInterface;
 use App\Repositories\Certificate\CertificateRepository;
 use App\Repositories\Certificate\CertificateRepositoryInterface;
+use App\Repositories\ChatMessage\ChatMessageRepository;
+use App\Repositories\ChatMessage\ChatMessageRepositoryInterface;
 use App\Repositories\Fields\FieldsRepository;
 use App\Repositories\Fields\FieldsRepositoryInterface;
 use App\Repositories\Hiring\HiringRepositoryInterface;
@@ -44,6 +46,8 @@ use App\Repositories\Experience\ExperienceRepository;
 use App\Repositories\Experience\ExperienceRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepository;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
+use App\Repositories\UserJob\UserJobRepository;
+use App\Repositories\UserJob\UserJobRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -85,10 +89,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CvSkillRepositoryInterface::class, CvSkillRepository::class);
         $this->app->bind(CertificateRepositoryInterface::class, CertificateRepository::class);
         $this->app->bind(ReferrerRepositoryInterface::class, ReferrerRepository::class);
-
-
-
-
+        $this->app->bind(ChatMessageRepositoryInterface::class, ChatMessageRepository::class);
+        $this->app->bind(UserJobRepositoryInterface::class, UserJobRepository::class);
     }
 
     /**

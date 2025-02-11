@@ -8,6 +8,8 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
 {
     public function getModel();
     public function getUsers(array $filters);
-    public function getUserById(int $id);
+    public function getUserById($id);
     public function updateToggleStatus(int $id, array $data);
+    public function getAdmin();
+    public function getUserByEmail($data);
 }

@@ -20,15 +20,17 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'user_name',
+        'name',
         'email',
+        'avatar_path',
         'password',
+        'google_id',
+        'facebook_id',
         'role',
         'active',
         'email_verified_at',
         'remember_token',
     ];
-
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -72,6 +74,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(AcademicAffair::class);
     }
+
     public function university()
     {
         return $this->hasOne(University::class);
@@ -80,5 +83,13 @@ class User extends Authenticatable
     public function jobs()
     {
         return $this->hasMany(Job::class, 'user_id', 'id');
+    }
+
+    public function chatMessages(){
+        return $this->hasMany(ChatMessage::class, 'from_id', 'id');
+    }
+
+    public function isAdmin(){
+        return $this->role === ROLE_ADMIN;
     }
 }

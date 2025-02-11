@@ -45,7 +45,7 @@ class UserService
         return $this->userRepository->delete($id);
     }
 
-    public function getUserById(int $id)
+    public function getUserById($id)
     {
         return $this->userRepository->getUserById($id);
     }

@@ -48,7 +48,8 @@
                                                             alt="hiring_img" />
                                                     </a>
                                                     <a href="{{ route('detailCompany', ['slug' => $company->slug]) }}">
-                                                        <h4 data-bs-placement="top" data-bs-title="{{ $company->name }}" class="company_name">
+                                                        <h4 data-bs-placement="top" data-bs-title="{{ $company->name }}"
+                                                            class="company_name">
                                                             {{ \Illuminate\Support\Str::limit($company->name, 22, '...') }}
                                                         </h4>
                                                     </a>
@@ -160,12 +161,9 @@
 
                                     @if ($companies->lastPage() > 1)
                                         <div id="pagination1">
-                                            @include(
-                                                'client.pages.components.client_company.pagination1',
-                                                [
-                                                    'companies' => $companies,
-                                                ]
-                                            )
+                                            @include('client.pages.components.client_company.pagination1', [
+                                                'companies' => $companies,
+                                            ])
                                         </div>
                                     @endif
                                 </div>
@@ -178,12 +176,9 @@
 
                                     @if ($companies->lastPage() > 1)
                                         <div id="pagination2">
-                                            @include(
-                                                'client.pages.components.client_company.pagination2',
-                                                [
-                                                    'companies' => $companies,
-                                                ]
-                                            )
+                                            @include('client.pages.components.client_company.pagination2', [
+                                                'companies' => $companies,
+                                            ])
                                         </div>
                                     @endif
                                 </div>
@@ -286,6 +281,11 @@
                     return $(this).attr('data-bs-title');
                 }
             });
+        });
+
+        $(".owl-carousel").owlCarousel({
+            items: 4,
+            margin: 20
         });
     </script>
 @endsection

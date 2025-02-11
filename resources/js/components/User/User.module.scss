@@ -1,0 +1,19 @@
+.user {
+    padding: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .050980392156862744);
+    border-bottom: 1px solid #eee;
+
+    .user__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+    }
+
+    .user__action {
+        font-size: 25px;
+        padding: 5px;
+        cursor: pointer;
+    }
+}

@@ -3,7 +3,6 @@
 @section('title', 'Danh sách bài đăng')
 
 @section('content')
-
     <div class="row">
         <div class="col-xl-12">
             <div class="page-titles">
@@ -37,7 +36,7 @@
                                 </div>
 
                                 <div class="col-xl-2 col-sm-6 mb-3 mb-xl-0">
-                                    <label class="form-label">{{ __('label.admin.job.status') }}</label>
+                                    <label class="form-label">{{ __('label.admin.job.status_approve') }}</label>
                                     <div class="dropdown bootstrap-select form-control default-select h-auto wide">
                                         <select name="status" class="form-control default-select h-auto wide">
                                             <option value="" @if (request()->status == '') selected @endif>
@@ -60,6 +59,29 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-xl-2 col-sm-6 mb-3 mb-xl-0">
+                                    <label class="form-label">{{ __('label.admin.job.status_active') }}</label>
+                                    <div class="dropdown bootstrap-select form-control default-select h-auto wide">
+                                        <select name="is_active" class="form-control default-select h-auto wide">
+                                            <option value="" @if (request()->is_active == '') selected @endif>
+                                                {{ __('label.admin.job.select_status') }}</option>
+                                            <option value="{{ ACTIVE }}"
+                                                @if (request()->is_active == ACTIVE) selected @endif>
+                                                {{ __('label.admin.job.active') }}</option>
+                                            <option value="{{ INACTIVE }}"
+                                                @if (request()->is_active == INACTIVE) selected @endif>
+                                                {{ __('label.admin.job.inactive') }}</option>
+                                        </select>
+
+                                        <div class="dropdown-menu ">
+                                            <div class="inner show" role="listbox" id="bs-select-2" tabindex="-1">
+                                                <ul class="dropdown-menu inner show" role="presentation"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-xl-2 col-sm-6 mb-3 mb-xl-0">
                                     <label class="form-label">{{ __('label.admin.job.major') }}</label>
                                     <div class="dropdown bootstrap-select form-control default-select h-auto wide">
@@ -103,19 +125,42 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">{{ __('label.admin.job.title_list') }}</h4>
+                    <div class="dropdown" id="actionDropdown" style="display: none;">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li>
+                                <button class="dropdown-item" id="approve-all">
+                                    <i class="fas fa-check text-success"></i> {{ __('label.admin.job.approve') }}
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" id="reject-all">
+                                    <i class="fas fa-times text-danger"></i> {{ __('label.admin.job.reject') }}
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-responsive-md">
                             <thead>
                                 <tr>
-
+                                    <th>
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
                                     <th>#</th>
                                     <th>{{ __('label.admin.job.title') }}</th>
                                     <th>{{ __('label.admin.company') }}</th>
                                     <th>{{ __('label.admin.job.major') }}</th>
                                     <th>{{ __('label.admin.job.created_at') }}</th>
-                                    <th>{{ __('label.admin.job.status') }}</th>
+                                    <th>{{ __('label.admin.job.status_approve') }}</th>
+                                    <th>{{ __('label.admin.job.status_active') }}</th>
                                     <th>{{ __('label.admin.job.action') }}</th>
                                 </tr>
                             </thead>
@@ -129,6 +174,7 @@
                                 @endif
                                 @foreach ($jobs as $index => $job)
                                     <tr>
+                                        <td><input type="checkbox" name="job_ids[]" value="{{ $job->id }}"></td>
                                         <td><strong>{{ $index + 1 + ($jobs->currentPage() - 1) * $jobs->perPage() }}</strong>
                                         </td>
                                         <td>
@@ -148,10 +194,39 @@
                                             @endif
                                         </td>
                                         <td>
+                                            <div class="d-flex align-items-center">
+                                                @if ($job->is_active == ACTIVE)
+                                                    <button
+                                                        class="btn btn-sm btn-success
+                                                    @if (
+                                                        \Auth::guard('admin')->user()->role == ROLE_ADMIN ||
+                                                            (\Auth::guard('admin')->user()->role == ROLE_SUB_ADMIN &&
+                                                                $job->role != ROLE_ADMIN &&
+                                                                $job->role != ROLE_SUB_ADMIN)) btn-toggle-status @endif
+                                                    "
+                                                        data-id="{{ $job->id }}"
+                                                        data-status="inactive">{{ __('label.admin.job.active') }}</button>
+                                                @else
+                                                    <button
+                                                        class="btn btn-sm btn-danger
+                                                    @if (
+                                                        \Auth::guard('admin')->user()->role == ROLE_ADMIN ||
+                                                            (\Auth::guard('admin')->user()->role == ROLE_SUB_ADMIN &&
+                                                                $job->role != ROLE_ADMIN &&
+                                                                $job->role != ROLE_SUB_ADMIN)) btn-toggle-status @endif
+                                                    "
+                                                        data-id="{{ $job->id }}"
+                                                        data-status="active">{{ __('label.admin.job.inactive') }}</button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>
                                             <div>
-                                                <a href="#btn-show-details" class="btn btn-primary shadow btn-xs btn-show-details"
+                                                <a href="#btn-show-details"
+                                                    class="btn btn-primary shadow btn-xs btn-show-details"
                                                     data-slug="{{ $job->slug }}">
-                                                    <i class="fa-solid fa-file-alt"></i> {{ __('label.admin.job.detail') }}
+                                                    <i class="fa-solid fa-file-alt"></i>
+                                                    {{ __('label.admin.job.detail') }}
                                                 </a>
                                             </div>
                                         </td>
@@ -186,15 +261,143 @@
                     </form>
                 </div>
                 <div class="modal-footer" id="buttonSubmit">
-                    <button type="button" class="btn btn-primary" data-status='2' id="btnSubmit">{{ __('label.admin.job.approve') }}</button>
-                    <button type="button" class="btn btn-danger" data-status='3' id="btnReject">{{ __('label.admin.job.reject') }}</button>
+                    <button type="button" class="btn btn-primary" data-status='2'
+                        id="btnSubmit">{{ __('label.admin.job.approve') }}</button>
+                    <button type="button" class="btn btn-danger" data-status='3'
+                        id="btnReject">{{ __('label.admin.job.reject') }}</button>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
+        $(document).ready(function() {
+            const $selectAllCheckbox = $('#selectAll');
+            const $jobCheckboxes = $('input[name="job_ids[]"]');
+            const $actionDropdown = $('#actionDropdown');
+            const $approveAllButton = $('#approve-all');
+            const $rejectAllButton = $('#reject-all');
+
+            $selectAllCheckbox.on('change', function() {
+                $jobCheckboxes.prop('checked', $(this).is(':checked'));
+                toggleActionDropdown();
+            });
+
+            $jobCheckboxes.on('change', function() {
+                toggleActionDropdown();
+            });
+
+            function toggleActionDropdown() {
+                const selectedJobs = $jobCheckboxes.filter(':checked');
+                $actionDropdown.toggle(selectedJobs.length > 0);
+            }
+
+            $approveAllButton.on('click', function() {
+                handleAction('approve');
+            });
+
+            $rejectAllButton.on('click', function() {
+                handleAction('reject');
+            });
+
+            function handleAction(action) {
+                const selectedJobs = $jobCheckboxes.filter(':checked');
+                const jobIds = selectedJobs.map(function() {
+                    return $(this).val();
+                }).get();
+
+                if (jobIds.length === 0) {
+                    return;
+                }
+
+                const status = action === 'approve' ? '{{ STATUS_APPROVED }}' : '{{ STATUS_REJECTED }}';
+
+                let hasRejectedJobs = false;
+                let hasApprovedJobs = false;
+
+                const validJobs = selectedJobs.filter(function() {
+                    const $row = $(this).closest('tr');
+                    const currentStatus = $row.find('td:nth-child(7) span').text().trim();
+
+                    if (currentStatus === '{{ __('label.admin.job.rejected') }}') {
+                        hasRejectedJobs = true;
+                        $(this).prop('checked', false);
+                        return false;
+                    }
+
+                    if (currentStatus === '{{ __('label.admin.job.approved') }}') {
+                        hasApprovedJobs = true;
+                        $(this).prop('checked', false);
+                        return false;
+                    }
+
+                    return currentStatus === '{{ __('label.admin.job.pending') }}';
+                });
+
+                if (validJobs.length === 0) {
+                    toastr.error('{{ __('label.admin.job.approved_or_rejected') }}');
+                    toggleActionDropdown();
+                    return;
+                }
+
+                $.ajax({
+                    url: '{{ route('admin.jobs.updateStatusBulk') }}',
+                    method: 'POST',
+                    data: {
+                        job_ids: validJobs.map(function() {
+                            return $(this).val();
+                        }).get(),
+                        status: status,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+
+                            validJobs.each(function() {
+                                const $checkbox = $(this);
+                                const $row = $checkbox.closest('tr');
+                                const $statusApproveCell = $row.find('td:nth-child(7)');
+                                const $statusActiveCell = $row.find('td:nth-child(8)');
+
+                                if (status === '{{ STATUS_APPROVED }}') {
+                                    $statusApproveCell.html(
+                                        `<span class="badge bg-success">{{ __('label.admin.job.approved') }}</span>`
+                                    );
+                                } else if (status === '{{ STATUS_REJECTED }}') {
+                                    $statusApproveCell.html(
+                                        `<span class="badge bg-danger">{{ __('label.admin.job.rejected') }}</span>`
+                                    );
+                                }
+
+                                if (status === '{{ STATUS_APPROVED }}') {
+                                    $statusActiveCell.html(`
+                                <button class="btn btn-sm btn-success btn-toggle-status"
+                                    data-id="${$checkbox.val()}"
+                                    data-status="inactive">{{ __('label.admin.job.active') }}</button>
+                            `);
+                                } else {
+                                    $statusActiveCell.html(`
+                                <button class="btn btn-sm btn-danger btn-toggle-status"
+                                    data-id="${$checkbox.val()}"
+                                    data-status="active">{{ __('label.admin.job.inactive') }}</button>
+                            `);
+                                }
+
+                                $checkbox.prop('checked', false);
+                            });
+
+                            toggleActionDropdown();
+                        }
+                    },
+                    error: function() {
+                        toastr.error(response.message);
+                    }
+                });
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
+
             // Bắt sự kiện khi nhấn vào nút "Chi tiết"
             document.querySelectorAll('.btn-show-details').forEach(function(button) {
                 button.addEventListener('click', function() {
@@ -221,7 +424,7 @@
 
                             if (data.status !== 1) {
                                 $("#detailsModal #buttonSubmit").hide();
-                            }else{
+                            } else {
                                 $("#detailsModal #buttonSubmit").show();
                             }
 
@@ -232,7 +435,7 @@
 
                             Toast.fire({
                                 icon: "error",
-                                title: "Không tìm thấy bài tuyển dụng."
+                                title: "{{ __('message.company.job.job_not_found') }}"
                             });
                         });
                 });
@@ -251,6 +454,40 @@
             document.getElementById('btnReject').addEventListener('click', function(e) {
                 submitForm(e.target.getAttribute('data-status'));
             });
+
+            $(document).on('click', '.btn-toggle-status', function() {
+                let button = $(this);
+                let jobId = button.data('id');
+                let currentStatus = button.data('status');
+
+                $.ajax({
+                    url: '{{ route('admin.job.toggleActive') }}',
+                    type: 'POST',
+                    data: {
+                        id: jobId,
+                        status: currentStatus,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            if (response.new_status === 'active') {
+                                button.removeClass('btn-danger').addClass('btn-success')
+                                    .text('{{ __('label.admin.job.active') }}')
+                                    .data('status', 'inactive');
+                            } else {
+                                button.removeClass('btn-success').addClass('btn-danger')
+                                    .text('{{ __('label.admin.job.inactive') }}')
+                                    .data('status', 'active');
+                            }
+                        }
+                    },
+                    error: function() {
+                        toastr.error(response.message);
+                    }
+                });
+            });
+
+
         });
     </script>
 @endsection

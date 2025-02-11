@@ -19,13 +19,17 @@ class NotificationService
         return $this->notificationRepository->create($args);
     }
 
-    public function renderNotificationRealtime($notification, $companyId = null, $universityId = null)
+    public function renderNotificationRealtime($notification, $companyId = null, $universityId = null, $adminId = null)
     {
-        $idChanel = $notification->company_id ?? $notification->university_id;
+        $idChanel = $notification->admin_id ?? $notification->company_id ?? $notification->university_id;
+        $role = $notification->admin_id ? 'admin' : ($notification->company_id ? 'company' : 'university');
+
         $viewNotifycation = view('management.components.notifycation', compact('notification'))->render();
-        $countNotificationUnSeen = $this->notificationRepository->getCountNotificationRealtime($companyId, $universityId);
-        broadcast(new NotifyJobChangeStatusEvent($viewNotifycation, $idChanel, $countNotificationUnSeen));
+        $countNotificationUnSeen = $this->notificationRepository->getCountNotificationRealtime($companyId, $universityId, $adminId);
+
+        broadcast(new NotifyJobChangeStatusEvent($viewNotifycation, $idChanel, $countNotificationUnSeen, $role));
     }
+
 
     public function getNotifications()
     {
