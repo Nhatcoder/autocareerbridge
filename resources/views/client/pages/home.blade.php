@@ -96,7 +96,7 @@
                                                         <a
                                                             href="{{ route('detailUniversity', ['slug' => $university->slug]) }}">
                                                             <div class="jp_hiring_content_wrapper">
-                                                                <img src="{{ isset($university->avatar_path) ? asset('storage/' . $university->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
+                                                                <img src="{{ filter_var($university->avatar_path, FILTER_VALIDATE_URL) ? $university->avatar_path : asset('storage/' . $university->avatar_path) }}"
                                                                     alt="hiring_img"
                                                                     style="width: 100px; height: 100px; max-width: 100px; max-height: 100px; object-fit: cover;border-radius: 50%;" />
                                                                 <h4> {{ \Illuminate\Support\Str::limit($university->name, 15, '...') }}
