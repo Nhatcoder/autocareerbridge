@@ -136,4 +136,39 @@ class CustommerController extends Controller
         auth()->guard('web')->logout();
         return redirect()->route('home');
     }
+
+    /**
+     * Show the profile
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function profile()
+    {
+        return view('client.pages.auth.profile');
+    }
+
+    /**
+     * Handle the update profile
+     *
+     */
+    public function updateProfile(CustommerRequest $request)
+    {
+        $data = [
+            'id' => $request->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ];
+
+        try {
+            $user = $this->custommerService->updateProfile($data);
+            if ($user) {
+                return redirect()->route('account.profile')->with('status_success', "Cập nhật thông tin thành công");
+            }
+        } catch (Exception $e) {
+            Log::error('File' . $e->getFile() . 'Line' . $e->getLine() . 'Message'
+                . $e->getMessage());
+            return back()->with('error', 'Xảy ra lỗi khi cập nhật thông tin');
+        }
+    }
 }

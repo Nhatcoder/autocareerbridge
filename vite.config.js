@@ -8,7 +8,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.jsx',
-		'resources/js/boostrap.jsx',
+                'resources/js/boostrap.jsx',
             ],
             refresh: true,
         }),
@@ -19,12 +19,12 @@ export default defineConfig({
             generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
     },
-    server: {
-        host: '192.168.0.152',
-        port: 5173,
-        cors: true, // Mở CORS
-        watch: {
-            usePolling: true,
-        },
-    },
+    // server: {
+    //     host: '192.168.0.152',
+    //     port: 5173,
+    //     cors: true, // Mở CORS
+    //     watch: {
+    //         usePolling: true,
+    //     },
+    // },
 });

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Custommer;
+
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
@@ -88,7 +89,7 @@ class CustommerService
                 'google_id' => $googleUser->id,
                 'email_verified_at' => now(),
             ]);
-        }else{
+        } else {
             $this->userReponsitory->update($user->id, [
                 'google_id' => $googleUser->id
             ]);
@@ -97,5 +98,15 @@ class CustommerService
         auth()->guard('web')->login($user);
 
         return ['success' => true, 'message' => 'Đăng nhập thành công.', 'user' => $user];
+    }
+
+    public function updateProfile($data)
+    {
+        $user = $this->userReponsitory->find($data['id']);
+        if (empty($user) && empty($data)) {
+            return null;
+        }
+        $user->update($data);
+        return $user;
     }
 }

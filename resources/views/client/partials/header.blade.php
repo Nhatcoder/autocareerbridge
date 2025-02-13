@@ -374,9 +374,9 @@
                                         </li>
                                     </a>
                                     <div class="dropdown-menu">
-                                        <a href="{{ route('company.profile') }}" class="dropdown-item"><i
-                                                class="fas fa-user-circle"></i>
-                                            {{ __('label.admin.header.profile') }}</a>
+                                         <a href="{{ route('account.profile') }}" class="dropdown-item"><i
+                                                 class="fas fa-user-circle"></i>
+                                             {{ __('label.admin.header.profile') }}</a>
 
                                         <form action="{{ route('logout', '12') }}" method="post">
                                             @csrf

@@ -32,6 +32,12 @@ class CustommerRequest extends FormRequest
                 'email' => ['required', 'email', 'max:255'],
                 'password' => ['required'],
             ];
+        } elseif ($this->routeIs('account.updateProfile')) {
+            return [
+                'name' => ['required', 'min:3', 'max:255'],
+                'email' => ['required', 'email', 'max:255', 'unique:users,email,' . auth('web')->user()->id, 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
+                'phone' => ['nullable', 'regex:/^(\+84 ?)?\d{10}$/'],
+            ];
         }
     }
 
@@ -40,7 +46,7 @@ class CustommerRequest extends FormRequest
         return [
             'name.required' => 'Họ tên không được để trống.',
             'name.min' => 'Họ tên phải có ít nhất 3 ký tự.',
-            'name.max' => 'Họ tên phải khó hơn 225 ký tự.',
+            'name.max' => 'Họ tên phải ít hơn 225 ký tự.',
             'email.regex' => 'Email không đúng định dạng.',
             'email.email' => 'Email phải là địa chỉ email hợp lệ.',
             'email.unique' => 'Email đã được sử dụng.',
@@ -51,6 +57,7 @@ class CustommerRequest extends FormRequest
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'password_confirmation.min' => 'Xác nhận mật khẩu phải có ít nhất 8 ký tự.',
             'password_confirmation.same' => 'Mật khẩu nhập lại không khớp.',
+            'phone.regex' => 'Số điện thoại không đúng định dạng.'
         ];
     }
 }
