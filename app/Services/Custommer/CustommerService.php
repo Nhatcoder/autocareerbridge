@@ -2,8 +2,8 @@
 
 namespace App\Services\Custommer;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use App\Repositories\User\UserRepositoryInterface;
 
@@ -83,7 +83,7 @@ class CustommerService
                 'name' => $googleUser->name,
                 'avatar_path' => $googleUser->avatar,
                 'email' => $googleUser->email,
-                'password' => Hash::make(Str::random()),
+                'password' => null,
                 'role' => ROLE_USER,
                 'active' => ACTIVE,
                 'google_id' => $googleUser->id,
@@ -100,6 +100,11 @@ class CustommerService
         return ['success' => true, 'message' => 'Đăng nhập thành công.', 'user' => $user];
     }
 
+    /**
+     * Update profile a user
+     *
+     * @param array $data
+     */
     public function updateProfile($data)
     {
         $user = $this->userReponsitory->find($data['id']);
@@ -107,6 +112,56 @@ class CustommerService
             return null;
         }
         $user->update($data);
+        return $user;
+    }
+
+    /**
+     * Update password a user
+     *
+     * @param array $data
+     */
+    public function updatePassword($data)
+    {
+        $user = $this->userReponsitory->getUserById($data['id']);
+        if (empty($user) && empty($data)) {
+            return null;
+        }
+
+        if (Hash::check($data['password_old'], $user->password)) {
+            $user->update([
+                'password' => $data['password'],
+            ]);
+            return $user;
+        }
+    }
+
+    /**
+     * Update avatar a user
+     *
+     * @param array $data
+     */
+    public function updateAvatar($data): mixed
+    {
+        $user = $this->userReponsitory->find($data['id']);
+        if (empty($user) && empty($data)) {
+            return null;
+        }
+
+        if (!empty($user->avatar_path)) {
+            $filePath = str_replace('/storage', '', $user->avatar_path);
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+        }
+
+        if ($data['avatar_path'] && $data['avatar_path']->isValid()) {
+            $data['avatar_path'] = $data['avatar_path']->store('avatars', 'public');
+            $data['avatar_path'] = '/storage/' . $data['avatar_path'];
+        }
+
+        $user->update([
+            'avatar_path' => $data['avatar_path'],
+        ]);
         return $user;
     }
 }

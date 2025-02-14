@@ -62,6 +62,9 @@ Route::middleware('web')->group(function () {
                 ->group(function () {
                     Route::get('/', [CustommerController::class, 'profile'])->name('profile');
                     Route::post('update', [CustommerController::class, 'updateProfile'])->name('updateProfile');
+                    Route::post('update-avatar', [CustommerController::class, 'updateAvatar'])->name('updateAvatar');
+                    Route::get('mat-khau', [CustommerController::class, 'changePasswordForm'])->name('changePasswordForm');
+                    Route::post('updatePassword', [CustommerController::class, 'updatePassword'])->name('updatePassword');
                 });
         });
 });
