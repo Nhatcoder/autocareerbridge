@@ -56,5 +56,15 @@ Route::middleware('web')->group(function () {
             Route::post('logout', [CustommerController::class, 'logout'])->name('logout');
             Route::get('login-by-google', [CustommerController::class, 'viewLoginWithGoogle'])->name('viewLoginWithGoogle');
             Route::get('login-google/callback', [CustommerController::class, 'loginWithGoogle'])->name('loginWithGoogle');
+
+            Route::prefix('tai-khoan')
+                ->as('account.')
+                ->group(function () {
+                    Route::get('/', [CustommerController::class, 'profile'])->name('profile');
+                    Route::post('update', [CustommerController::class, 'updateProfile'])->name('updateProfile');
+                    Route::post('update-avatar', [CustommerController::class, 'updateAvatar'])->name('updateAvatar');
+                    Route::get('mat-khau', [CustommerController::class, 'changePasswordForm'])->name('changePasswordForm');
+                    Route::post('updatePassword', [CustommerController::class, 'updatePassword'])->name('updatePassword');
+                });
         });
 });

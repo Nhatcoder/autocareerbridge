@@ -374,9 +374,13 @@
                                         </li>
                                     </a>
                                     <div class="dropdown-menu">
-                                        <a href="{{ route('company.profile') }}" class="dropdown-item"><i
+                                        <a href="{{ route('account.profile') }}" class="dropdown-item"><i
                                                 class="fas fa-user-circle"></i>
                                             {{ __('label.admin.header.profile') }}</a>
+                                        <a href="{{ route('account.changePasswordForm') }}" class="dropdown-item"><i
+                                                class="fas fa-key"></i>
+                                            Đổi mật khẩu
+                                        </a>
 
                                         <form action="{{ route('logout', '12') }}" method="post">
                                             @csrf

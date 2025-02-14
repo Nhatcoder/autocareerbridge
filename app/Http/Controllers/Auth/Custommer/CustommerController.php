@@ -63,8 +63,7 @@ class CustommerController extends Controller
             $this->custommerService->register($data);
             return redirect()->route('viewLogin')->with('status_success', 'Đăng ký tài khoản thành công');
         } catch (Exception $e) {
-            Log::error('File' . $e->getFile() . 'Line' . $e->getLine() . 'Message'
-                . $e->getMessage());
+            $this->logExceptionDetails($e);
             return back()->with('error', 'Xảy ra lỗi khi đăng ký tài khoản');
         }
     }
@@ -135,5 +134,102 @@ class CustommerController extends Controller
     {
         auth()->guard('web')->logout();
         return redirect()->route('home');
+    }
+
+    /**
+     * Show the profile
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function profile()
+    {
+        return view('client.pages.auth.profile');
+    }
+
+    /**
+     * Handle the update profile
+     *
+     */
+    public function updateProfile(CustommerRequest $request)
+    {
+        $data = [
+            'id' => $request->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ];
+
+        try {
+            $user = $this->custommerService->updateProfile($data);
+            if ($user) {
+                return redirect()->route('account.profile')->with('status_success', "Cập nhật thông tin thành công");
+            } else {
+                return back()->with('status_fail', 'Xảy ra lỗi khi cập nhật thông tin');
+            }
+        } catch (Exception $e) {
+            $this->logExceptionDetails($e);
+            return back()->with('error', 'Xảy ra lỗi khi cập nhật thông tin');
+        }
+    }
+
+    /**
+     * Show the change password
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function changePasswordForm()
+    {
+        return view('client.pages.auth.changePassword');
+    }
+
+    /**
+     * Handle the change password
+     *
+     */
+    public function updatePassword(CustommerRequest $request)
+    {
+        $data = [
+            'id' => $request->id,
+            'password_old' => $request->password_old,
+            'password' => Hash::make($request->password),
+            'password_confirmation' => Hash::make($request->password_confirmation),
+        ];
+
+        try {
+            $user = $this->custommerService->updatePassword($data);
+            if ($user) {
+                return redirect()->route('account.changePasswordForm')->with('status_success', "Cập nhật mật khẩu thành công.");
+            } else {
+                return back()->withInput()->with('password_old', 'Mật khẩu hiện tại không đúng.');
+            }
+        } catch (Exception $e) {
+            $this->logExceptionDetails($e);
+            return back()->with('error', 'Xảy ra lỗi khi thay đổi mật khẩu');
+        }
+    }
+
+    /**
+     * Handle the update avatar
+     *
+     */
+    public function updateAvatar(Request $request)
+    {
+        $data = [
+            'id' => $request->id,
+            'avatar_path' => $request->avatar_path,
+        ];
+
+        try {
+            $user = $this->custommerService->updateAvatar($data);
+            if ($user) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Cập nhật avatar thành công'
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->logExceptionDetails($e);
+            return back()->with('error', 'Xảy ra lỗi khi cập nhật avatar');
+        }
     }
 }

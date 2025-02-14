@@ -23,14 +23,26 @@ class CustommerRequest extends FormRequest
         if ($this->routeIs('register')) {
             return [
                 'name' => ['required', 'min:3', 'max:255'],
-                'email' => ['required', 'email', 'max:255', 'unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
-                'password' => ['required', 'min:8', 'regex:/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$@#%]).*$/'],
+                'email' => ['required', 'email', 'max:255', 'unique:users', 'regex:' . REGEX_EMAIL],
+                'password' => ['required', 'min:8', 'regex:' . REGEX_PASSWORD],
                 'password_confirmation' => ['required', 'same:password'],
             ];
         } elseif ($this->routeIs('login')) {
             return [
                 'email' => ['required', 'email', 'max:255'],
                 'password' => ['required'],
+            ];
+        } elseif ($this->routeIs('account.updateProfile')) {
+            return [
+                'name' => ['required', 'min:3', 'max:255'],
+                'email' => ['required', 'email', 'max:255', 'unique:users,email,' . auth('web')->user()->id, 'regex:' . REGEX_EMAIL],
+                'phone' => ['nullable', 'regex:/^(\+84 ?)?\d{10}$/'],
+            ];
+        } elseif ($this->routeIs('account.updatePassword')) {
+            return [
+                'password_old' => auth('web')->user()->password ? ['required'] : ['nullable'],
+                'password' => ['required', 'min:8', 'regex:' . REGEX_PASSWORD],
+                'password_confirmation' => ['required', 'same:password'],
             ];
         }
     }
@@ -40,7 +52,7 @@ class CustommerRequest extends FormRequest
         return [
             'name.required' => 'Họ tên không được để trống.',
             'name.min' => 'Họ tên phải có ít nhất 3 ký tự.',
-            'name.max' => 'Họ tên phải khó hơn 225 ký tự.',
+            'name.max' => 'Họ tên phải ít hơn 225 ký tự.',
             'email.regex' => 'Email không đúng định dạng.',
             'email.email' => 'Email phải là địa chỉ email hợp lệ.',
             'email.unique' => 'Email đã được sử dụng.',
@@ -49,8 +61,10 @@ class CustommerRequest extends FormRequest
             'password_confirmation.required' => 'Mật khẩu xác nhận không được để trống.',
             'password.regex' => 'Mật khẩu từ 8-25 ký tự, chứa ít nhất một chữ cái hoa, chữ cái thường, số và ký tự đặc biệt.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password_old.required' => 'Mật khẩu không được để trống.',
             'password_confirmation.min' => 'Xác nhận mật khẩu phải có ít nhất 8 ký tự.',
             'password_confirmation.same' => 'Mật khẩu nhập lại không khớp.',
+            'phone.regex' => 'Số điện thoại không đúng định dạng.',
         ];
     }
 }
