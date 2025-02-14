@@ -40,6 +40,11 @@ class ResumeController extends Controller
     {
         try {
             $cvs = $this->cvService->getMyCV();
+
+            if (!$cvs) {
+                return redirect()->back()->with('error', 'Bạn chưa có CV nào.');
+            }
+
             return view('client.pages.cv.my-cv', compact('cvs'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
