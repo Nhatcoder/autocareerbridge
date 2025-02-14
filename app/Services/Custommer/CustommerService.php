@@ -111,7 +111,9 @@ class CustommerService
         if (empty($user) && empty($data)) {
             return null;
         }
-        $user->update($data);
+
+        $this->userReponsitory->update($user->id, $data);
+
         return $user;
     }
 
@@ -123,13 +125,13 @@ class CustommerService
     public function updatePassword($data)
     {
         $user = $this->userReponsitory->getUserById($data['id']);
-        if (empty($user) && empty($data)) {
+        if (empty($user)) {
             return null;
         }
 
         if (Hash::check($data['password_old'], $user->password)) {
-            $user->update([
-                'password' => $data['password'],
+            $this->userReponsitory->update($user->id, [
+                'password' => $data['password']
             ]);
             return $user;
         }
@@ -159,7 +161,7 @@ class CustommerService
             $data['avatar_path'] = '/storage/' . $data['avatar_path'];
         }
 
-        $user->update([
+        $this->userReponsitory->update($user->id, [
             'avatar_path' => $data['avatar_path'],
         ]);
         return $user;

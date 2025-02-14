@@ -63,8 +63,7 @@ class CustommerController extends Controller
             $this->custommerService->register($data);
             return redirect()->route('viewLogin')->with('status_success', 'Đăng ký tài khoản thành công');
         } catch (Exception $e) {
-            Log::error('File' . $e->getFile() . 'Line' . $e->getLine() . 'Message'
-                . $e->getMessage());
+            $this->logExceptionDetails($e);
             return back()->with('error', 'Xảy ra lỗi khi đăng ký tài khoản');
         }
     }
@@ -164,10 +163,11 @@ class CustommerController extends Controller
             $user = $this->custommerService->updateProfile($data);
             if ($user) {
                 return redirect()->route('account.profile')->with('status_success', "Cập nhật thông tin thành công");
+            } else {
+                return back()->with('status_fail', 'Xảy ra lỗi khi cập nhật thông tin');
             }
         } catch (Exception $e) {
-            Log::error('File' . $e->getFile() . 'Line' . $e->getLine() . 'Message'
-                . $e->getMessage());
+            $this->logExceptionDetails($e);
             return back()->with('error', 'Xảy ra lỗi khi cập nhật thông tin');
         }
     }
@@ -203,8 +203,7 @@ class CustommerController extends Controller
                 return back()->withInput()->with('password_old', 'Mật khẩu hiện tại không đúng.');
             }
         } catch (Exception $e) {
-            Log::error('File' . $e->getFile() . 'Line' . $e->getLine() . 'Message'
-                . $e->getMessage());
+            $this->logExceptionDetails($e);
             return back()->with('error', 'Xảy ra lỗi khi thay đổi mật khẩu');
         }
     }
@@ -229,8 +228,7 @@ class CustommerController extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            Log::error('File' . $e->getFile() . 'Line' . $e->getLine() . 'Message'
-                . $e->getMessage());
+            $this->logExceptionDetails($e);
             return back()->with('error', 'Xảy ra lỗi khi cập nhật avatar');
         }
     }
