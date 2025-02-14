@@ -81,6 +81,8 @@ class CvService
 
             $cvId = $cv->id;
 
+            $currentTime = now();
+
             if (!empty($companyNames)) {
                 foreach ($companyNames as $index => $companyName) {
                     $experiences[] = [
@@ -90,7 +92,7 @@ class CvService
                         'start_date' => ($request->start_date_exp)[$index] ?? null,
                         'end_date'   => ($request->end_date_exp)[$index] ?? null,
                         'description'    => ($request->description)[$index] ?? null,
-                        'created_at' => now(),
+                        'created_at' => $currentTime,
                     ];
                 }
                 $this->experienceRepository->insert($experiences);
@@ -106,7 +108,7 @@ class CvService
                         'type_graduate' => ($request->degree)[$index] ?? null,
                         'start_date'   => ($request->start_date_education)[$index] ?? null,
                         'end_date'   => ($request->end_date_education)[$index] ?? null,
-                        'created_at' => now(),
+                        'created_at' => $currentTime,
                     ];
                 }
                 $this->educationRepository->insert($educations);
@@ -130,7 +132,7 @@ class CvService
                         'company_name'       => ($request->contact_company_name)[$index] ?? null,
                         'position' => ($request->contact_position)[$index] ?? null,
                         'phone'   => ($request->contact_phone)[$index] ?? null,
-                        'created_at' => now(),
+                        'created_at' => $currentTime,
                     ];
                 }
                 $this->referrerRepository->insert($referrers);
