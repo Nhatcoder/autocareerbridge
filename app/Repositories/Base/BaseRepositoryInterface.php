@@ -12,8 +12,11 @@ interface BaseRepositoryInterface
 
     public function create($attributes = []);
 
+    public function insert(array $data);
+
     public function update($id, $attributes = []);
 
     public function delete($id);
 
+    public function deleteByIds(array $ids);
 }

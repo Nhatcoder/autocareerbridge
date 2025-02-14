@@ -51,6 +51,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $with = [
+        'cvs'
+    ];
+
+
     public function company()
     {
         return $this->hasOne(Company::class);
@@ -59,6 +64,11 @@ class User extends Authenticatable
     public function hiring()
     {
         return $this->hasOne(Hiring::class);
+    }
+
+    public function cvs()
+    {
+        return $this->hasMany(Cv::class);
     }
 
     public function academicAffair()

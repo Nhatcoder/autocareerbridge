@@ -5,6 +5,7 @@ use App\Http\Controllers\Clients\ConversationsController;
 use App\Http\Controllers\Clients\CompaniesController;
 use App\Http\Controllers\Clients\HomeController;
 use App\Http\Controllers\Clients\JobsController;
+use App\Http\Controllers\Clients\ResumeController;
 use App\Http\Controllers\Company\CollaborationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
@@ -35,8 +36,30 @@ Route::middleware('web')->group(function () {
     Route::get('chi-tiet-workshop/{slug}', [WorkshopsController::class, 'index'])->name('detailWorkShop');
     Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
 
+
+
     Route::middleware('check.login')
         ->group(function () {
+            // cv client
+            Route::get('ho-so', [ResumeController::class, 'file'])->name('file');
+            Route::get('view-pdf', [ResumeController::class, 'viewPDF'])->name('viewPDF');
+
+            Route::get('mau-cv', [ResumeController::class, 'listCv'])->name('listCv');
+            Route::get('my-cv', [ResumeController::class, 'myCv'])->name('myCv');
+            Route::get('/cv/create/{template}', [ResumeController::class, 'createCV'])->name('cv.create');
+
+            Route::get('cv/{id}/download', [ResumeController::class, 'download'])->name('cv.download');
+            Route::get('cv/{id}/view', [ResumeController::class, 'view'])->name('cv.view');
+            Route::get('cv/{id}/edit', [ResumeController::class, 'editCV'])->name('cv.edit');
+
+            Route::get('/api/cv/{id}', [ResumeController::class, 'getCVData']);
+
+
+            // thêm thông tin cập nhật hồ sơ
+            // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
+            Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
+            Route::put('cv/{id}/update', [ResumeController::class, 'update'])->name('updateCv');
+
             Route::post('apply-job', [JobsController::class, 'applyJob'])->name('applyJob');
 
             Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');

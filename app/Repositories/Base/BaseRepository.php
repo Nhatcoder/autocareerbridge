@@ -57,4 +57,13 @@ abstract class BaseRepository implements BaseRepositoryInterface
         };
         return false;
     }
+
+    public function insert(array $data)
+    {
+        return $this->model->insert($data);
+    }
+
+    public function deleteByIds(array $ids){
+        return $this->model->whereIn('id', $ids)->delete();
+    }
 }

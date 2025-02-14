@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Layout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cv-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #d3d3d3;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            margin: 0;
+            margin-top: 20px;
+            font-size: 30px;
+        }
+
+        .header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .content {
+            display: flex;
+            padding: 20px;
+        }
+
+        .left-section {
+            width: 35%;
+            border-right: 1px solid #ddd;
+            padding-right: 20px;
+        }
+
+        .right-section {
+            width: 65%;
+            padding-left: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .section ul li {
+            margin-bottom: 5px;
+        }
+
+        .skill {
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cv-container">
+        <div class="header">
+            <div>
+                <h1 class="mb-2">Hà Danh</h1>
+                <p>GIÁM ĐỐC</p>
+            </div>
+            <img src="https://t4.ftcdn.net/jpg/06/08/55/73/360_F_608557356_ELcD2pwQO9pduTRL30umabzgJoQn5fnd.jpg"
+                alt="Profile Picture">
+        </div>
+        <div class="content">
+            <div class="left-section">
+                <div class="section">
+                    <h3>THÔNG TIN CÁ NHÂN</h3>
+                    <p>📞 0987654321</p>
+                    <p>📧 hadanh.jyb@gmail.com</p>
+                    <p>🎂 17/11/1998</p>
+                    <p>📍 &nbsp; Hoài Đức, Hà Nội</p>
+                    <p>🌐 <a href="https://topcv.vn/mau-cv" class="text-black">topcv.vn/mau-cv</a></p>
+                </div>
+                <div class="section">
+                    <h3>GIỚI THIỆU</h3>
+                    <p><strong>GIÁM ĐỐC CÔNG NGHỆ</strong></p>
+                    <ul>
+                        <li>Biên soạn và cập nhật 100+ tài liệu đào tạo nội bộ.</li>
+                        <li>Phân tích nhu cầu và lập kế hoạch đào tạo cho 500 nhân viên.</li>
+                        <li>Xây dựng, giám sát và cải tiến quy trình đào tạo theo định hướng của công ty.</li>
+                        <li>Theo dõi, đánh giá học viên sau đào tạo sử dụng phương pháp SMART.</li>
+                        <li>Trực tiếp giảng dạy 10 chương trình đào tạo theo kế hoạch.</li>
+                    </ul>
+                </div>
+                <div class="section">
+                    <h3>HỌC VẤN</h3>
+                    <p><strong>Đại Học Bách Khoa</strong></p>
+                    <p>Thợ Xây</p>
+                    <p>01/2000 - NOW</p>
+                </div>
+                <div class="section">
+                    <h3>KỸ NĂNG</h3>
+                    <div class="skill">Xách vữa</div>
+                    <div class="skill">Đào vữa</div>
+                    <div class="skill">Ném gạch</div>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="section">
+                    <h3>KINH NGHIỆM LÀM VIỆC</h3>
+                    <p><strong>GIÁM ĐỐC CÔNG NGHỆ</strong></p>
+                    <p>Fc Thợ Xây | 01/2000 - 01/2025</p>
+                    <ul>
+                        <li>Quản lý chương trình phát triển kỹ năng của 300 nhân viên, phổ biến các hoạt động và chính
+                            sách công ty.</li>
+                        <li>Phân tích nhu cầu, lập kế hoạch, ngân sách 100 triệu mỗi quý, chuẩn bị và tiến hành thực
+                            hiện các khóa đào tạo.</li>
+                        <li>Đề xuất các chủ đề đào tạo mới, chịu trách nhiệm phối hợp với các phòng ban liên quan để
+                            nâng cao hiệu quả đào tạo và phát triển các vấn đề kỹ năng phát triển nguồn nhân lực cho
+                            nhân viên.</li>
+                        <li>Đào tạo kỹ năng cho đội ngũ 30 giảng viên phối hợp với các đối tác chiến lược, ngân sách
+                            được duyệt.</li>
+                        <li>Thực hiện đào tạo hội nhập cho khoảng 50 CBNV mới mỗi tháng.</li>
+                    </ul>
+                </div>
+                <div class="section">
+                    <h3>DỰ ÁN CÁ NHÂN</h3>
+                    <p><strong>Chuyên Viên Đào Tạo</strong></p>
+                    <ul>
+                        <li>Quản lý chương trình phát triển kỹ năng của 300 nhân viên, phổ biến các hoạt động và chính
+                            sách công ty.</li>
+                        <li>Phân tích nhu cầu, lập kế hoạch, ngân sách 100 triệu mỗi quý, chuẩn bị và tiến hành thực
+                            hiện các khóa đào tạo.</li>
+                        <li>Đề xuất các chủ đề đào tạo mới, chịu trách nhiệm phối hợp với các phòng ban liên quan để
+                            khảo sát nhu cầu đào tạo phát triển về chuyên môn và kỹ năng phát triển nghề nghiệp cho nhân
+                            viên.</li>
+                        <li>Đã hợp tác cùng 100 đơn vị đào tạo và 30 giảng viên phù hợp với các tiêu chí, ngân sách được
+                            phê duyệt.</li>
+                    </ul>
+                    <p>Link dự án: <a href="https://topcv.vn/mau-cv" class="text-black">https://topcv.vn/mau-cv</a></p>
+                </div>
+                <div class="section">
+                    <h3>Chứng chỉ</h3>
+                    <p><strong>Thợ Chính</strong></p>
+                    <p>Link chứng chỉ: <a href="https://topcv.vn/mau-cv" class="text-black">https://topcv.vn/mau-cv</a>
+                    </p>
+                    <ul>
+                        <li>Xây dựng chương trình đào tạo kỹ năng cho 30 thành viên CLB.</li>
+                        <li>Mời 2 chuyên gia về chia sẻ kỹ năng viết CV và phỏng vấn.</li>
+                    </ul>
+                </div>
+                <div class="section">
+                    <h3>Giải thưởng</h3>
+                    <p><strong>Thợ Xây Pro</strong></p>
+                    <p>03/2020 | Fc Xây Dựng Việt Nam</p>
+                    <p><strong>Chuyên Viên Đào Tạo Nội Bộ</strong></p>
+                    <ul>
+                        <li>Biên soạn và cập nhật 100+ tài liệu đào tạo theo lộ trình</li>
+                        <li>Phân tích nhu cầu và lập kế hoạch đào tạo cho 500 nhân viên</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -206,6 +206,7 @@ return [
         'header' => [
             'profile' => 'Tài khoản',
             'notification' => 'Thông báo',
+            'cv' => 'Hồ sơ xin việc',
             'logout' => 'Đăng xuất',
         ],
         'profile' => [
