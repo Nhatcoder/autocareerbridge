@@ -6,5 +6,4 @@ use App\Repositories\Base\BaseRepositoryInterface;
 
 interface EducationRepositoryInterface extends BaseRepositoryInterface
 {
-    public function deleteByIds(array $ids);
 }

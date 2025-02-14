@@ -42,6 +42,7 @@ class ResumeController extends Controller
             $cvs = $this->cvService->getMyCV();
 
             if (!$cvs) {
+                
                 return redirect()->back()->with('error', 'Bạn chưa có CV nào.');
             }
 
