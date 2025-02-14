@@ -11,9 +11,4 @@ class CvSkillRepository extends BaseRepository implements CvSkillRepositoryInter
     {
         return CvSkill::class;
     }
-
-    public function create($attributes = [])
-    {
-        return $this->model->create($attributes);
-    }
 }

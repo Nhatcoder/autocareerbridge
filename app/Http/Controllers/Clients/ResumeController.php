@@ -3,20 +3,13 @@
 namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cv;
+use App\Http\Requests\Cv\CvRequest;
 use App\Services\Cv\CvService;
-use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
-use Barryvdh\DomPDF\PDF as DomPDFPDF;
-use PDF;
-use Mpdf\Mpdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Spatie\Browsershot\Browsershot;
-use Illuminate\Support\Str;
 
 class ResumeController extends Controller
 {
@@ -25,17 +18,6 @@ class ResumeController extends Controller
     public function __construct(CvService $cvService)
     {
         $this->cvService = $cvService;
-    }
-
-
-    public function file()
-    {
-        // dd(Auth::user());
-        $slug = Auth::guard('admin')->user()->cv->slug;
-
-        $cv = Cv::query()->where('slug', $slug)->firstOrFail();
-
-        return view('client.pages.cv.update-cv', compact('cv'));
     }
 
     /**
@@ -56,19 +38,13 @@ class ResumeController extends Controller
      */
     public function myCv()
     {
-        $cvs = Cv::query()->get();
-        return view('client.pages.cv.my-cv', compact('cvs'));
+        try {
+            $cvs = $this->cvService->getMyCV();
+            return view('client.pages.cv.my-cv', compact('cvs'));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
-
-    public function edit($slug)
-    {
-        $slug = Auth::guard('admin')->user()->cv->slug;
-
-        $cv = Cv::query()->where('slug', $slug)->firstOrFail();
-
-        return view('client.pages.cv.edit.information', compact('slug', 'cv'));
-    }
-
 
     /**
      * Create a new CV.
@@ -76,11 +52,22 @@ class ResumeController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CvRequest $request)
     {
-        $this->cvService->createCv($request);
-        return redirect()->route('myCv');
+        try {
+            $this->cvService->createCv($request);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => 'Tạo CV thành công!',
+                'redirect' => route('myCv'),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Lỗi khi tạo CV: ' . $e->getMessage());
+        }
     }
+
+
 
     /**
      * Update CV information.
@@ -89,10 +76,19 @@ class ResumeController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(CvRequest $request, $id)
     {
-        $this->cvService->updateCv($request, $id);
-        return redirect()->route('myCv');
+        try {
+            $this->cvService->updateCv($request, $id);
+
+            return response()->json([
+                'redirect' => route('myCv'),
+                'type' => 'success',
+                'message' => 'Cập nhật CV thành công!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Lỗi cập nhật CV: ' . $e->getMessage());
+        }
     }
 
 
@@ -113,6 +109,11 @@ class ResumeController extends Controller
                 $data = file_get_contents($path);
                 $cv->avatar = 'data:image/' . $type . ';base64,' . base64_encode($data);
             }
+        } else {
+            $path = public_path('clients/images/content/base.png');
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $cv->avatar = 'data:image/' . $type . ';base64,' . base64_encode($data);
         }
 
         $pdf = View::make("client.pages.cv.pdf.{$cv->template}", compact('cv'))->render();
@@ -140,7 +141,14 @@ class ResumeController extends Controller
     public function view($id)
     {
         $cv = $this->cvService->renderCV($id);
-        return view('client.pages.cv.pdf.minimal', compact('cv'));
+        try {
+            if (!$cv) {
+                abort(404);
+            }
+            return view("client.pages.cv.pdf.{$cv->template}", compact('cv'));
+        } catch (\Exception $e) {
+            Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+        }
     }
 
 
@@ -164,9 +172,19 @@ class ResumeController extends Controller
     public function editCV($id)
     {
         $cv = $this->cvService->renderCV($id);
-        $template = $cv->template;
-        return view("client.pages.cv.edit", compact(['cv', 'template']));
+        try {
+            if (!$cv) {
+                abort(404);
+            }
+            $template = $cv->template;
+
+            return view("client.pages.cv.edit", compact(['cv', 'template']));
+        } catch (\Exception $e) {
+            Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+        }
     }
+
+
 
 
     /**

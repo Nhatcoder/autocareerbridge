@@ -12,11 +12,6 @@ class ExperienceRepository extends BaseRepository implements ExperienceRepositor
         return Experience::class;
     }
 
-    public function create($attributes = [])
-    {
-        return $this->model->create($attributes);
-    }
-
     public function deleteByIds(array $ids){
         return $this->model->whereIn('id', $ids)->delete();
     }

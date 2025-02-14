@@ -27,16 +27,6 @@ class Cv extends Model
         'introduce',
     ];
 
-    protected $with = [
-        'user',
-        'educations',
-        'experiences',
-        'achievements',
-        'certificates',
-        'cv_skill',
-        'referrers',
-    ];
-
     public function user(){
         return $this->belongsTo(User::class);
     }

@@ -15,11 +15,10 @@ module.exports = {
             watch: false,
         },
         {
-            name: "dev",
-            script: "sh",
-            args: "-c 'npm run dev'",
+            name: "vite-dev",
+            script: "npm",
+            args: "run dev -- --host 192.168.0.152 --port 5173",
             watch: false,
-            attach: true,
         }
     ],
 };

@@ -9,4 +9,6 @@ interface CvRepositoryInterface extends BaseRepositoryInterface
     // public function create($attributes = []);
 
     public function getCv($id);
+
+    public function getMyCv();
 }

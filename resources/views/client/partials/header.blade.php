@@ -236,10 +236,36 @@
                     <div class="jp_navi_right_btn_wrapper float-end ">
                         <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
                             @if (Auth::guard('admin')->check())
-                                <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('admin')->company()->id]) }}"
-                                    class="chat-company">
-                                    <i class="icon_message fa-solid fa-message"></i>
-                                </a>
+                                @if (Auth::guard('admin')->user()->role !== ROLE_ADMIN)
+                                    <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('admin')->user()->company->id]) }}"
+                                        class="chat-company">
+                                        <svg width="25px" height="25px" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg" fill="#23b6dd">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <style>
+                                                    .cls-1 {
+                                                        fill: none;
+                                                        stroke: #ffffff;
+                                                        stroke-linecap: round;
+                                                        stroke-linejoin: round;
+                                                        stroke-width: 1.5px;
+                                                    }
+                                                </style>
+                                                <g id="ic-contact-chat">
+                                                    <path class="cls-1"
+                                                        d="M4,3H14a2,2,0,0,1,2,2v6a2,2,0,0,1-2,2H11L8,16,5,13H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3Z">
+                                                    </path>
+                                                    <path class="cls-1"
+                                                        d="M16,8h4a2,2,0,0,1,2,2v6a2,2,0,0,1-2,2H18l-2,3-3-3H10a2,2,0,0,1-2-2H8">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                @endif
                                 <a href="javascript:void(0);" role="button" class="menu-link"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <li class="gc_main_navigation d-inline-flex">
@@ -309,9 +335,37 @@
                                 </div>
                             @else
                                 @if (Auth::guard(name: 'web')->user())
+                                    <a class="icon_notification" href="jvavascript:void(0);">
+                                        <span class="notification_count">54</span>
+                                        <i class="fa-regular fa-bell"></i>
+                                    </a>
                                     <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('web')->user()->id]) }}"
-                                        class="chat-company">
-                                        <i class="icon_message fa-solid fa-message"></i>
+                                        class="icon_message">
+                                        <svg width="25px" height="25px" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg" fill="#23b6dd">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <style>
+                                                    .cls-1 {
+                                                        fill: none;
+                                                        stroke: #ffffff;
+                                                        stroke-linecap: round;
+                                                        stroke-linejoin: round;
+                                                        stroke-width: 1.5px;
+                                                    }
+                                                </style>
+                                                <g id="ic-contact-chat">
+                                                    <path class="cls-1"
+                                                        d="M4,3H14a2,2,0,0,1,2,2v6a2,2,0,0,1-2,2H11L8,16,5,13H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3Z">
+                                                    </path>
+                                                    <path class="cls-1"
+                                                        d="M16,8h4a2,2,0,0,1,2,2v6a2,2,0,0,1-2,2H18l-2,3-3-3H10a2,2,0,0,1-2-2H8">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </svg>
                                     </a>
                                     <a href="javascript:void(0);" role="button" class="menu-link"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -338,16 +392,17 @@
                                 @else
                                     <li><a href="{{ route('viewRegister') }}"><i class="fa fa-user"></i>&nbsp;
                                             Đăng ký
-                                        </a></li>
+                                        </a>
+                                    </li>
                                     <li><a href="{{ route('viewLogin') }}"><i class="fa fa-sign-in"></i>&nbsp;
                                             Đăng nhập</a>
                                     </li>
-                                    <li><a target="_blank" href="{{ route('management.login') }}">Nhà quản lý</a>
+                                    <li>
+                                        <a target="_blank" href="{{ route('management.login') }}">Nhà quản lý</a>
                                     </li>
                                 @endif
                             @endif
                         </ul>
-
                     </div>
                 </div>
             </div>

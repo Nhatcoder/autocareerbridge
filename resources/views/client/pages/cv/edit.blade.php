@@ -9,7 +9,7 @@
             padding: 20px;
             background-color: #f8f9fa;
             /* height: 100vh;
-                                        overflow: hidden; */
+                                                                                                                                overflow: hidden; */
         }
 
         .form-container {
@@ -31,7 +31,6 @@
         .form-container textarea {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
@@ -64,15 +63,8 @@
             zoom: 65%
         }
 
-        .header {
-            background-color: #d3d3d3;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
 
-        .header h1 {
+        /* .header h1 {
             margin: 0;
             margin-top: 20px;
             font-size: 30px;
@@ -120,19 +112,15 @@
             margin-bottom: 10px;
             font-weight: 600;
             font-family: {{ $cv->font }};
-        }
+        } */
 
-        .cv-container p,
-        li {
-            font-size: 14px;
-            color: #000;
-        }
     </style>
     <div class="main-container">
         <!-- Form Section -->
         <div class="form-container">
             <h3>Nhập Thông Tin CV</h3>
-            <form action="{{ route('updateCv', ['id' => $cv->id]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('updateCv', ['id' => $cv->id]) }}" method="PUT" enctype="multipart/form-data"
+                data-id="{{ $cv->id }}" id="formCv">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="template" value="{{ $template }}">
@@ -163,18 +151,21 @@
                     <label for="name" class="form-label">Tiêu đề hồ sơ</label>
                     <input type="text" id="title" name="title" class="form-control"
                         placeholder="Nhập tiêu đề hồ sơ" value="{{ $cv->title }}">
+                    <small class="text-danger error-message"></small>
                 </div>
                 <h3>Thông Tin Cơ Bản</h3>
                 <div class="input-section">
                     <div class="row">
                         <div class="col-md-12 text-start mb-4">
                             <div>
-                                <img src="{{ $cv->avatar }}" alt="Avatar" id="avatarPreview" class="rounded-circle"
+                                <img src="{{ $cv->avatar ?? asset('clients/images/content/base.png') }}" alt="Avatar"
+                                    id="avatarPreview" class="rounded-circle"
                                     style="width: 150px; height: 150px; object-fit: cover;">
                             </div>
                             <div class="mt-2">
                                 <label for="avatar" class="form-label">Tải lên ảnh đại diện</label>
                                 <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*">
+                                <small class="text-danger error-message"></small>
                             </div>
                         </div>
                         <!-- Cột 1 -->
@@ -183,18 +174,22 @@
                                 <label for="name" class="form-label">Họ và Tên</label>
                                 <input type="text" id="name" name="name" class="form-control"
                                     placeholder="Họ và tên" value="{{ $cv->username }}">
+                                <small class="text-danger error-message"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Email</label>
                                 <input type="text" id="email" name="email" class="form-control" placeholder="Email"
                                     value="{{ $cv->email }}">
+                                <small class="text-danger error-message"></small>
+
                             </div>
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Ngày sinh</label>
                                 <input type="date" id="birthdate" name="birthdate" class="form-control"
                                     placeholder="Ngày sinh" value="{{ $cv->birthdate }}">
+                                <small class="text-danger error-message"></small>
                             </div>
 
 
@@ -206,23 +201,27 @@
                                 <label for="name" class="form-label">Vị trí</label>
                                 <input type="text" id="position" name="position_name" class="form-control"
                                     placeholder="Developer" value="{{ $cv->position }}">
+                                <small class="text-danger error-message"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Điện thoại</label>
                                 <input type="text" id="phone" name="phone" class="form-control"
                                     placeholder="Điện thoại" value="{{ $cv->phone }}">
+                                <small class="text-danger error-message"></small>
                             </div>
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Địa chỉ</label>
                                 <input type="text" id="address" name="address" class="form-control"
                                     placeholder="Địa chỉ" value="{{ $cv->address }}">
+                                <small class="text-danger error-message"></small>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="contact" class="form-label">Mục tiêu nghề nghiệp</label>
                             <textarea id="introduce" name="introduce" class="form-control" rows="4">{{ $cv->introduce }}</textarea>
+                            <small class="text-danger error-message"></small>
                         </div>
                     </div>
                 </div>
@@ -258,6 +257,7 @@
                     <div class="input-section">
                         @foreach ($cv->cv_skill as $skill)
                             <textarea id="skills" name="skills" rows="4" placeholder="Danh sách kỹ năng...">{{ $skill->name }}</textarea>
+                            <small class="text-danger error-message"></small>
                         @endforeach
                     </div>
                 </div>
@@ -267,6 +267,7 @@
                 <div class="input-section">
                     @foreach ($cv->certificates as $certificate)
                         <textarea id="certifications" name="certifications" rows="4" placeholder="Danh sách chứng chỉ...">{{ $certificate->description }}</textarea>
+                        <small class="text-danger error-message"></small>
                     @endforeach
                 </div>
 
@@ -299,5 +300,78 @@
             @endif
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#formCv').on('submit', function(e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+
+                let cvId = $(this).data('id');
+
+                $.ajax({
+                    url: `/cv/${cvId}/update`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        toastr.success("", response.message);
+
+                        setTimeout(function() {
+                            window.location.href = response.redirect;
+                        }, 1500);
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+
+                            // Xóa thông báo lỗi cũ
+                            $('.error-message').text('');
+
+                            $.each(errors, function(key, value) {
+                                let keyParts = key.split('.');
+
+                                if (keyParts.length > 1) {
+                                    let fieldName = keyParts[0] + '[]';
+                                    let index = parseInt(keyParts[1]);
+
+                                    let inputField = $(`[name="${fieldName}"]`).eq(
+                                        index);
+                                    let errorContainer = inputField.closest('.mb-3')
+                                        .find('.error-message');
+                                    errorContainer.text(value[0]);
+                                } else {
+                                    let inputField = $('[name="' + key + '"]');
+
+                                    if (inputField.attr('type') === 'file') {
+                                        inputField.closest('.col-md-12').find(
+                                            '.error-message').text(value[0]);
+                                    } else if (inputField.is('textarea')) {
+                                        inputField.closest('.input-section').find(
+                                            '.error-message').text(value[0]);
+                                    } else {
+                                        inputField.closest('.mb-3').find(
+                                            '.error-message').text(value[0]);
+                                    }
+                                }
+                            });
+
+                            toastr.error("", "Dữ liệu chưa hợp lệ, vui lòng kiểm tra lại!");
+                        } else {
+                            console.error('Lỗi khác:', xhr.status);
+                            console.error('Response Text:', xhr.responseText);
+                            toastr.error("", "Có lỗi xảy ra, vui lòng thử lại sau!");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 
 @endsection

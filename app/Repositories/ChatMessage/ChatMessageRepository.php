@@ -35,35 +35,37 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
     public function userChat()
     {
         $userCurrent = auth('admin')->user()->company ?? auth('web')->user();
-        $userChat = DB::table('chat_messages as cm')
-            ->joinSub($this->latestMessages(), 'latest', function ($join) {
-                $join->on(DB::raw('GREATEST(cm.from_id, cm.to_id)'), '=', 'latest.participant_a')
-                    ->on(DB::raw('LEAST(cm.from_id, cm.to_id)'), '=', 'latest.participant_b')
-                    ->on('cm.created_at', '=', 'latest.latest_message_time');
-            })
-            ->leftJoin('companies as sender_company', 'sender_company.id', '=', 'cm.from_id')
-            ->leftJoin('users as sender_user', 'sender_user.id', '=', 'cm.from_id')
-            ->leftJoin('companies as receiver_company', 'receiver_company.id', '=', 'cm.to_id')
-            ->leftJoin('users as receiver_user', 'receiver_user.id', '=', 'cm.to_id')
-            ->where(function ($query) use ($userCurrent) {
-                $query->where('cm.from_id', $userCurrent->id)
-                    ->orWhere('cm.to_id', $userCurrent->id);
-            })
-            ->select(
-                'cm.from_id',
-                'cm.to_id',
-                'cm.message',
-                'cm.seen_id',
-                'cm.created_at as sent_time',
-                DB::raw('COALESCE(sender_company.avatar_path, sender_user.avatar_path) as sender_avatar'),
-                DB::raw('COALESCE(sender_company.name, sender_user.name) as sender_name'),
-                DB::raw('COALESCE(receiver_company.avatar_path, receiver_user.avatar_path) as receiver_avatar'),
-                DB::raw('COALESCE(receiver_company.name, receiver_user.name) as receiver_name')
-            )
-            ->where('cm.deleted_at', null)
-            ->orderBy('cm.created_at', 'desc')
-            ->first();
-        return $userChat;
+        if ($userCurrent) {
+            $userChat = DB::table('chat_messages as cm')
+                ->joinSub($this->latestMessages(), 'latest', function ($join) {
+                    $join->on(DB::raw('GREATEST(cm.from_id, cm.to_id)'), '=', 'latest.participant_a')
+                        ->on(DB::raw('LEAST(cm.from_id, cm.to_id)'), '=', 'latest.participant_b')
+                        ->on('cm.created_at', '=', 'latest.latest_message_time');
+                })
+                ->leftJoin('companies as sender_company', 'sender_company.id', '=', 'cm.from_id')
+                ->leftJoin('users as sender_user', 'sender_user.id', '=', 'cm.from_id')
+                ->leftJoin('companies as receiver_company', 'receiver_company.id', '=', 'cm.to_id')
+                ->leftJoin('users as receiver_user', 'receiver_user.id', '=', 'cm.to_id')
+                ->where(function ($query) use ($userCurrent) {
+                    $query->where('cm.from_id', $userCurrent->id)
+                        ->orWhere('cm.to_id', $userCurrent->id);
+                })
+                ->select(
+                    'cm.from_id',
+                    'cm.to_id',
+                    'cm.message',
+                    'cm.seen_id',
+                    'cm.created_at as sent_time',
+                    DB::raw('COALESCE(sender_company.avatar_path, sender_user.avatar_path) as sender_avatar'),
+                    DB::raw('COALESCE(sender_company.name, sender_user.name) as sender_name'),
+                    DB::raw('COALESCE(receiver_company.avatar_path, receiver_user.avatar_path) as receiver_avatar'),
+                    DB::raw('COALESCE(receiver_company.name, receiver_user.name) as receiver_name')
+                )
+                ->where('cm.deleted_at', null)
+                ->orderBy('cm.created_at', 'desc')
+                ->first();
+            return $userChat;
+        }
     }
     public function userChats()
     {
@@ -107,7 +109,7 @@ class ChatMessageRepository extends BaseRepository implements ChatMessageReposit
             ->whereNull('cm.deleted_at')
             ->orderBy('cm.created_at', 'desc')
             ->get();
-            return $userChats;
+        return $userChats;
     }
 
     public function chats($id)

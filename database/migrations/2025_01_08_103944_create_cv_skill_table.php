@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cv_skill', function (Blueprint $table) {
             $table->id();
             $table->integer('cv_id')->unsigned();
-            $table->text('name');
+            $table->text('name')->nullable();
             $table->timestamps();
         });
     }

@@ -1,102 +1,123 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <style>
-        .cv-container p,
+        body {
+            font-family: {{ $cv->font }};
+        }
+
+        #work-experience-cv strong {
+            color: #212529;
+        }
+
+        .main-container-modern {
+            display: flex;
+            background-color: #fff;
+            align-items: stretch;
+            min-height: 1123px;
+        }
+
+        .sidebar {
+            background-color: #2b3f6c;
+            color: #fff;
+            padding: 30px 20px;
+            width: 35%;
+            box-sizing: border-box;
+        }
+
+        .sidebar h1 {
+            color: {{ $cv->color }};
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar p {
+            margin: 10px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .sidebar .section {
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: 500;
+            border-bottom: 2px solid #ccd4e3;
+            padding-bottom: 5px;
+        }
+
+        .sidebar .section h3 {
+            color: {{ $cv->color }};
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar ul {
+            padding-left: 25px;
+        }
+
+        .sidebar li {
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 100;
+        }
+
+        .main {
+            padding: 30px;
+            width: 65%;
+            box-sizing: border-box;
+        }
+
+        .main h3 {
+            font-size: 18px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: {{ $cv->color }};
+        }
+
+        .main ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .main p,
         li {
             font-size: 14px;
             color: #000;
         }
 
-        .header {
-            background-color: #d3d3d3;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .header h1 {
-            margin: 0;
-            margin-top: 20px;
-            font-size: 30px;
-            font-family: {{ $cv->font }};
-            color: {{ $cv->color }};
-        }
-
-        .header img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
-        .content {
-            display: flex;
-            padding: 20px;
-        }
-
-        .left-section {
-            width: 35%;
-            border-right: 1px solid #ddd;
-            padding-right: 20px;
-        }
-
-        .right-section {
-            width: 65%;
-            padding-left: 20px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-        }
-
-        .input-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .section h3 {
-            font-size: 18px;
-            color: {{ $cv->color }};
+        .main ul li {
             margin-bottom: 10px;
-            font-weight: 600;
-            font-family: {{ $cv->font }};
+            line-height: 1.6;
         }
 
-        .referrer-cv {
-            display: flex;
-            flex-direction: column;
+        .avatar-modern {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .referrer-cv p {
-            padding-left: 15px;
-            position: relative;
-            line-height: 1.1;
-        }
-
-        .referrer-cv p:first-child::before {
-            content: "•";
-            position: absolute;
-            left: 0;
+        .avatar-modern img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <div>
-            <h1 class="text-uppercase" class="mb-2" id="cv-name"></h1>
-            <p id="cv-position"></p>
-        </div>
-        <img src="https://placehold.co/400" alt="Profile Picture" id="cvAvatarPreview">
-    </div>
-    <div class="content">
-        <div class="left-section">
+    <div class="main-container-modern">
+        <div class="sidebar">
+            <div class="section header">
+                <div class="avatar-modern">
+                    <img src="https://placehold.co/400" alt="Profile Picture" id="cvAvatarPreview">
+                </div>
+                <h1 id="cv-name"></h1>
+                <p id="cv-position"></p>
+            </div>
             <div class="section">
-                <h3>LIÊN HỆ</h3>
+                <h3>THÔNG TIN CÁ NHÂN</h3>
                 <p><i class="fas fa-phone"></i> <span id="cv-phone"></span></p>
                 <p><i class="fas fa-envelope"></i> <span id="cv-email"></span></p>
                 <p><i class="fas fa-birthday-cake"></i> <span id="cv-birthdate"></span></p>
@@ -107,28 +128,30 @@
                 <div id="education-cv">
                 </div>
             </div>
-            <div class="section" style="display: none;">
+
+            <div class="section"style="display: none;">
                 <h3>KỸ NĂNG</h3>
                 <p id="cv-skill" style="white-space: pre-wrap;"></p>
             </div>
             <div class="section" style="display: none;">
-                <h3>NGƯỜI GIỚI THIỆU</h3>
-                <p id="cv-personal-introduce"></p>
+                <h3>CHỨNG CHỈ</h3>
+                <p id="certification-cv" style="white-space: pre-wrap;"></p>
             </div>
         </div>
 
-        <div class="right-section">
-            <div class="section" style="display: none;">
+        <div class="main">
+            <div class="section">
                 <h3>MỤC TIÊU NGHỀ NGHIỆP</h3>
                 <p id="cv-introduce" style="white-space: pre-wrap;"></p>
             </div>
+
             <div class="section" style="display: none;">
                 <h3>KINH NGHIỆM LÀM VIỆC</h3>
                 <div id="work-experience-cv"></div>
             </div>
             <div class="section" style="display: none;">
-                <h3>CHỨNG CHỈ</h3>
-                <p id="certification-cv" style="white-space: pre-wrap;"></p>
+                <h3>NGƯỜI GIỚI THIỆU</h3>
+                <p id="cv-personal-introduce"></p>
             </div>
         </div>
     </div>
@@ -136,22 +159,18 @@
 
 </html>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        document.getElementById('cv-color').addEventListener('input', function() {
-            let color = this.value;
-            document.querySelectorAll('.section h3').forEach(el => el.style.color = color);
-            document.querySelector('.header h1').style.color = color;
-        });
-        document.getElementById('cv-font').addEventListener('change', function() {
-            let font = this.value;
-            document.querySelector('.cv-container').style.fontFamily = font;
-            document.querySelectorAll('.section h3').forEach(el => el.style.fontFamily = font);
-            document.querySelector('.header h1').style.fontFamily = font;
-        });
+    // change style
+    document.getElementById('cv-color').addEventListener('input', function() {
+        let color = this.value;
+        document.querySelectorAll('.section h3').forEach(el => el.style.color = color);
+        document.querySelector('.header h1').style.color = color;
     });
-
-
+    document.getElementById('cv-font').addEventListener('change', function() {
+        let font = this.value;
+        document.querySelector('.cv-container').style.fontFamily = font;
+        document.querySelectorAll('.section h3').forEach(el => el.style.fontFamily = font);
+        document.querySelector('.header h1').style.fontFamily = font;
+    });
 
     const avatarPreview = document.getElementById('avatarPreview');
     const cvAvatarPreview = document.getElementById('cvAvatarPreview');
@@ -173,6 +192,7 @@
         }
     });
 
+    // fetch api
     document.addEventListener("DOMContentLoaded", function() {
         const path = window.location.pathname;
         const segments = path.split("/");
@@ -186,6 +206,7 @@
         fetchCvData(cvId);
     });
 
+    // hàm xử lý fetch api chung
     function fetchCvData(cvId) {
         fetch(`/api/cv/${cvId}`)
             .then(response => response.json())
@@ -216,8 +237,45 @@
             .catch(error => console.error("Lỗi khi fetch dữ liệu CV:", error));
     }
 
-    // experience
 
+    document.querySelectorAll('#name, #email, #birthdate, #position, #phone, #address, #introduce').forEach(
+        input => {
+            const targetId = `cv-${input.id}`;
+            const target = document.getElementById(targetId);
+            const section = target?.closest('.section');
+
+            if (target) {
+                target.textContent = input.placeholder;
+            }
+
+            input.addEventListener('input', function() {
+                if (target) {
+                    if (this.type === 'date' && this.value) {
+                        const date = new Date(this.value);
+                        const formattedDate =
+                            `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                        target.textContent = formattedDate;
+                    } else {
+                        target.textContent = this.value || this.placeholder;
+                    }
+                }
+
+                if (input.id === 'introduce' && section) {
+                    if (this.value.trim()) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                }
+            });
+
+            input.dispatchEvent(new Event('input'));
+        });
+
+
+
+
+    // experience
     const workExperienceContainer = document.getElementById("work-experience-container");
     const workExperienceCV = document.getElementById("work-experience-cv");
     const addButton = document.getElementById("add-work-experience-button");
@@ -280,16 +338,16 @@
         const cvEntry = document.createElement('div');
         cvEntry.id = sectionId;
         cvEntry.innerHTML = /*html*/ `
-            <p><strong id="${sectionId}-position">${data.position || 'Chức vụ'}</strong></p>
-            <p>
-                <span id="${sectionId}-company">${data.company_name || 'Tên Công Ty'}</span> |
-                <span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> -
-                <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span>
-            </p>
+            <strong><span id="${sectionId}-position">${data.position || 'Chức vụ'}</span> | <span id="${sectionId}-company">${data.company_name || 'Tên Công Ty'}</span></strong>
+            <p><span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> - <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span></p>
             <ul>
-                <li id="${sectionId}-description" style="white-space: pre-wrap;">${data.description || 'Mô Tả Công Việc'}</li>
+                <li id="${sectionId}-description">
+                    ${data.description || 'Mô Tả Công Việc'}
+                </li>
             </ul>
         `;
+
+
         workExperienceCV.appendChild(cvEntry);
         const section = workExperienceCV.closest('.section');
         section.style.display = "block";
@@ -339,13 +397,7 @@
     });
 
 
-
-
-
-
-
     // education
-
     const educationContainer = document.getElementById("education-container");
     const educationCV = document.getElementById("education-cv");
     const addEducationButton = document.getElementById("show-education-form-button");
@@ -409,13 +461,10 @@
         const cvEntry = document.createElement('div');
         cvEntry.id = sectionId;
         cvEntry.innerHTML = /*html*/ `
-            <p><strong id="${sectionId}-school">${data.university_name || 'Tên Trường'}</strong></p>
-            <p><span id="${sectionId}-major">${data.major || 'Chuyên Ngành'}</span></p>
-            <p>
-                <span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> -
-                <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span>
-            </p>
-            <p>Loại tốt nghiệp: <span id="${sectionId}-degree">${data.type_graduate || 'Loại Tốt Nghiệp'}</span></p>
+            <strong style="font-size:16px;" id="${sectionId}-school"><span>${data.university_name || 'Tên Trường'}</span></strong>
+            <p><span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> - <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span></p>
+            <p id="${sectionId}-major">${sectionId}-major">${data.major || 'Chuyên Ngành'}</p>
+            <p>Loại Tốt Nghiệp: <span id="${sectionId}-degree">${data.type_graduate || 'Loại Tốt Nghiệp'}</span></p>
         `;
         educationCV.appendChild(cvEntry);
         const section = educationCV.closest('.section');
@@ -469,44 +518,7 @@
         createEducationSection({});
     });
 
-
-
-
-    document.querySelectorAll('#name, #email, #birthdate, #position, #phone, #address, #introduce').forEach(
-        input => {
-            const targetId = `cv-${input.id}`;
-            const target = document.getElementById(targetId);
-            const section = target?.closest('.section');
-
-            if (target) {
-                target.textContent = input.placeholder;
-            }
-
-            input.addEventListener('input', function() {
-                if (target) {
-                    if (this.type === 'date' && this.value) {
-                        const date = new Date(this.value);
-                        const formattedDate =
-                            `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-                        target.textContent = formattedDate;
-                    } else {
-                        target.textContent = this.value || this.placeholder;
-                    }
-                }
-
-                if (input.id === 'introduce' && section) {
-                    if (this.value.trim()) {
-                        section.style.display = 'block';
-                    } else {
-                        section.style.display = 'none';
-                    }
-                }
-            });
-
-            input.dispatchEvent(new Event('input'));
-        });
-
-
+    //skill + certificate
     document.addEventListener("DOMContentLoaded", function() {
         function updateSection(inputId, cvId) {
             const input = document.getElementById(inputId);
@@ -531,7 +543,6 @@
         updateSection("skills", "cv-skill");
         updateSection("certifications", "certification-cv");
     });
-
 
 
     // personal introduce

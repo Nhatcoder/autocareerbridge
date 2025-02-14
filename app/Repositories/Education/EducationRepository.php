@@ -13,11 +13,6 @@ class EducationRepository extends BaseRepository implements EducationRepositoryI
         return Education::class;
     }
 
-    public function create($attributes = [])
-    {
-        return $this->model->create($attributes);
-    }
-
     public function deleteByIds(array $ids){
         return $this->model->whereIn('id', $ids)->delete();
     }

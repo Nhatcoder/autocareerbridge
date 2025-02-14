@@ -153,70 +153,80 @@
                     </p>
                     <p><i class="fas fa-map-marker-alt"></i> <span id="cv-address">{{ $cv->address }}</span></p>
                 </div>
-                <div class="section">
-                    <h3>HỌC VẤN</h3>
-                    @foreach ($cv->educations as $edu)
-                        <div id="education-cv">
-                            <p class="text-uppercase"><strong>{{ $edu->university_name }}</strong></p>
-                            <li>{{ $edu->major }}</li>
-                            <li>
-                                <span>{{ \Carbon\Carbon::parse($edu->start_date)->format('m/Y') }}</span> -
-                                <span>{{ \Carbon\Carbon::parse($edu->end_date)->format('m/Y') }}</span>
-                            </li>
-                            <li>Loại tốt nghiệp: {{ $edu->type_graduate }}</li>
-                        </div>
-                    @endforeach
-
-                </div>
-                <div class="section">
-                    <h3>KỸ NĂNG</h3>
-                    @foreach ($cv->cv_skill as $skill)
-                        <p id="cv-skill" style="white-space: pre-wrap;">{{ $skill->name }}</p>
-                    @endforeach
-                </div>
-                <div class="section">
-                    <h3>NGƯỜI GIỚI THIỆU</h3>
-                    @foreach ($cv->referrers as $referrer)
-                        <p id="cv-personal-introduce">
-                        <div class="referrer-cv mt-2">
-                            <p>{{ $referrer->name }}</p>
-                            <p>{{ $referrer->company_name }}</p>
-                            <p>{{ $referrer->position }}</p>
-                            <p>{{ $referrer->phone }}</p>
-                        </div>
-                        </p>
-                    @endforeach
-                </div>
+                @if (empty($cv->educations))
+                    <div class="section">
+                        <h3>HỌC VẤN</h3>
+                        @foreach ($cv->educations as $edu)
+                            <div id="education-cv">
+                                <p class="text-uppercase"><strong>{{ $edu->university_name }}</strong></p>
+                                <li>{{ $edu->major }}</li>
+                                <li>
+                                    <span>{{ \Carbon\Carbon::parse($edu->start_date)->format('m/Y') }}</span> -
+                                    <span>{{ \Carbon\Carbon::parse($edu->end_date)->format('m/Y') }}</span>
+                                </li>
+                                <li>Loại tốt nghiệp: {{ $edu->type_graduate }}</li>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+                @if (empty($cv->cv_skill))
+                    <div class="section">
+                        <h3>KỸ NĂNG</h3>
+                        @foreach ($cv->cv_skill as $skill)
+                            <p id="cv-skill" style="white-space: pre-wrap;">{{ $skill->name }}</p>
+                        @endforeach
+                    </div>
+                @endif
+                @if (empty($cv->referrers))
+                    <div class="section">
+                        <h3>NGƯỜI GIỚI THIỆU</h3>
+                        @foreach ($cv->referrers as $referrer)
+                            <p id="cv-personal-introduce">
+                            <div class="referrer-cv mt-2">
+                                <p>{{ $referrer->name }}</p>
+                                <p>{{ $referrer->company_name }}</p>
+                                <p>{{ $referrer->position }}</p>
+                                <p>{{ $referrer->phone }}</p>
+                            </div>
+                            </p>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             <div class="right-section">
-                <div class="section">
-                    <h3>MỤC TIÊU NGHỀ NGHIỆP</h3>
-                    <p id="cv-introduce" style="white-space: pre-wrap;">{{ $cv->introduce }}</p>
-                </div>
-                <div class="section">
-                    <h3>KINH NGHIỆM LÀM VIỆC</h3>
-                    @foreach ($cv->experiences as $experience)
-                        <div id="work-experience-cv">
-                            <p><strong>{{ $experience->position }}</strong></p>
-                            <p>
-                                <span>{{ $experience->company_name }}</span> |
-                                <span>{{ \Carbon\Carbon::parse($experience->start_date)->format('m/Y') }}</span> -
-                                <span>{{ \Carbon\Carbon::parse($experience->end_date)->format('m/Y') }}</span>
-                            </p>
-                            <ul style="list-style: none; padding-left: 0;">
-                                <li style="white-space: pre-wrap;">{{ $experience->description }}</li>
-                            </ul>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="section">
-                    <h3 style="text-transform: uppercase">Chứng chỉ</h3>
-                    @foreach ($cv->certificates as $certificate)
-                        <p id="certification-cv" style="white-space: pre-wrap;">{{ $certificate->description }}
-                        </p>
-                    @endforeach
-                </div>
+                @if (isset($cv->introduce))
+                    <div class="section">
+                        <h3>MỤC TIÊU NGHỀ NGHIỆP</h3>
+                        <p id="cv-introduce" style="white-space: pre-wrap;">{{ $cv->introduce }}</p>
+                    </div>
+                @endif
+                @if (empty($cv->experiences))
+                    <div class="section">
+                        <h3>KINH NGHIỆM LÀM VIỆC</h3>
+                        @foreach ($cv->experiences as $experience)
+                            <div id="work-experience-cv">
+                                <p><strong>{{ $experience->position }}</strong></p>
+                                <p>
+                                    <span>{{ $experience->company_name }}</span> |
+                                    <span>{{ \Carbon\Carbon::parse($experience->start_date)->format('m/Y') }}</span> -
+                                    <span>{{ \Carbon\Carbon::parse($experience->end_date)->format('m/Y') }}</span>
+                                </p>
+                                <ul style="list-style: none; padding-left: 0;">
+                                    <li style="white-space: pre-wrap;">{{ $experience->description }}</li>
+                                </ul>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+                @if (empty($cv->certificates))
+                    <div class="section">
+                        <h3 style="text-transform: uppercase">Chứng chỉ</h3>
+                        @foreach ($cv->certificates as $certificate)
+                            <p id="certification-cv" style="white-space: pre-wrap;">{{ $certificate->description }}
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
     </div>

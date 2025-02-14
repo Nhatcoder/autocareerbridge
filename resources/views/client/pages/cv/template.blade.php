@@ -9,7 +9,7 @@
             padding: 20px;
             background-color: #f8f9fa;
             /* height: 100vh;
-                    overflow: hidden; */
+                                                                                                                                                                overflow: hidden; */
         }
 
         .form-container {
@@ -31,7 +31,6 @@
         .form-container textarea {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
@@ -65,46 +64,7 @@
 
         /* height: fit-content; */
 
-        .header {
-            background-color: #d3d3d3;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
 
-        .header h1 {
-            margin: 0;
-            margin-top: 20px;
-            font-size: 30px;
-            /* font-family: 'Roboto'; */
-        }
-
-        .header img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
-        .content {
-            display: flex;
-            padding: 20px;
-        }
-
-        .left-section {
-            width: 35%;
-            border-right: 1px solid #ddd;
-            padding-right: 20px;
-        }
-
-        .right-section {
-            width: 65%;
-            padding-left: 20px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-        }
 
         .input-section {
             margin-bottom: 20px;
@@ -114,19 +74,8 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .section h3 {
-            font-size: 18px;
-            color: #e74c3c;
-            margin-bottom: 10px;
-            font-weight: 600;
-            /* font-family: 'Roboto'; */
-        }
 
-        .cv-container p,
-        li {
-            font-size: 14px;
-            color: #000;
-        }
+
 
         .cv-settings {
             padding: 15px;
@@ -140,7 +89,7 @@
         <!-- Form Section -->
         <div class="form-container">
             <h3>Nhập Thông Tin CV</h3>
-            <form action="{{ route('createCv') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('createCv') }}" method="POST" enctype="multipart/form-data" id="formCv">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="template" value="{{ $template }}">
@@ -168,6 +117,7 @@
                     <label for="name" class="form-label">Tiêu đề hồ sơ</label>
                     <input type="text" id="title" name="title" class="form-control"
                         placeholder="Nhập tiêu đề hồ sơ">
+                    <small class="text-danger error-message"></small>
                 </div>
                 <h3>Thông Tin Cơ Bản</h3>
                 <div class="input-section">
@@ -181,51 +131,65 @@
                                 <label for="avatar" class="form-label">Tải lên ảnh đại diện</label>
                                 <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*"
                                     onchange="previewAvatar(event)">
+                                <small class="text-danger error-message"></small>
                             </div>
                         </div>
-                        <!-- Cột 1 -->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Họ và Tên</label>
-                                <input type="text" id="name" name="name" class="form-control"
-                                    placeholder="Họ và tên">
+                        <div class="row">
+                            <!-- Họ và Tên - Vị trí -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Họ và Tên</label>
+                                    <input type="text" id="name" name="name" class="form-control"
+                                        placeholder="Họ và tên">
+                                    <small class="text-danger error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="position" class="form-label">Vị trí</label>
+                                    <input type="text" id="position" name="position_name" class="form-control"
+                                        placeholder="Developer">
+                                    <small class="text-danger error-message"></small>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Email</label>
-                                <input type="text" id="email" name="email" class="form-control"
-                                    placeholder="Email">
+                            <!-- Email - Điện thoại -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="text" id="email" name="email" class="form-control"
+                                        placeholder="Email">
+                                    <small class="text-danger error-message"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Điện thoại</label>
+                                    <input type="text" id="phone" name="phone" class="form-control"
+                                        placeholder="Điện thoại">
+                                    <small class="text-danger error-message"></small>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Ngày sinh</label>
-                                <input type="date" id="birthdate" name="birthdate" class="form-control"
-                                    placeholder="Ngày sinh">
+                            <!-- Ngày sinh - Địa chỉ -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="birthdate" class="form-label">Ngày sinh</label>
+                                    <input type="date" id="birthdate" name="birthdate" class="form-control"
+                                        placeholder="Ngày sinh">
+                                    <small class="text-danger error-message"></small>
+                                </div>
                             </div>
-
-
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Địa chỉ</label>
+                                    <input type="text" id="address" name="address" class="form-control"
+                                        placeholder="Địa chỉ">
+                                    <small class="text-danger error-message"></small>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Cột 2 -->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Vị trí</label>
-                                <input type="text" id="position" name="position_name" class="form-control"
-                                    placeholder="Developer">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Điện thoại</label>
-                                <input type="text" id="phone" name="phone" class="form-control"
-                                    placeholder="Điện thoại">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Địa chỉ</label>
-                                <input type="text" id="address" name="address" class="form-control"
-                                    placeholder="Địa chỉ">
-                            </div>
-                        </div>
                         <div class="mb-3">
                             <label for="contact" class="form-label">Mục tiêu nghề nghiệp</label>
                             <textarea id="introduce" name="introduce" class="form-control" rows="4"></textarea>
@@ -262,6 +226,7 @@
                     <h3>Kỹ Năng</h3>
                     <div class="input-section">
                         <textarea id="skills" name="skills" rows="4" placeholder="Danh sách kỹ năng..."></textarea>
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
 
@@ -269,6 +234,8 @@
                 <h3>Chứng Chỉ</h3>
                 <div class="input-section">
                     <textarea id="certifications" name="certifications" rows="4" placeholder="Danh sách chứng chỉ..."></textarea>
+                    <small class="text-danger error-message"></small>
+
                 </div>
 
                 <div>
@@ -300,5 +267,73 @@
             @endif
         </div>
     </div>
-@endsection
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#formCv').on('submit', function(e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+
+                $.ajax({
+                    url: "{{ route('createCv') }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        toastr.success("", response.message);
+
+                        setTimeout(function() {
+                            window.location.href = response.redirect;
+                        }, 1500);
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $('.error-message').text('');
+
+                            $.each(errors, function(key, value) {
+                                let keyParts = key.split('.');
+
+                                if (keyParts.length > 1) {
+                                    let fieldName = keyParts[0] + '[]';
+                                    let index = parseInt(keyParts[1]);
+
+                                    let inputField = $(`[name="${fieldName}"]`).eq(
+                                        index);
+                                    let errorContainer = inputField.closest('.mb-3')
+                                        .find('.error-message');
+                                    errorContainer.text(value[0]);
+                                } else {
+                                    let inputField = $('[name="' + key + '"]');
+
+                                    if (inputField.attr('type') === 'file') {
+                                        inputField.closest('.col-md-12').find(
+                                            '.error-message').text(value[0]);
+                                    } else if (inputField.is('textarea')) {
+                                        inputField.closest('.input-section').find(
+                                            '.error-message').text(value[0]);
+                                    } else {
+                                        inputField.closest('.mb-3').find(
+                                            '.error-message').text(value[0]);
+                                    }
+                                }
+                            });
+
+                            toastr.error("", "Dữ liệu chưa hợp lệ, vui lòng kiểm tra lại!");
+                        } else {
+                            console.error('Lỗi khác:', xhr.status);
+                            toastr.error("", "Có lỗi xảy ra, vui lòng thử lại sau!");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+@endsection

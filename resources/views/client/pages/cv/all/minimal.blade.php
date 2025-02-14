@@ -2,6 +2,61 @@
 
 <head>
     <style>
+        .header {
+            background-color: #d3d3d3;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            margin: 0;
+            margin-top: 20px;
+            font-size: 30px;
+            /* font-family: 'Roboto'; */
+        }
+
+        .header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .content {
+            display: flex;
+            padding: 20px;
+        }
+
+        .left-section {
+            width: 35%;
+            border-right: 1px solid #ddd;
+            padding-right: 20px;
+        }
+
+        .right-section {
+            width: 65%;
+            padding-left: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-weight: 600;
+            /* font-family: 'Roboto'; */
+        }
+
+        .main-container-minimal p,
+        li {
+            font-size: 14px;
+            color: #000;
+        }
+
         .referrer-cv {
             display: flex;
             flex-direction: column;
@@ -22,52 +77,55 @@
 </head>
 
 <body>
-    <div class="header">
-        <div>
-            <h1 class="text-uppercase" style="color: #e74c3c" class="mb-2" id="cv-name"></h1>
-            <p id="cv-position"></p>
-        </div>
-        <img src="https://placehold.co/400" alt="Profile Picture" id="cvAvatarPreview">
-    </div>
-    <div class="content">
-        <div class="left-section">
-            <div class="section">
-                <h3>LIÊN HỆ</h3>
-                <p><i class="fas fa-phone"></i> <span id="cv-phone"></span></p>
-                <p><i class="fas fa-envelope"></i> <span id="cv-email"></span></p>
-                <p><i class="fas fa-birthday-cake"></i> <span id="cv-birthdate"></span></p>
-                <p><i class="fas fa-map-marker-alt"></i> <span id="cv-address"></span></p>
+    <div class="main-container-minimal">
+        <div class="header">
+            <div>
+                <h1 class="text-uppercase" style="color: #e74c3c" class="mb-2" id="cv-name"></h1>
+                <p id="cv-position"></p>
             </div>
-            <div class="section" style="display: none;">
-                <h3>HỌC VẤN</h3>
-                <div id="education-cv">
+            <img src="https://placehold.co/400" alt="Profile Picture" id="cvAvatarPreview">
+        </div>
+        <div class="content">
+            <div class="left-section">
+                <div class="section">
+                    <h3>LIÊN HỆ</h3>
+                    <p><i class="fas fa-phone"></i> <span id="cv-phone"></span></p>
+                    <p><i class="fas fa-envelope"></i> <span id="cv-email"></span></p>
+                    <p><i class="fas fa-birthday-cake"></i> <span id="cv-birthdate"></span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="cv-address"></span></p>
+                </div>
+                <div class="section" style="display: none;">
+                    <h3>HỌC VẤN</h3>
+                    <div id="education-cv">
+                    </div>
+                </div>
+                <div class="section" style="display: none;">
+                    <h3>KỸ NĂNG</h3>
+                    <p id="cv-skill" style="white-space: pre-wrap;"></p>
+                </div>
+                <div class="section" style="display: none;">
+                    <h3>NGƯỜI GIỚI THIỆU</h3>
+                    <p id="cv-personal-introduce"></p>
                 </div>
             </div>
-            <div class="section" style="display: none;">
-                <h3>KỸ NĂNG</h3>
-                <p id="cv-skill" style="white-space: pre-wrap;"></p>
-            </div>
-            <div class="section" style="display: none;">
-                <h3>NGƯỜI GIỚI THIỆU</h3>
-                <p id="cv-personal-introduce"></p>
-            </div>
-        </div>
 
-        <div class="right-section">
-            <div class="section" style="display: none;">
-                <h3>MỤC TIÊU NGHỀ NGHIỆP</h3>
-                <p id="cv-introduce" style="white-space: pre-wrap;"></p>
-            </div>
-            <div class="section" style="display: none;">
-                <h3>KINH NGHIỆM LÀM VIỆC</h3>
-                <div id="work-experience-cv"></div>
-            </div>
-            <div class="section" style="display: none;">
-                <h3>CHỨNG CHỈ</h3>
-                <p id="certification-cv" style="white-space: pre-wrap;"></p>
+            <div class="right-section">
+                <div class="section" style="display: none;">
+                    <h3>MỤC TIÊU NGHỀ NGHIỆP</h3>
+                    <p id="cv-introduce" style="white-space: pre-wrap;"></p>
+                </div>
+                <div class="section" style="display: none;">
+                    <h3>KINH NGHIỆM LÀM VIỆC</h3>
+                    <div id="work-experience-cv"></div>
+                </div>
+                <div class="section" style="display: none;">
+                    <h3>CHỨNG CHỈ</h3>
+                    <p id="certification-cv" style="white-space: pre-wrap;"></p>
+                </div>
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
@@ -116,12 +174,14 @@
                     <div class="mb-3">
                         <label class="form-label">Tên Công Ty</label>
                         <input type="text" class="form-control company-input" name="company_name[]" placeholder="Công ty JVB" data-target="#${sectionId}-company">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Vị Trí</label>
                         <input type="text" class="form-control position-input" name="position[]" placeholder="Chức vụ" data-target="#${sectionId}-position">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
             </div>
@@ -130,12 +190,14 @@
                     <div class="mb-3">
                         <label class="form-label">Thời Gian Bắt Đầu</label>
                         <input type="month" class="form-control start-date-input" name="start_date_exp[]" data-target="#${sectionId}-start-date">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Thời Gian Kết Thúc</label>
                         <input type="month" class="form-control end-date-input" name="end_date_exp[]" data-target="#${sectionId}-end-date">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
             </div>
@@ -191,6 +253,8 @@
                 section.style.display = "none";
             }
         });
+
+
     });
 
     // education
@@ -210,12 +274,14 @@
                 <div class="mb-3">
                     <label class="form-label">Tên Trường</label>
                     <input type="text" class="form-control school-input" placeholder="Đại học FPT" name="school[]" data-target="#${sectionId}-school">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Chuyên Ngành</label>
                     <input type="text" class="form-control major-input" placeholder="Chuyên ngành" name="major[]" data-target="#${sectionId}-major">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
         </div>
@@ -224,18 +290,21 @@
                 <div class="mb-3">
                     <label class="form-label">Loại Tốt Nghiệp</label>
                     <input type="text" class="form-control degree-input" placeholder="Tốt, khá" name="degree[]" data-target="#${sectionId}-degree">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="mb-3">
                     <label class="form-label">Thời Gian Bắt Đầu</label>
                     <input type="month" class="form-control start-date-input" data-target="#${sectionId}-start-date" name="start_date_education[]">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="mb-3">
                     <label class="form-label">Thời Gian Kết Thúc</label>
                     <input type="month" class="form-control end-date-input" data-target="#${sectionId}-end-date" name="end_date_education[]">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
         </div>
@@ -369,24 +438,28 @@
                     <div class="mb-3">
                         <label class="form-label">Tên người liên hệ</label>
                         <input type="text" class="form-control" placeholder="Khánh Nguyên" name="contact_name[]" data-target="#${sectionId}-name">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Tên công ty</label>
                         <input type="text" class="form-control" placeholder="Công ty ABC" name="contact_company_name[]" data-target="#${sectionId}-company">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Chức vụ</label>
                         <input type="text" class="form-control" placeholder="Chức vụ" name="contact_position[]" data-target="#${sectionId}-position">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Số điện thoại</label>
-                        <input type="text" class="form-control" placeholder="0123456789" name="contact_phone[]" required data-target="#${sectionId}-phone">
+                        <input type="text" class="form-control" placeholder="0123456789" name="contact_phone[]" data-target="#${sectionId}-phone">
+                        <small class="text-danger error-message"></small>
                     </div>
                 </div>
             </div>

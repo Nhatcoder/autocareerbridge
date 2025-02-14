@@ -57,4 +57,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
         };
         return false;
     }
+
+    public function insert(array $data)
+    {
+        return $this->model->insert($data);
+    }
 }

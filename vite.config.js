@@ -6,9 +6,9 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/sass/app.scss',
                 'resources/css/app.css',
                 'resources/js/app.jsx',
+		'resources/js/boostrap.jsx',
             ],
             refresh: true,
         }),
@@ -17,6 +17,14 @@ export default defineConfig({
     css: {
         modules: {
             generateScopedName: '[name]__[local]___[hash:base64:5]',
+        },
+    },
+    server: {
+        host: '192.168.0.152',
+        port: 5173,
+        cors: true, // Mở CORS
+        watch: {
+            usePolling: true,
         },
     },
 });

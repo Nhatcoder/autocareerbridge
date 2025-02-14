@@ -13,20 +13,19 @@ class CvRepository extends BaseRepository implements CvRepositoryInterface
         return Cv::class;
     }
 
-    public function create($attributes = [])
-    {
-        return $this->model->create($attributes);
-    }
-
     public function getCv($id)
     {
-        return $this->model->with([
+        return $this->model->findOrFail($id)->load([
             'user',
             'experiences',
             'certificates',
             'cv_skill',
             'educations',
             'referrers'
-        ])->findOrFail($id);
+        ]);
+    }
+    public function getMyCv()
+    {
+        return $this->model->where('user_id', auth()->id())->get();
     }
 }

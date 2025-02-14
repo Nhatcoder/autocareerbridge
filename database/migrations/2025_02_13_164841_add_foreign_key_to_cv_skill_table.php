@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('certificates', function (Blueprint $table) {
-            $table->id();
-            $table->integer('cv_id')->unsigned();
-            $table->string('description')->nullable();
-            $table->timestamps();
+        Schema::table('cv_skill', function (Blueprint $table) {
+            $table->foreignId('cv_id')->change()->constrained('cvs')->onDelete('cascade');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('certificates');
+        Schema::table('cv_skill', function (Blueprint $table) {
+            $table->dropForeign(['cv_id']);
+        });
     }
 };

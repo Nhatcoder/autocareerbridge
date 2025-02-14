@@ -24,7 +24,8 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ $cv->title }}</h5>
                                 <p class="card-text"><small class="text-muted">Ngày tạo:
-                                        {{ $cv->created_at->format('d/m/Y') }}</small></p>
+                                        {{ \Carbon\Carbon::parse($cv->created_at)->format('d/m/Y') }}
+                                    </small></p>
                                 <a href="{{ route('cv.edit', ['id' => $cv->id]) }}" class="btn btn-warning btn-sm">Sửa</a>
                                 <a href="{{ route('cv.view', ['id' => $cv->id]) }}" class="btn btn-primary btn-sm">Xem</a>
                                 <a href="{{ route('cv.download', ['id' => $cv->id]) }}" class="btn btn-success btn-sm">Tải

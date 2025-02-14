@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->string('avatar')->default('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF5-3YjBcXTqKUlOAeUUtuOLKgQSma2wGG1g&s')->nullable();
             $table->string('birthdate');
             $table->string('url')->nullable();
-            $table->text('introduce');
+            $table->text('introduce')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

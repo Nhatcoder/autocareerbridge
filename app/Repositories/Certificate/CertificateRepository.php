@@ -11,11 +11,4 @@ class CertificateRepository extends BaseRepository implements CertificateReposit
     {
         return Certificate::class;
     }
-
-    public function create($attributes = [])
-    {
-        return $this->model->create($attributes);
-    }
-
-
 }

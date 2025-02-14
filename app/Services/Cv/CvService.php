@@ -9,6 +9,7 @@ use App\Repositories\Education\EducationRepositoryInterface;
 use App\Repositories\Experience\ExperienceRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CvService
 {
@@ -71,7 +72,7 @@ class CvService
                 'birthdate' => $request->birthdate,
                 'introduce' => $request->introduce,
                 'avatar' => $avatarUrl,
-                'user_id' => 1
+                'user_id' => auth()->user()->id
             ]);
 
             $companyNames  = $request->company_name;
@@ -82,29 +83,33 @@ class CvService
 
             if (!empty($companyNames)) {
                 foreach ($companyNames as $index => $companyName) {
-                    $this->experienceRepository->create([
+                    $experiences[] = [
                         'cv_id'          => $cvId,
                         'company_name'   => $companyName ?? null,
                         'position'       => ($request->position)[$index] ?? null,
                         'start_date' => ($request->start_date_exp)[$index] ?? null,
                         'end_date'   => ($request->end_date_exp)[$index] ?? null,
                         'description'    => ($request->description)[$index] ?? null,
-                    ]);
+                        'created_at' => now(),
+                    ];
                 }
+                $this->experienceRepository->insert($experiences);
             }
 
 
             if (!empty($schoolNames)) {
                 foreach ($schoolNames as $index => $school) {
-                    $this->educationRepository->create([
+                    $educations[] = [
                         'cv_id'          => $cvId,
                         'university_name'   => $school ?? null,
                         'major'       => ($request->major)[$index] ?? null,
                         'type_graduate' => ($request->degree)[$index] ?? null,
                         'start_date'   => ($request->start_date_education)[$index] ?? null,
                         'end_date'   => ($request->end_date_education)[$index] ?? null,
-                    ]);
+                        'created_at' => now(),
+                    ];
                 }
+                $this->educationRepository->insert($educations);
             }
 
             $this->cvSkillRepository->create([
@@ -119,21 +124,23 @@ class CvService
 
             if (!empty($contactNames)) {
                 foreach ($contactNames as $index => $contact) {
-                    $this->referrerRepository->create([
+                    $referrers[] = [
                         'cv_id'          => $cvId,
                         'name'   => $contact ?? null,
                         'company_name'       => ($request->contact_company_name)[$index] ?? null,
                         'position' => ($request->contact_position)[$index] ?? null,
                         'phone'   => ($request->contact_phone)[$index] ?? null,
-                    ]);
+                        'created_at' => now(),
+                    ];
                 }
+                $this->referrerRepository->insert($referrers);
             }
 
             DB::commit();
             return $cv;
         } catch (\Exception $e) {
             DB::rollback();
-            throw $e;
+            Log::error($e->getMessage());
         }
     }
 
@@ -279,7 +286,7 @@ class CvService
             return $cv;
         } catch (\Exception $e) {
             DB::rollback();
-            throw $e;
+            Log::error($e->getMessage());
         }
     }
 
@@ -292,6 +299,12 @@ class CvService
     public function renderCV($id)
     {
         $cv = $this->cvRepository->getCv($id);
+        return $cv;
+    }
+
+    public function getMyCV()
+    {
+        $cv = $this->cvRepository->getMyCv();
         return $cv;
     }
 }
