@@ -41,12 +41,19 @@
                             <ul class="gc_main_navigation">
                                 <li class="has-mega gc_main_navigation {{ Request::routeIs('home') ? 'active' : '' }}">
                                     <a href="{{ route('home') }}" class="gc_main_navigation">
-                                        Trang chủ </a>
+                                        Trang chủ
+                                    </a>
                                 </li>
                                 <li
                                     class="has-mega gc_main_navigation {{ Request::routeIs('search') ? 'active' : '' }}">
                                     <a href="{{ route('search') }}" class="gc_main_navigation">
                                         Việc làm</a>
+                                    @if (Auth::guard('web')->check() && Auth::guard('web')->user()->userJob()->count() > 0)
+                                        <ul>
+                                            <li class="parent"><a href="{{ route('search') }}">Tìm việc làm</a></li>
+                                            <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã ứng tuyển</a></li>
+                                        </ul>
+                                    @endif
                                 </li>
 
                                 <li

@@ -1,5 +1,5 @@
 @extends('client.layout.main')
-@section('title', 'Tìm kiếm '. $getJobs->count() . ' việc làm ' .  ucfirst(request()->key_search) )
+@section('title', 'Tìm kiếm ' . $getJobs->count() . ' việc làm ' . ucfirst(request()->key_search))
 
 @section('content')
     <div class="jp_img_wrapper">
@@ -15,7 +15,11 @@
                             </div>
                         </div>
                     </div>
-                    @include('client.pages.components.search.searchForm', ['getProvince' => $getProvince, 'getMajor' => $getMajor, 'getFiled' => $getFiled])
+                    @include('client.pages.components.search.searchForm', [
+                        'getProvince' => $getProvince,
+                        'getMajor' => $getMajor,
+                        'getFiled' => $getFiled,
+                    ])
                 </div>
             </div>
         </div>
@@ -23,8 +27,7 @@
     <div class="jp_listing_sidebar_main_wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hidden-sm hidden-xs p"
-                     style="position: sticky; top: 0;">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hidden-sm hidden-xs p" style="position: sticky; top: 0;">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
                             <div class="jp_filter_wrapper d-flex align-items-center">
@@ -32,15 +35,14 @@
                                     <i class="fa-solid fa-filter" style="padding-right: 10px; color: #23c0e9"></i>
                                     <h4 class="mb-0"> Lọc nâng cao</h4>
                                 </div>
-                                <div
-                                    class="clear-filter-btn ms-auto d-flex align-items-center"
-                                    id="">
-                                    <a type="button" onclick="removeFilter()"><i class="fa fa-times-circle"></i> Xoá lọc</a>
+                                <div class="clear-filter-btn ms-auto d-flex align-items-center" id="">
+                                    <a type="button" onclick="removeFilter()"><i class="fa fa-times-circle"></i> Xoá
+                                        lọc</a>
                                 </div>
 
                             </div>
                             <div class="jp_rightside_job_categories_wrapper"
-                                 style="max-height: calc(70vh - 10px); overflow-y: auto;">
+                                style="max-height: calc(70vh - 10px); overflow-y: auto;">
                                 <div class="jp_rightside_job_categories_heading">
                                     <h4>Lọc lĩnh vực</h4>
                                 </div>
@@ -48,12 +50,11 @@
                                     <div class="handyman_sec1_wrapper">
                                         <div class="content">
                                             <div class="box">
-                                                @foreach($getFiled as $field)
+                                                @foreach ($getFiled as $field)
                                                     <p>
-                                                        <input type="checkbox" id="fields-{{$field->id}}"
-                                                               name="fields[]"
-                                                               value="{{$field->id}}">
-                                                        <label for="fields-{{$field->id}}">{{ $field->name }}</label>
+                                                        <input type="checkbox" id="fields-{{ $field->id }}"
+                                                            name="fields[]" value="{{ $field->id }}">
+                                                        <label for="fields-{{ $field->id }}">{{ $field->name }}</label>
                                                     </p>
                                                 @endforeach
                                             </div>
@@ -64,7 +65,7 @@
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="jp_rightside_job_categories_wrapper"
-                                 style="max-height: calc(70vh - 10px); overflow-y: auto;">
+                                style="max-height: calc(70vh - 10px); overflow-y: auto;">
                                 <div class="jp_rightside_job_categories_heading">
                                     <h4>Lọc kỹ năng</h4>
                                 </div>
@@ -72,11 +73,11 @@
                                     <div class="handyman_sec1_wrapper">
                                         <div class="content">
                                             <div class="box">
-                                                @foreach($getSkills as $skill)
+                                                @foreach ($getSkills as $skill)
                                                     <p>
-                                                        <input type="checkbox" id="skill-{{$skill->id}}" name="skills[]"
-                                                               value="{{$skill->id}}">
-                                                        <label for="skill-{{$skill->id}}">{{ $skill->name }}</label>
+                                                        <input type="checkbox" id="skill-{{ $skill->id }}"
+                                                            name="skills[]" value="{{ $skill->id }}">
+                                                        <label for="skill-{{ $skill->id }}">{{ $skill->name }}</label>
                                                     </p>
                                                 @endforeach
                                             </div>
@@ -94,8 +95,8 @@
                                 <div id="list" class="tab-pane fade in active">
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            @if($getJobs->count() > 0)
-                                                @foreach($getJobs as $getJob)
+                                            @if ($getJobs->count() > 0)
+                                                @foreach ($getJobs as $getJob)
                                                     <div
                                                         class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
                                                         <div class="item">
@@ -107,25 +108,26 @@
                                                                             <div class="row">
                                                                                 <div
                                                                                     class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                                                                                    <a href="{{ route('detailJob', ['slug' => $getJob->slug]) }}">
-                                                                                        <div
-                                                                                            class="jp_job_post_side_img">
-                                                                                            <img
-                                                                                                data-bs-toggle="tooltip"
+                                                                                    <a
+                                                                                        href="{{ route('detailJob', ['slug' => $getJob->slug]) }}">
+                                                                                        <div class="jp_job_post_side_img">
+                                                                                            <img data-bs-toggle="tooltip"
                                                                                                 title="{{ $getJob->company->name }}"
-                                                                                                src="{{isset($getJob->company->avatar_path) ? asset($getJob->company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
-                                                                                                alt="post_img"/>
+                                                                                                src="{{ isset($getJob->company->avatar_path) ? asset($getJob->company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
+                                                                                                alt="post_img" />
                                                                                         </div>
 
                                                                                         <div
                                                                                             class="jp_job_post_right_cont jp_cl_job_cont">
                                                                                             <h4 data-bs-toggle="tooltip"
                                                                                                 title="{{ ucwords($getJob->name) }}">
-                                                                                                {{ Str::limit(ucwords($getJob->name), 45) }}</h4>
+                                                                                                {{ Str::limit(ucwords($getJob->name), 45) }}
+                                                                                            </h4>
                                                                                             <p style="color:#e69920;"
-                                                                                               data-bs-toggle="tooltip"
-                                                                                               title="{{ strtoupper($getJob->company->name) }}">
-                                                                                                {{ strtoupper($getJob->company->name)}}</p>
+                                                                                                data-bs-toggle="tooltip"
+                                                                                                title="{{ strtoupper($getJob->company->name) }}">
+                                                                                                {{ strtoupper($getJob->company->name) }}
+                                                                                            </p>
                                                                                         </div>
                                                                                         <div
                                                                                             class="jp_job_post_right_content d-flex align-items-center justify-content-between">
@@ -133,14 +135,14 @@
                                                                                                 <li data-bs-toggle="tooltip"
                                                                                                     title="{{ ucwords($getJob->company->addresses->first()->province->name) }}, {{ ucwords($getJob->company->addresses->first()->district->name) }}">
                                                                                                     <i class="fa-solid fa-location-dot"
-                                                                                                       style="color: #ff5353;"></i>
+                                                                                                        style="color: #ff5353;"></i>
                                                                                                     {{ ucwords($getJob->company->addresses->first()->province->name) }}
                                                                                                 </li>
                                                                                             </ul>
                                                                                             <ul>
                                                                                                 <li>
                                                                                                     Còn
-                                                                                                    <strong>{{ Carbon\Carbon::parse($getJob->end_date)->startOfDay()->diffInDays(now()->startOfDay())}}</strong>
+                                                                                                    <strong>{{ Carbon\Carbon::parse($getJob->end_date)->startOfDay()->diffInDays(now()->startOfDay()) }}</strong>
                                                                                                     ngày để ứng
                                                                                                     tuyển
                                                                                                 </li>
@@ -153,10 +155,67 @@
                                                                                     <div
                                                                                         class="jp_job_post_right_btn_wrapper btn-block">
                                                                                         <ul>
+                                                                                            @php
+                                                                                                $university =
+                                                                                                    auth()
+                                                                                                        ->guard('admin')
+                                                                                                        ->user()
+                                                                                                        ->university ??
+                                                                                                    (auth()
+                                                                                                        ->guard('admin')
+                                                                                                        ->user()
+                                                                                                        ->academicAffair
+                                                                                                        ->university ??
+                                                                                                        null);
+                                                                                                $jobUniversityStatus = null;
+                                                                                                if ($university) {
+                                                                                                    $jobUniversityStatus = $university
+                                                                                                        ->universityJobs()
+                                                                                                        ->where(
+                                                                                                            'job_id',
+                                                                                                            $job->id,
+                                                                                                        )
+                                                                                                        ->first();
+                                                                                                }
+
+                                                                                                $custommer =
+                                                                                                    auth()
+                                                                                                        ->guard('web')
+                                                                                                        ->check() &&
+                                                                                                    auth()
+                                                                                                        ->guard('web')
+                                                                                                        ->user()
+                                                                                                        ->role ==
+                                                                                                        ROLE_USER;
+                                                                                                $jobUserStatus = null;
+                                                                                                if ($custommer) {
+                                                                                                    $jobUserStatus = in_array(
+                                                                                                        auth()
+                                                                                                            ->guard(
+                                                                                                                'web',
+                                                                                                            )
+                                                                                                            ->user()
+                                                                                                            ->id,
+                                                                                                        $getJob
+                                                                                                            ->userJob()
+                                                                                                            ->pluck(
+                                                                                                                'user_id',
+                                                                                                            )
+                                                                                                            ->toArray(),
+                                                                                                    );
+                                                                                                }
+                                                                                            @endphp
                                                                                             <li>
-                                                                                                <a
-                                                                                                    href="{{ route('detailJob', ['slug' => $getJob->slug]) }}">Ứng
-                                                                                                    tuyển</a>
+                                                                                                @if (($university && !$jobUniversityStatus) || ($custommer && $jobUserStatus))
+                                                                                                    <button
+                                                                                                        class="btn btn-secondary"
+                                                                                                        disabled>Đã
+                                                                                                        ứng tuyển</button>
+                                                                                                @else
+                                                                                                    <a class="btn btn-primary"
+                                                                                                        href="{{ route('detailJob', ['slug' => $getJob->slug]) }}">Ứng
+                                                                                                        tuyển</a>
+                                                                                                @endif
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
@@ -166,19 +225,21 @@
                                                                         <div class="jp_job_post_keyword_wrapper">
                                                                             <ul>
                                                                                 <li>
-                                                                                    <i class="fa-solid fa-graduation-cap"></i>
+                                                                                    <i
+                                                                                        class="fa-solid fa-graduation-cap"></i>
                                                                                 </li>
                                                                                 @if ($getJob->skills)
                                                                                     @foreach ($getJob->skills as $skill)
-                                                                                        <li><a
-                                                                                                style="text-decoration: none;"
+                                                                                        <li><a style="text-decoration: none;"
                                                                                                 href="#">{{ $skill->name }}</a>
                                                                                         </li>
                                                                                     @endforeach
                                                                                 @endif
                                                                                 <li class="float-end">
                                                                                     <p>Đã
-                                                                                        đăng {{ Carbon\Carbon::parse($getJob->updated_at)->diffForHumans() }}</p>
+                                                                                        đăng
+                                                                                        {{ Carbon\Carbon::parse($getJob->updated_at)->diffForHumans() }}
+                                                                                    </p>
                                                                                 </li>
                                                                             </ul>
                                                                         </div>
@@ -191,9 +252,9 @@
                                             @else
                                                 <div class="text-center" style="margin-top: 100px;">
                                                     <img class="lazy entered loaded"
-                                                         data-src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg"
-                                                         alt="None suitable job" data-ll-status="loaded"
-                                                         src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg">
+                                                        data-src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg"
+                                                        alt="None suitable job" data-ll-status="loaded"
+                                                        src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg">
                                                     <p class="text-center">
                                                         Chưa tìm thấy việc làm phù hợp với yêu cầu của bạn</p>
                                                 </div>
@@ -210,7 +271,8 @@
                                                         </li>
 
                                                         @foreach ($getJobs->getUrlRange(1, $getJobs->lastPage()) as $page => $url)
-                                                            <li class="{{ $page == $getJobs->currentPage() ? 'active' : '' }}">
+                                                            <li
+                                                                class="{{ $page == $getJobs->currentPage() ? 'active' : '' }}">
                                                                 <a href="{{ $url }}">{{ $page }}</a>
                                                             </li>
                                                         @endforeach
@@ -236,10 +298,10 @@
 @endsection
 @section('js')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             let loading = false;
 
-            $('input[type="checkbox"]').on('change', function () {
+            $('input[type="checkbox"]').on('change', function() {
                 if (loading) return;
 
                 loading = true;
@@ -247,18 +309,18 @@
                 let selectedFields = [];
                 let selectedSkills = [];
 
-                $('input[name="fields[]"]:checked').each(function () {
+                $('input[name="fields[]"]:checked').each(function() {
                     selectedFields.push($(this).val());
                 });
 
-                $('input[name="skills[]"]:checked').each(function () {
+                $('input[name="skills[]"]:checked').each(function() {
                     selectedSkills.push($(this).val());
                 });
 
                 let keySearch = $('input[name="key_search"]').val();
                 console.log(keySearch)
                 $.ajax({
-                    url: '{{ route("search") }}',
+                    url: '{{ route('search') }}',
                     method: 'GET',
                     data: {
                         key_search: keySearch,
@@ -266,16 +328,18 @@
                         skills: selectedSkills,
                         _token: '{{ csrf_token() }}'
                     },
-                    beforeSend: function () {
-                        $('.tab-content').html('<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>');
+                    beforeSend: function() {
+                        $('.tab-content').html(
+                            '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
+                        );
                     },
-                    success: function (response) {
+                    success: function(response) {
                         $('.tab-content').html(response.html);
                     },
-                    complete: function () {
+                    complete: function() {
                         loading = false;
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error('Lỗi AJAX:', error);
                     }
                 });
@@ -283,12 +347,12 @@
         });
     </script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Xử lý checkbox
             $('input[type="checkbox"]').on('change', handleFilter);
 
             // Xử lý click phân trang
-            $(document).on('click', '.pagination a', function (e) {
+            $(document).on('click', '.pagination a', function(e) {
                 e.preventDefault();
                 let url = $(this).attr('href');
                 loadJobs(url);
@@ -299,51 +363,53 @@
             let selectedFields = [];
             let selectedSkills = [];
 
-            $('input[name="fields[]"]:checked').each(function () {
+            $('input[name="fields[]"]:checked').each(function() {
                 selectedFields.push($(this).val());
             });
 
-            $('input[name="skills[]"]:checked').each(function () {
+            $('input[name="skills[]"]:checked').each(function() {
                 selectedSkills.push($(this).val());
             });
 
-            loadJobs('{{ route("search") }}', {
+            loadJobs('{{ route('search') }}', {
                 fields: selectedFields,
                 skills: selectedSkills
             });
         }
 
         function loadJobs(url, data = {}) {
-            $('.tab-content').html('<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>');
+            $('.tab-content').html(
+                '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
+            );
 
             $.ajax({
                 url: url,
                 method: 'GET',
                 data: data,
-                success: function (response) {
+                success: function(response) {
                     $('.tab-content').html(response.html);
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.error('Lỗi AJAX:', error);
                 }
             });
         }
     </script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Xử lý checkbox filters với AJAX
-            $('input[type="checkbox"]').on('change', function () {
+            $('input[type="checkbox"]').on('change', function() {
                 handleSearch(true); // true = use AJAX
             });
 
             // Xử lý form tìm kiếm
-            $('.jp_header_form_wrapper').find('select, input').on('change keyup', function () {
+            $('.jp_header_form_wrapper').find('select, input').on('change keyup', function() {
                 // Nếu không phải submit button, thực hiện search AJAX
                 handleSearch(true);
             });
 
             // Xử lý submit form thông thường
-            $('form').on('submit', function (e) {
+            $('form').on('submit', function(e) {
                 e.preventDefault();
                 handleSearch(false); // false = normal form submit
             });
@@ -361,11 +427,11 @@
             let selectedFields = [];
             let selectedSkills = [];
 
-            $('input[name="fields[]"]:checked').each(function () {
+            $('input[name="fields[]"]:checked').each(function() {
                 selectedFields.push($(this).val());
             });
 
-            $('input[name="skills[]"]:checked').each(function () {
+            $('input[name="skills[]"]:checked').each(function() {
                 selectedSkills.push($(this).val());
             });
 
@@ -374,16 +440,18 @@
 
             if (isAjax) {
                 // AJAX search
-                $('.tab-content').html('<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>');
+                $('.tab-content').html(
+                    '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
+                );
 
                 $.ajax({
                     url: form.attr('action'),
                     method: 'GET',
                     data: formData,
-                    success: function (response) {
+                    success: function(response) {
                         $('.tab-content').html(response.html);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error('Lỗi AJAX:', error);
                     }
                 });
@@ -392,11 +460,11 @@
                 form.find('input[name="fields[]"]').remove();
                 form.find('input[name="skills[]"]').remove();
 
-                selectedFields.forEach(function (field) {
+                selectedFields.forEach(function(field) {
                     form.append(`<input type="hidden" name="fields[]" value="${field}">`);
                 });
 
-                selectedSkills.forEach(function (skill) {
+                selectedSkills.forEach(function(skill) {
                     form.append(`<input type="hidden" name="skills[]" value="${skill}">`);
                 });
 
@@ -405,26 +473,28 @@
         }
 
         // Xử lý phân trang AJAX
-        $(document).on('click', '.pagination a', function (e) {
+        $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             let url = $(this).attr('href');
 
-            $('.tab-content').html('<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>');
+            $('.tab-content').html(
+                '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
+            );
 
             $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     $('.tab-content').html(response.html);
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.error('Lỗi AJAX:', error);
                 }
             });
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const searchInput = document.getElementById("key_search");
             const clearBtn = document.getElementById("clear_btn");
 
@@ -470,7 +540,7 @@
                 }
             }
 
-            $(document).ready(function () {
+            $(document).ready(function() {
                 // Check nếu có request lên thì hiển thị ra
                 const searchParams = new URLSearchParams(window.location.search);
                 if (searchParams.toString()) {

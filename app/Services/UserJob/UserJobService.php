@@ -15,4 +15,8 @@ class UserJobService
     public function getJobUserApply(){
         return $this->userJobRepository->getJobUserApply();
     }
+
+    public function getJobUserApplyChats(){
+        return $this->userJobRepository->getJobUserApplyChats();
+    }
 }

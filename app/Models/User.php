@@ -86,11 +86,18 @@ class User extends Authenticatable
         return $this->hasMany(Job::class, 'user_id', 'id');
     }
 
-    public function chatMessages(){
+    public function chatMessages()
+    {
         return $this->hasMany(ChatMessage::class, 'from_id', 'id');
     }
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->role === ROLE_ADMIN;
+    }
+
+    public function userJob()
+    {
+        return $this->hasMany(UserJob::class, 'user_id', 'id');
     }
 }
