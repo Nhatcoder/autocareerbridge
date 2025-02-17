@@ -20,7 +20,7 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
     public function getJobUserApply()
     {
         $userCurrent = auth('admin')->user() ?? auth('web')->user();
-        $jobUserApply = UserJob::with('user', 'job.company', 'job.skills')->where("user_id", $userCurrent->id)->paginate(PAGINATE_JOB);
+        $jobUserApply = $this->model->with('user', 'job.company', 'job.skills')->where("user_id", $userCurrent->id)->paginate(PAGINATE_JOB);
         return $jobUserApply;
     }
 
@@ -28,7 +28,7 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
     {
         $userCurrent = auth('web')->user();
 
-        $jobUserApply = UserJob::with('user', 'job.company')
+        $jobUserApply = $this->model->with('user', 'job.company')
             ->where("user_id", $userCurrent->id)
             ->latest('id')
             ->get()
