@@ -1792,81 +1792,6 @@ ul {
     margin-left: 20px;
 }
 
-.jp_job_post_right_btn_wrapper li:first-child {
-    margin-left: 0;
-}
-
-.jp_job_post_right_btn_wrapper li:first-child a {
-    float: left;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #e9e9e9;
-    text-align: center;
-    line-height: 30px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    color: #f36969;
-    background: transparent;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    -ms-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    transition: all 0.5s;
-}
-
-.jp_job_post_right_btn_wrapper li:first-child a:hover {
-    background: #f36969;
-    color: #ffffff;
-    border: 1px solid #f36969;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    -ms-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    transition: all 0.5s;
-}
-
-.jp_job_post_right_btn_wrapper li:nth-child(2) {
-    float: none;
-    margin-left: 50px;
-}
-
-.jp_job_post_right_btn_wrapper li:nth-child(2) a {
-    float: left;
-    width: 100px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    background: #37d09c;
-    color: #ffffff;
-    font-size: 12px;
-    text-transform: uppercase;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.jp_job_post_right_btn_wrapper li:last-child {
-    margin-left: 50px;
-    margin-top: 40px;
-    float: none;
-}
-
-.jp_job_post_right_btn_wrapper li:last-child a {
-    float: left;
-    width: 100px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    background: #f36969;
-    color: #ffffff;
-    font-size: 12px;
-    text-transform: uppercase;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-
 .jp_job_post_keyword_wrapper {
     float: left;
     width: 100%;
@@ -1889,7 +1814,7 @@ ul {
     margin-left: 20px;
 }
 
-.jp_job_post_keyword_wrapper li:first-child {
+.jp_job_post_keyword_wrapper li {
     margin-left: 0;
     color: #000000;
     -webkit-transition: all 0.5s;

@@ -80,14 +80,14 @@
                         @endif
                     @elseif(auth()->guard('web')->check() && auth()->guard('web')->user()->role == ROLE_USER)
                         @if (in_array(auth()->guard('web')->user()->id, $job->userJob()->pluck('user_id')->toArray()))
-                        <button class="bg-gray-400 text-white px-4 py-2 rounded-lg" disabled>
-                            <i class="fa fa-check-circle"></i> &nbsp;Đã ứng tuyển
-                        </button>
+                            <button class="bg-gray-400 text-white px-4 py-2 rounded-lg" disabled>
+                                <i class="fa fa-check-circle"></i> &nbsp;Đã ứng tuyển
+                            </button>
                         @else
-                        <button class="bg-[#23c0e9] text-white px-4 py-2 rounded-lg" data-toggle="modal"
-                        data-target="#exampleModal">
-                        <i class="fa fa-plus-circle"></i> &nbsp;Ứng tuyển ngay
-                    </button>
+                            <button class="bg-[#23c0e9] text-white px-4 py-2 rounded-lg" data-toggle="modal"
+                                data-target="#exampleModal">
+                                <i class="fa fa-plus-circle"></i> &nbsp;Ứng tuyển ngay
+                            </button>
                         @endif
                     @endif
 

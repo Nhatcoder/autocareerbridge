@@ -10,6 +10,7 @@ use App\Services\Major\MajorService;
 use App\Services\Skill\SkillService;
 use App\Services\University\UniversityService;
 use App\Services\University\WorkshopService;
+use App\Services\UserJob\UserJobService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -22,6 +23,7 @@ class HomeController extends Controller
     protected $majorService;
     protected $workShopService;
     protected $skillService;
+    protected $userJobService;
 
     public function __construct(
         UniversityService $universityService,
@@ -30,7 +32,9 @@ class HomeController extends Controller
         JobService        $jobService,
         MajorService      $majorService,
         WorkshopService   $workShopService,
-        SkillService      $skillService
+        SkillService      $skillService,
+        UserJobService    $userJobService
+
     ) {
         $this->universityService = $universityService;
         $this->companyService = $companyService;
@@ -39,12 +43,13 @@ class HomeController extends Controller
         $this->majorService = $majorService;
         $this->workShopService = $workShopService;
         $this->skillService = $skillService;
+        $this->userJobService = $userJobService;
     }
 
     /**
      * Display the home page with companies, universities, and job fields data.
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
-     * @author Dang Duc Chung
+     * @author Dang Duc Chung & Tran Van Nhat
      * @access public
      */
     public function index()
@@ -134,9 +139,20 @@ class HomeController extends Controller
     public function workshop()
     {
         $workShops = $this->workShopService->getWorkShopClient();
-        return view('client.pages.workshop.list',[
+        return view(
+            'client.pages.workshop.list',
+            [
                 'workShops' => $workShops
             ]
         );
+    }
+
+    public function historyJobApply()
+    {
+        $getUserApplyJobs = $this->userJobService->getJobUserApply();
+        $data = [
+            'getUserApplyJobs' => $getUserApplyJobs
+        ];
+        return view('client.pages.job.historyJobApply', $data);
     }
 }

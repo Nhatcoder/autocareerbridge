@@ -65,7 +65,7 @@ class ConversationsController extends Controller
                 $this->chatMessageService->updateSeenMessage($id);
             }
 
-            $getUserApplyJob = $this->userJobService->getJobUserApply();
+            $getUserApplyJob = $this->userJobService->getJobUserApplyChats();
             $userChats = $this->chatMessageService->userChats();
             if ($company || $user) {
                 $chats = $this->chatMessageService->chats($id);
