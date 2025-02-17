@@ -139,6 +139,7 @@ class HomeController extends Controller
     public function workshop()
     {
         $workShops = $this->workShopService->getWorkShopClient();
+
         return view(
             'client.pages.workshop.list',
             [
@@ -150,9 +151,9 @@ class HomeController extends Controller
     public function historyJobApply()
     {
         $getUserApplyJobs = $this->userJobService->getJobUserApply();
-        $data = [
+
+        return view('client.pages.job.historyJobApply', [
             'getUserApplyJobs' => $getUserApplyJobs
-        ];
-        return view('client.pages.job.historyJobApply', $data);
+        ]);
     }
 }
