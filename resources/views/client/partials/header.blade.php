@@ -71,6 +71,14 @@
                                     class="gc_main_navigation parent {{ Request::routeIs(['workshop', 'workshopDetail']) ? 'active' : '' }}">
                                     <a href="{{ route('workshop') }}" class="gc_main_navigation">Workshop</a>
                                 </li>
+                                @auth
+                                    @if (auth()->user()->role == 7)
+                                        <li
+                                            class="gc_main_navigation parent {{ Request::routeIs('myCv') ? 'active' : '' }}">
+                                            <a href="{{ route('myCv') }}" class="gc_main_navigation">Quản lý CV</a> 
+                                        </li>
+                                    @endif
+                                @endauth
 
                                 <li>
                                     <div id="search_open" class="gc_search_box">

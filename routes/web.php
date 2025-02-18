@@ -54,6 +54,8 @@ Route::middleware('web')->group(function () {
             Route::get('cv/{id}/view', [ResumeController::class, 'view'])->name('cv.view');
             Route::get('cv/{id}/edit', [ResumeController::class, 'editCV'])->name('cv.edit');
 
+            Route::delete('cv/{id}/delete', [ResumeController::class, 'deleteCv'])->name('cv.delete');
+
             Route::get('/api/cv/{id}', [ResumeController::class, 'getCVData']);
 
 
@@ -61,6 +63,10 @@ Route::middleware('web')->group(function () {
             // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
             Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
             Route::put('cv/{id}/update', [ResumeController::class, 'update'])->name('updateCv');
+
+            Route::get('load-template/{template}', function ($template) {
+                return view('client.pages.cv.all.' . $template);
+            });
 
             Route::post('apply-job', [JobsController::class, 'applyJob'])->name('applyJob');
 

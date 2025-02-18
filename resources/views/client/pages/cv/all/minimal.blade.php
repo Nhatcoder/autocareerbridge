@@ -371,8 +371,12 @@
                 if (target) {
                     if (this.type === 'date' && this.value) {
                         const date = new Date(this.value);
-                        const formattedDate =
-                            `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                        const day = String(date.getDate()).padStart(2,
+                        '0'); // Thêm số 0 nếu ngày nhỏ hơn 10
+                        const month = String(date.getMonth() + 1).padStart(2,
+                        '0'); // Thêm số 0 nếu tháng nhỏ hơn 10
+                        const year = date.getFullYear();
+                        const formattedDate = `${day}/${month}/${year}`;
                         target.textContent = formattedDate;
                     } else {
                         target.textContent = this.value || this.placeholder;
@@ -390,6 +394,7 @@
 
             input.dispatchEvent(new Event('input'));
         });
+
 
 
 
