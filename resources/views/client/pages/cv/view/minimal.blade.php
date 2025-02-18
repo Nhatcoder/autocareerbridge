@@ -132,6 +132,9 @@
 </head>
 
 <body>
+    <div class="text-center my-3">
+        <a href="{{ route('cv.download', $cv->id) }}" class="btn btn-success">Tải xuống</a>
+    </div>
     <div class="cv-container" style="">
         <div class="header">
             <div>
@@ -230,6 +233,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

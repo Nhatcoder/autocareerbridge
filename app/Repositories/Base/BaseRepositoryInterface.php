@@ -19,4 +19,6 @@ interface BaseRepositoryInterface
     public function delete($id);
 
     public function deleteByIds(array $ids);
+
+    public function deleteByCvId($id);
 }
