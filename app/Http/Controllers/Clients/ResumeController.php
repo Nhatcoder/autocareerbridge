@@ -42,7 +42,7 @@ class ResumeController extends Controller
             $cvs = $this->cvService->getMyCV();
 
             if (!$cvs) {
-                
+
                 return redirect()->back()->with('error', 'Bạn chưa có CV nào.');
             }
 
@@ -61,6 +61,7 @@ class ResumeController extends Controller
     public function store(CvRequest $request)
     {
         try {
+
             $this->cvService->createCv($request);
 
             return response()->json([
@@ -151,7 +152,7 @@ class ResumeController extends Controller
             if (!$cv) {
                 abort(404);
             }
-            return view("client.pages.cv.pdf.{$cv->template}", compact('cv'));
+            return view("client.pages.cv.view.{$cv->template}", compact('cv'));
         } catch (\Exception $e) {
             Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
         }
@@ -206,5 +207,15 @@ class ResumeController extends Controller
             'cv' => $cv,
             'template' => $cv->template,
         ]);
+    }
+
+    public function deleteCv($id)
+    {
+        try {
+            $this->cvService->deleteCv($id);
+            return redirect()->route('myCv')->with('status_success', 'Xóa CV thành công!');
+        } catch (\Exception $e) {
+            Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+        }
     }
 }

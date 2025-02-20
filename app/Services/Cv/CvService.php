@@ -114,15 +114,20 @@ class CvService
                 $this->educationRepository->insert($educations);
             }
 
-            $this->cvSkillRepository->create([
-                'cv_id' => $cvId,
-                'name' => $request->skills,
-            ]);
+            if (!empty($request->skills)) {
+                $this->cvSkillRepository->create([
+                    'cv_id' => $cvId,
+                    'name' => $request->skills,
+                ]);
+            }
 
-            $this->certificateRepository->create([
-                'cv_id' => $cvId,
-                'description' => $request->certifications
-            ]);
+            if (!empty($request->certifications)) {
+                $this->certificateRepository->create([
+                    'cv_id' => $cvId,
+                    'description' => $request->certifications
+                ]);
+            }
+
 
             if (!empty($contactNames)) {
                 foreach ($contactNames as $index => $contact) {
@@ -281,8 +286,18 @@ class CvService
             $this->referrerRepository->deleteByIds(array_diff($currentReferrerIds, $newReferrerIds));
 
             // skill and certificate
-            $cv->cv_skill()->updateOrCreate(['cv_id' => $cvId], ['name' => $request->skills]);
-            $cv->certificates()->updateOrCreate(['cv_id' => $cvId], ['description' => $request->certifications]);
+            if (!empty($request->skills)) {
+                $cv->cv_skill()->updateOrCreate(
+                    ['cv_id' => $cvId],
+                    ['name' => $request->skills]
+                );
+            }
+            if (!empty($request->certifications)) {
+                $cv->certificates()->updateOrCreate(
+                    ['cv_id' => $cvId],
+                    ['description' => $request->certifications]
+                );
+            }
 
             DB::commit();
             return $cv;
@@ -308,5 +323,41 @@ class CvService
     {
         $cv = $this->cvRepository->getMyCv();
         return $cv;
+    }
+
+    /**
+     * Delete a CV by ID.
+     *
+     * @param int $cvId
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteCv($cvId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $cv = $this->cvRepository->find($cvId);
+
+            if (!$cv) {
+                abort(404);
+            }
+
+            $this->experienceRepository->deleteByCvId($cvId);
+            $this->educationRepository->deleteByCvId($cvId);
+            $this->cvSkillRepository->deleteByCvId($cvId);
+            $this->certificateRepository->deleteByCvId($cvId);
+            $this->referrerRepository->deleteByCvId($cvId);
+
+            $this->cvRepository->delete($cvId);
+
+            DB::commit();
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            return false;
+        }
     }
 }

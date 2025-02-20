@@ -9,7 +9,7 @@
             padding: 20px;
             background-color: #f8f9fa;
             /* height: 100vh;
-                                                                                                                                                                overflow: hidden; */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            overflow: hidden; */
         }
 
         .form-container {
@@ -84,15 +84,107 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
+
+        /* css modal */
+
+        .template-item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .template-item img {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+        }
+
+        .template-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .template-item:hover a.btn-primary {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .template-item a.btn-primary {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .template-name {
+            margin-top: 8px;
+            font-weight: bold;
+        }
     </style>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chọn mẫu CV</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="template-item" data-template="minimal">
+                                <img src="{{ asset('clients/images/cv/minimal.png') }}" alt="Minimal Template">
+                                <button type="button" onclick="changeTemplate('minimal')">Minimal</button>
+                            </div>
+                            <p class="template-name">Minimal</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="template-item" data-template="elegant">
+                                <img src="{{ asset('clients/images/cv/elegant.png') }}" alt="Elegant Template">
+                                <button type="button" onclick="changeTemplate('elegant')">Elegant</button>
+                            </div>
+                            <p class="template-name">Elegant</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="template-item" data-template="modern">
+                                <img src="{{ asset('clients/images/cv/modern.png') }}" alt="Modern Template">
+                                <button type="button" onclick="changeTemplate('modern')">Modern</button>
+                            </div>
+                            <p class="template-name">Modern</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form và CV -->
     <div class="main-container">
         <!-- Form Section -->
         <div class="form-container">
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Đổi mẫu
+                </button>
+            </div>
             <h3>Nhập Thông Tin CV</h3>
             <form action="{{ route('createCv') }}" method="POST" enctype="multipart/form-data" id="formCv">
                 @csrf
                 @method('POST')
-                <input type="hidden" name="template" value="{{ $template }}">
+                <input type="hidden" name="template" value="{{ $template }}" id="templateInput">
                 <div class="cv-settings">
                     <h3>Tùy chỉnh CV</h3>
                     <div class="row">
@@ -129,8 +221,8 @@
                             </div>
                             <div class="mt-2">
                                 <label for="avatar" class="form-label">Tải lên ảnh đại diện</label>
-                                <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*"
-                                    onchange="previewAvatar(event)">
+                                <input type="file" id="avatar" name="avatar" class="form-control"
+                                    accept="image/*" onchange="previewAvatar(event)">
                                 <small class="text-danger error-message"></small>
                             </div>
                         </div>
@@ -267,8 +359,7 @@
             @endif
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#formCv').on('submit', function(e) {
@@ -335,5 +426,4 @@
             });
         });
     </script>
-
 @endsection
