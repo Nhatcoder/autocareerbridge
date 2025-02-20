@@ -5,6 +5,7 @@ namespace App\Repositories\Job;
 use App\Models\CompanyWorkshop;
 use App\Models\Job;
 use App\Models\UniversityJob;
+use App\Models\UserJob;
 use App\Repositories\Base\BaseRepository;
 use Carbon\Carbon;
 use Exception;
@@ -16,11 +17,13 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
 {
     protected $universityJob;
     protected $companyWorkshop;
+    protected $userJob;
 
-    public function __construct(UniversityJob $universityJob, CompanyWorkshop $companyWorkshop)
+    public function __construct(UserJob $userJob, UniversityJob $universityJob, CompanyWorkshop $companyWorkshop)
     {
         $this->companyWorkshop = $companyWorkshop;
         $this->universityJob = $universityJob;
+        $this->userJob = $userJob;
         parent::__construct();
     }
 
@@ -462,5 +465,24 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             ->whereIn('id', $jobIds)
             ->where('status', STATUS_PENDING)
             ->get();
+    }
+
+    public function getUserApplyJob($company_id)
+    {
+        $userJob = $this->userJob
+            ->with('user')
+            ->whereHas('job', function ($query) use ($company_id) {
+                $query->where('user_id', $company_id);
+            })
+            ->orderBy('id', 'desc');
+
+        return [
+            'all' => clone $userJob->paginate(10),
+            'w_eval' => (clone $userJob)->where('status', STATUS_W_EVAL)->paginate(10),
+            'fit' => (clone $userJob)->where('status', STATUS_FIT)->paginate(10),
+            'interv' => (clone $userJob)->where('status', STATUS_INTERV)->paginate(10),
+            'hired' => (clone $userJob)->where('status', STATUS_HIRED)->paginate(10),
+            'unfit' => (clone $userJob)->where('status', STATUS_UNFIT)->paginate(10),
+        ];
     }
 }

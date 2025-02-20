@@ -45,4 +45,15 @@ class NotificationService
     {
         return $this->notificationRepository->seen($args);
     }
+
+    public function renderNotificationRealtimeClient($notification, $id)
+    {
+        $idChanel = $notification->user_id ?? $notification->company_id;
+        $role = $notification->admin_id ? 'admin' : 'user';
+
+        $viewNotifycation = view('management.components.notifycation', compact('notification'))->render();
+
+        // $countNotificationUnSeen = $this->notificationRepository->getCountNotificationRealtime();
+        // broadcast(new NotifyJobChangeStatusEvent($viewNotifycation, $idChanel, $countNotificationUnSeen, $role));
+    }
 }

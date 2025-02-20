@@ -51,7 +51,8 @@
                                     @if (Auth::guard('web')->check() && Auth::guard('web')->user()->userJob()->count() > 0)
                                         <ul>
                                             <li class="parent"><a href="{{ route('search') }}">Tìm việc làm</a></li>
-                                            <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã ứng tuyển</a></li>
+                                            <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã ứng
+                                                    tuyển</a></li>
                                         </ul>
                                     @endif
                                 </li>
@@ -243,7 +244,9 @@
                     <div class="jp_navi_right_btn_wrapper float-end ">
                         <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
                             @if (Auth::guard('admin')->check())
-                                @if (Auth::guard('admin')->user()->role !== ROLE_ADMIN)
+                                @if (Auth::guard('admin')->user()->role !== ROLE_ADMIN &&
+                                        Auth::guard('admin')->user()->role === ROLE_COMPANY &&
+                                        Auth::guard('admin')->user()->role === ROLE_HIRING)
                                     <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('admin')->user()->company->id]) }}"
                                         class="chat-company">
                                         <svg width="25px" height="25px" viewBox="0 0 24 24"
@@ -342,10 +345,67 @@
                                 </div>
                             @else
                                 @if (Auth::guard(name: 'web')->user())
-                                    <a class="icon_notification" href="jvavascript:void(0);">
+                                    <a class="icon_notification" role="button" class="menu-link"
+                                        data-bs-toggle="dropdown" aria-expanded="false" href="jvavascript:void(0);">
                                         <span class="notification_count">54</span>
                                         <i class="fa-regular fa-bell"></i>
                                     </a>
+
+                                    <div class="dropdown-menu" style="width: 360px;">
+                                        <div class="notification-box">
+                                            <div class="box_header d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0 fw-bold">Thông báo</h5>
+                                                <span class="mark-read">Đánh dấu là đã đọc</span>
+                                            </div>
+
+                                            <div class="notification-list">
+                                                <div class="notification-item">
+                                                    <div class="title fw-medium">Nhà tuyển dụng vừa xem CV ứng tuyển
+                                                        của bạn
+                                                    </div>
+                                                    <div class="content">Ms Trang, CÔNG TY TNHH MIAGI SOLUTION, Vừa xem
+                                                        CC của bạn
+                                                    </div>
+                                                    <div class="time">14/02/2025</div>
+                                                    <div class="is-seen">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="notification-item">
+                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
+                                                    </div>
+                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
+                                                    <div class="time">1 giờ trước</div>
+                                                </div>
+                                                <div class="notification-item">
+                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
+                                                    </div>
+                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
+                                                    <div class="time">1 giờ trước</div>
+                                                </div>
+                                                <div class="notification-item">
+                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
+                                                    </div>
+                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
+                                                    <div class="time">1 giờ trước</div>
+                                                </div>
+                                                <div class="notification-item">
+                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
+                                                    </div>
+                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
+                                                    <div class="time">1 giờ trước</div>
+                                                </div>
+                                                <div class="notification-item">
+                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
+                                                    </div>
+                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
+                                                    <div class="time">1 giờ trước</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                     <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('web')->user()->id]) }}"
                                         class="icon_message">
                                         <svg width="25px" height="25px" viewBox="0 0 24 24"

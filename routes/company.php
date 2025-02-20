@@ -64,8 +64,9 @@ Route::group([
     Route::delete('manage-job/delete/{id}', [JobsController::class, 'destroy'])->name('deleteJob');
     Route::get('manage-job/detail/{slug}', [JobsController::class, 'show'])->name('showJob');
     Route::get('manage-university-job', [JobsController::class, 'manageUniversityJob'])->name('manageUniversityJob');
+    Route::get('manage-user-job', [JobsController::class, 'manageUserApplyJob'])->name('manageUserApplyJob');
+    Route::post('manage-user-job/change-status', [JobsController::class, 'changeStatusUserAplly'])->name('changeStatusUserAplly');
     Route::get('manage-university-job/change-status/{id}/{status}', [JobsController::class, 'updateStatus'])->name('updateStatus');
     Route::post('workshop/apply/{companyId}/{workshopId}', [WorkShopsController::class, 'applyWorkshop'])->name('workshop.apply');
     Route::get('/workshops/applied', [WorkShopsController::class, 'workshopApplied'])->name('workshops.applied');
-
 });

@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Company;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Company\JobRequest;
 use App\Models\Job;
 use App\Models\Skill;
-use App\Services\Job\JobService;
-use App\Services\Major\MajorService;
-use App\Services\Skill\SkillService;
-use Auth;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\Job\JobService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
+use App\Services\Major\MajorService;
+use App\Services\Skill\SkillService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Company\JobRequest;
 
 /**
  * JobsController handles job management operations for companies, including listing
  * and filtering jobs by search, status, and major.
  *
  * @package App\Http\Controllers\Company
- * @author Khuat Van Duy
+ * @author Khuat Van Duy & Tran Van Nhat
  * @access public
  * @see index()
  * @see create()
@@ -206,7 +206,7 @@ class JobsController extends Controller
      * This method retrieves and categorizes university job applications based on their status
      * (pending, approved, rejected). It then returns a view with the categorized data for display.
      *
-     * @return \Illuminate\View\View The view for managing university job applications, including pending, approved, and rejected jobs.
+     * The view for managing university job applications, including pending, approved, and rejected jobs.
      * @author Dang Duc Chung
      * @throws \Exception If retrieving or processing the job applications fails.
      * @see JobService::manageUniversityJob() for the logic behind fetching the university job data.
@@ -246,6 +246,49 @@ class JobsController extends Controller
         } catch (\Exception $exception) {
             Log::error('Lỗi : ' . $exception->getMessage());
             return redirect()->back()->with('status_fail', __('message.company.job.error_status_job'));
+        }
+    }
+
+    /**
+     * Manage user job applications.
+     * This method retrieves and categorizes user job applications based on their status
+     * (pending, approved, rejected). It then returns a view with the categorized data for display.
+     *
+     * @return \Illuminate\View\View The view for managing user job applications, including w_eval, fit, interv, hired, unfit, and all jobs.
+     * @author TRAN VAN NHAT
+     * @throws \Exception If retrieving or processing the job applications fails.
+     * @see JobService::manageUserApplyJob() for the logic behind fetching the user job data.
+     */
+    public function manageUserApplyJob()
+    {
+        $universityJobs = $this->jobService->custommerApplicateJob();
+        $data = [
+            'all' => $universityJobs['all'],
+            'w_eval' => $universityJobs['w_eval'],
+            'fit' => $universityJobs['fit'],
+            'interv' => $universityJobs['interv'],
+            'hired' => $universityJobs['hired'],
+            'unfit' => $universityJobs['unfit'],
+        ];
+
+        return view('management.pages.company.custommer_job.index', $data);
+    }
+
+    public function changeStatusUserAplly(Request $request)
+    {
+        try {
+            $data = $request->only(['id', 'status', 'interview_time']);
+
+            $this->jobService->changeStatusUserAplly($data);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('message.company.job.update_status_job'),
+            ], 201);
+        } catch (\Exception $exception) {
+            $this->logExceptionDetails($exception);
+
+            return redirect()->back()->with('status_fail', __('message.company.job.error_update'));
         }
     }
 }

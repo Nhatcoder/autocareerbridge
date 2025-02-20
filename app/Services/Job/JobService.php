@@ -420,7 +420,7 @@ class JobService
 
     /**
      * Allows a user to apply for a job.
-     *
+     * @author Tran Van Nhat
      * @param array $data The job application data, including job_id and other relevant details.
      * @return mixed The result of creating the job application in the repository.
      */
@@ -429,5 +429,61 @@ class JobService
         $user = Auth::guard('web')->user()->id;
         $data['user_id'] = $user;
         return $this->userJobRepository->create($data);
+    }
+
+    /**
+     * This function handles customer job applications.
+     * @author Tran Van Nhat
+     */
+    public function custommerApplicateJob()
+    {
+        $companyId = auth()->guard('admin')->user()->company->id ?? auth()->guard('admin')->user()->hiring->company_id;
+        $userJobs = $this->jobRepository->getUserApplyJob($companyId);
+
+        return $userJobs;
+    }
+
+
+    /**
+     * This function handles change status of a user job applying
+     * @author Tran Van Nhat
+     */
+    public function changeStatusUserAplly($data)
+    {
+        $userJob = $this->userJobRepository->find($data['id']);
+        if (empty($userJob)) {
+            return null;
+        }
+        switch ($data['status']) {
+            case STATUS_FIT:
+                $this->userJobRepository->update($userJob->id, [
+                    'interview_time' => $data['interview_time'],
+                    'status' => $data['status'],
+                ]);
+                break;
+            default:
+                $this->userJobRepository->update($userJob->id, [
+                    'status' => $data['status'],
+                ]);
+
+                $notification = $this->notificationService->create([
+                    'user_id' => $userJob->user_id,
+                    'content' => 'You have a new job application',
+                    'link' => route('user.jobDetail', $userJob->slug),
+                ]);
+
+                // $this->notificationService->renderNotificationRealtime($notification, $userJob->user_id);
+
+                // $notification = $this->notificationRepository->create([
+                //     'title' => 'Công việc ' . $job->name . ' được doanh nghiệp chấp nhận',
+                //     'university_id' => $universityId,
+                //     'link' => route('university.jobDetail', $job->slug),
+                //     'type' => TYPE_JOB,
+                // ]);
+                // $this->notificationService->renderNotificationRealtime($notification, null, $universityId);
+                break;
+        }
+
+        return $userJob;
     }
 }

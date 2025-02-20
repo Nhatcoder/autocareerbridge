@@ -19,6 +19,7 @@ export default defineConfig({
             generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
     },
+    
     // server: {
     //     host: '192.168.0.152',
     //     port: 5173,

@@ -272,15 +272,22 @@
                         </li>
                         <li><a href="{{ route('company.createJob') }}">{{ __('label.company.sidebar.create') }}</a>
                         </li>
-
                     </ul>
                 </li>
 
                 <li class="{{ request()->is('company/manage-university-job*') ? 'mm-active' : '' }}">
-                    <a href="{{ route('company.manageUniversityJob') }}?tab=pending" aria-expanded="false"> <i
-                            class="fa-solid fa-clipboard-list"></i>
+                    <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
+                        <i class="fa-solid fa-clipboard-list"></i>
                         <span class="nav-text">{{ __('label.company.sidebar.manage_applied_jobs') }}</span>
                     </a>
+                    <ul aria-expanded="false">
+                        <li><a
+                                href="{{ route('company.manageUniversityJob') }}?tab=pending">{{ __('label.company.sidebar.school_candidate') }}</a>
+                        </li>
+                        <li><a
+                                href="{{ route('company.manageUserApplyJob', ['tab' => 'all']) }}">{{ __('label.company.sidebar.custommer_candidate') }}</a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ route('company.workshops.applied') }}" aria-expanded="false">

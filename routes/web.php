@@ -56,7 +56,6 @@ Route::middleware('web')->group(function () {
 
             Route::get('/api/cv/{id}', [ResumeController::class, 'getCVData']);
 
-
             // thêm thông tin cập nhật hồ sơ
             // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
             Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
