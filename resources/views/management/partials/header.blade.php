@@ -207,7 +207,7 @@
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a href="   @if (auth('admin')->user()->role === ROLE_ADMIN) {{ route('admin.users.edit', auth('admin')->user()->id) }}
+                                <a href="@if (auth('admin')->user()->role === ROLE_ADMIN) {{ route('admin.users.edit', auth('admin')->user()->id) }}
                                         @elseif (auth('admin')->user()->role === ROLE_COMPANY)
                                             {{ route('company.profile') }}
 
@@ -246,6 +246,12 @@
                                         </g>
                                     </svg>
                                     <span class="ms-2">{{ __('label.admin.header.notification') }} </span>
+                                </a>
+
+                                <a href="{{ route('home') }}" class="dropdown-item ai-icon " target="_blank"
+                                    rel="noopener noreferrer">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                    <span class="ms-2">{{ __('label.admin.header.location_client') }} </span>
                                 </a>
 
                                 <form action="{{ route('management.logout', Auth::guard('admin')->user()->id) }}"

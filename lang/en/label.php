@@ -200,6 +200,13 @@ return [
         ],
 
         'company' => 'Company',
+        'header' => [
+            'profile' => 'Profile',
+            'notification' => 'Notification',
+            'cv' => 'CV',
+            'logout' => 'Logout',
+            'location_client' => 'Go to client website',
+        ],
         'profile' => [
             'information' => 'General information',
             'about' => 'About',
