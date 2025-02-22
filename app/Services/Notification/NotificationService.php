@@ -30,7 +30,6 @@ class NotificationService
         broadcast(new NotifyJobChangeStatusEvent($viewNotifycation, $idChanel, $countNotificationUnSeen, $role));
     }
 
-
     public function getNotifications()
     {
         return $this->notificationRepository->getNotifications();
@@ -46,14 +45,30 @@ class NotificationService
         return $this->notificationRepository->seen($args);
     }
 
-    public function renderNotificationRealtimeClient($notification, $id)
+    /**
+     * Render notification realtime to client
+     * @author TranVanNhat
+     * @param mixed $notification
+     * @param mixed $company
+     * @return void
+     */
+    public function renderNotificationRealtimeClient($notification)
     {
         $idChanel = $notification->user_id ?? $notification->company_id;
-        $role = $notification->admin_id ? 'admin' : 'user';
+        $role = $notification->company_id ? COMPANY : USER;
 
-        $viewNotifycation = view('management.components.notifycation', compact('notification'))->render();
+        $viewNotifycation = view('client.partials.components.notifycation', compact('notification'))->render();
 
-        // $countNotificationUnSeen = $this->notificationRepository->getCountNotificationRealtime();
-        // broadcast(new NotifyJobChangeStatusEvent($viewNotifycation, $idChanel, $countNotificationUnSeen, $role));
+        $countNotificationUnSeen = $this->notificationRepository->countNotifycationUser($notification->user_id);
+        broadcast(new NotifyJobChangeStatusEvent($viewNotifycation, $idChanel, $countNotificationUnSeen, $role));
+    }
+
+    /**
+     * Mark all notification as seen
+     * @author TranVanNhat
+     */
+    public function markSeenAll()
+    {
+        return $this->notificationRepository->markSeenAll();
     }
 }

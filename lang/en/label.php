@@ -469,7 +469,7 @@ return [
             "university" => "University",
             "candicate" => "Candicate",
             "date" => "Creation Date",
-            "time_applied" => "Application time",
+            "time_applied" => "Dated submission",
             "action" => "Action",
             "status" => "Status",
             "approve" => "Approve",
@@ -482,6 +482,8 @@ return [
             'interv' => 'Interviewing',
             'hired'  => 'Hired',
             'unfit'  => 'Unfit',
+            'message_confirm' => 'Do you want to change the status of the job application?',
+            'confirm' => 'Confirm',
         ],
         'joinWorkshop' => [
             "pending" => "Pending",

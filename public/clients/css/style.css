@@ -4339,12 +4339,16 @@ ul {
 
 .notification_count {
     position: absolute;
-    top: -8px;
-    right: -5px;
+    top: -5px;
+    right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #ff0000;
     color: #fff;
+    width: 20px;
+    height: 20px;
     font-size: 12px;
-    padding: 2px 6px;
     border-radius: 50%;
 }
 
@@ -4373,8 +4377,7 @@ ul {
     display: block;
 }
 
-.notification-item:hover .title,
-.notification-item:hover .content {
+.notification-item:hover .title {
     color: #18bae2;
 }
 
@@ -4387,10 +4390,6 @@ ul {
     color: #333;
 }
 
-.notification-item .content {
-    font-size: 14px;
-    color: #555;
-}
 
 .notification-item .time {
     font-size: 12px;
@@ -4411,7 +4410,7 @@ ul {
 
 .notification-list {
     max-height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .is-seen {

@@ -31,6 +31,10 @@ Broadcast::channel('university.{id}', function ($user, $id) {
         (int) optional($user->academicAffair)->university_id === (int) $id);
 }, ['guards' => ['admin']]);
 
+Broadcast::channel('user.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+}, ['guards' => ['web']]);
+
 Broadcast::channel('chat.{user1}.{user2}', function ($user, $user1, $user2) {
     if ($user && ((int) $user1) && ((int) $user2)) {
         return ['id' => $user->id];

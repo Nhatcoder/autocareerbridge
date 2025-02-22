@@ -467,6 +467,12 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             ->get();
     }
 
+    /**
+     * Retrieve a list of user job applications related to a company.
+     * @author TranVanNhat
+     * @param int $company_id The ID of the company to query.
+     * @return array A list of user job applications, including the 'all', 'w_eval', 'fit', 'interv', 'hired', and 'unfit' keys.
+     */
     public function getUserApplyJob($company_id)
     {
         $userJob = $this->userJob
@@ -477,12 +483,12 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             ->orderBy('id', 'desc');
 
         return [
-            'all' => clone $userJob->paginate(10),
-            'w_eval' => (clone $userJob)->where('status', STATUS_W_EVAL)->paginate(10),
-            'fit' => (clone $userJob)->where('status', STATUS_FIT)->paginate(10),
-            'interv' => (clone $userJob)->where('status', STATUS_INTERV)->paginate(10),
-            'hired' => (clone $userJob)->where('status', STATUS_HIRED)->paginate(10),
-            'unfit' => (clone $userJob)->where('status', STATUS_UNFIT)->paginate(10),
+            'all' => clone $userJob->paginate(PAGINATE_LIST_COMPANY),
+            'w_eval' => (clone $userJob)->where('status', STATUS_W_EVAL)->paginate(PAGINATE_LIST_COMPANY),
+            'fit' => (clone $userJob)->where('status', STATUS_FIT)->paginate(PAGINATE_LIST_COMPANY),
+            'interv' => (clone $userJob)->where('status', STATUS_INTERV)->paginate(PAGINATE_LIST_COMPANY),
+            'hired' => (clone $userJob)->where('status', STATUS_HIRED)->paginate(PAGINATE_LIST_COMPANY),
+            'unfit' => (clone $userJob)->where('status', STATUS_UNFIT)->paginate(PAGINATE_LIST_COMPANY),
         ];
     }
 }

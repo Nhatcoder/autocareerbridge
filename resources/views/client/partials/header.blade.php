@@ -76,7 +76,7 @@
                                     @if (auth()->user()->role == 7)
                                         <li
                                             class="gc_main_navigation parent {{ Request::routeIs('myCv') ? 'active' : '' }}">
-                                            <a href="{{ route('myCv') }}" class="gc_main_navigation">Quản lý CV</a> 
+                                            <a href="{{ route('myCv') }}" class="gc_main_navigation">Quản lý CV</a>
                                         </li>
                                     @endif
                                 @endauth
@@ -355,7 +355,9 @@
                                 @if (Auth::guard(name: 'web')->user())
                                     <a class="icon_notification" role="button" class="menu-link"
                                         data-bs-toggle="dropdown" aria-expanded="false" href="jvavascript:void(0);">
-                                        <span class="notification_count">54</span>
+                                        <span data-count="{{ $notificationCount > 0 ? $notificationCount : 0 }}"
+                                            class="notification_count {{ $notificationCount > 0 ? $notificationCount : 'd-none' }}">
+                                            {{ $notificationCount }}</span>
                                         <i class="fa-regular fa-bell"></i>
                                     </a>
 
@@ -363,53 +365,37 @@
                                         <div class="notification-box">
                                             <div class="box_header d-flex justify-content-between align-items-center">
                                                 <h5 class="mb-0 fw-bold">Thông báo</h5>
-                                                <span class="mark-read">Đánh dấu là đã đọc</span>
+                                                @if ($notificationCount > 0)
+                                                    <a href="{{ route('markSeenAll') }}" class="mark-read">Đánh dấu
+                                                        là đã
+                                                        đọc</a>
+                                                @endif
                                             </div>
 
-                                            <div class="notification-list">
-                                                <div class="notification-item">
-                                                    <div class="title fw-medium">Nhà tuyển dụng vừa xem CV ứng tuyển
-                                                        của bạn
+                                            <div class="notification-list" data-role="{{ USER }}"
+                                                data-id-chanel="{{ Auth::guard('web')->user()->id }}">
+                                                @forelse ($notificationsHeader as $item)
+                                                    <a href="{{ $item->link }}" class="notification-item d-block"
+                                                        data-id="{{ $item->id }}">
+                                                        <div
+                                                            class="title {{ $item->is_seen == UNSEEN ? 'fw-bold' : 'fw-medium' }}">
+                                                            {{ $item->title }}
+                                                        </div>
+                                                        <div class="time">
+                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i') }}
+                                                        </div>
+                                                        @if ($item->is_seen == SEEN)
+                                                            <div class="is-seen">
+                                                                <i class="fa-solid fa-check"></i>
+                                                            </div>
+                                                        @endif
+                                                    </a>
+                                                @empty
+                                                    <div class="no_notifycation title fw-medium text-center pt-2">Không
+                                                        có thông báo
+                                                        nào
                                                     </div>
-                                                    <div class="content">Ms Trang, CÔNG TY TNHH MIAGI SOLUTION, Vừa xem
-                                                        CC của bạn
-                                                    </div>
-                                                    <div class="time">14/02/2025</div>
-                                                    <div class="is-seen">
-                                                        <i class="fa-solid fa-check"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="notification-item">
-                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
-                                                    </div>
-                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
-                                                    <div class="time">1 giờ trước</div>
-                                                </div>
-                                                <div class="notification-item">
-                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
-                                                    </div>
-                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
-                                                    <div class="time">1 giờ trước</div>
-                                                </div>
-                                                <div class="notification-item">
-                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
-                                                    </div>
-                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
-                                                    <div class="time">1 giờ trước</div>
-                                                </div>
-                                                <div class="notification-item">
-                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
-                                                    </div>
-                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
-                                                    <div class="time">1 giờ trước</div>
-                                                </div>
-                                                <div class="notification-item">
-                                                    <div class="title">Nhà tuyển dụng vừa xem CV ứng tuyển của bạn
-                                                    </div>
-                                                    <div class="content">Tên công ty khác, Vừa xem CV của bạn</div>
-                                                    <div class="time">1 giờ trước</div>
-                                                </div>
+                                                @endforelse
                                             </div>
 
                                         </div>

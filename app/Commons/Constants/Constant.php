@@ -59,3 +59,6 @@ define('STATUS_FIT', 2);
 define('STATUS_INTERV', 3);
 define('STATUS_HIRED', 4);
 define('STATUS_UNFIT', 5);
+
+define('COMPANY', 'company');
+define('USER', 'user');

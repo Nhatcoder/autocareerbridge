@@ -1,12 +1,6 @@
-<div class="notification-item">
-    <div class="title fw-medium">Nhà tuyển dụng vừa xem CV ứng tuyển
-        của bạn
+<a href="{{ $notification->link }}" class="notification-item d-block" data-id="{{ $notification->id }}">
+    <div class="title fw-bold">
+        {{ $notification->title }}
     </div>
-    <div class="content">Ms Trang, CÔNG TY TNHH MIAGI SOLUTION, Vừa xem
-        CC của bạn
-    </div>
-    <div class="time">14/02/2025</div>
-    <div class="is-seen">
-        <i class="fa-solid fa-check"></i>
-    </div>
-</div>
+    <div class="time"> {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y H:i') }}</div>
+</a>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Clients\UniversitiesController;
 use App\Http\Controllers\Clients\WorkshopsController;
+use App\Http\Controllers\NotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +38,6 @@ Route::middleware('web')->group(function () {
     Route::get('viec-lam', [HomeController::class, 'search'])->name('search');
     Route::get('lich-su-ung-tuyen', [HomeController::class, 'historyJobApply'])->name('historyJobApply');
 
-
-
-
     Route::middleware('check.login')
         ->group(function () {
             // cv client
@@ -53,19 +51,13 @@ Route::middleware('web')->group(function () {
             Route::get('cv/{id}/download', [ResumeController::class, 'download'])->name('cv.download');
             Route::get('cv/{id}/view', [ResumeController::class, 'view'])->name('cv.view');
             Route::get('cv/{id}/edit', [ResumeController::class, 'editCV'])->name('cv.edit');
-
             Route::delete('cv/{id}/delete', [ResumeController::class, 'deleteCv'])->name('cv.delete');
-
             Route::get('/api/cv/{id}', [ResumeController::class, 'getCVData']);
 
             // thêm thông tin cập nhật hồ sơ
             // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
             Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
             Route::put('cv/{id}/update', [ResumeController::class, 'update'])->name('updateCv');
-
-            Route::get('load-template/{template}', function ($template) {
-                return view('client.pages.cv.all.' . $template);
-            });
 
             Route::post('apply-job', [JobsController::class, 'applyJob'])->name('applyJob');
 
@@ -75,6 +67,8 @@ Route::middleware('web')->group(function () {
             Route::get('history-image/{id}', [ConversationsController::class, 'historyImage'])->name('historyImage');
             Route::get('user-chat', [ConversationsController::class, 'getUserChat'])->name('getUserChat');
             Route::get('update-seen-message', [ConversationsController::class, 'updateSeenMessage'])->name('updateSeenMessage');
+
+            Route::get('get-data-scroll-notifycation', [NotificationsController::class, 'getDataScrollNotifycation'])->name('getDataScrollNotifycation');
         });
 
     Route::middleware('check.login')

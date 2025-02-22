@@ -381,7 +381,7 @@ return [
             'manage_hiring' => 'Quản lý nhân viên',
             'manage_collaboration' => 'Quản lý trường hợp tác',
             'search_university' => 'Tìm kiếm trường học',
-            'manage_applied_jobs' => 'Ứng viên',
+            'manage_applied_jobs' => 'Quản lý hồ sơ',
             'manage_workshop' => 'Bài workshop đã tham gia',
             'school_candidate' => 'Trường học',
             'custommer_candidate' => 'Ứng viên',
@@ -474,7 +474,7 @@ return [
 
         ],
         'applyJob' => [
-            'manage_applied_jobs' => 'Quản lí công việc ứng tuyển',
+            'manage_applied_jobs' => 'Quản lý hồ sơ',
             "pending" => "Chờ duyệt",
             "rejected" => "Đã từ chối",
             "approved" => "Đã duyệt",
@@ -482,7 +482,7 @@ return [
             "university" => "Trường học",
             "candicate" => "Ứng viên",
             "date" => "Ngày tạo",
-            "time_applied" => "Thời gian ứng tuyển",
+            "time_applied" => "Ngày nộp",
             "action" => "Hành động",
             "status" => "Trạng thái",
             "approve" => "Phê duyệt",
@@ -494,6 +494,8 @@ return [
             'interv' => 'Đang phỏng vấn',
             'hired'  => 'Đã tuyển',
             'unfit'  => 'Không phù hợp',
+            'message_confirm' => 'Bạn có chắc muốn đổi trạng thái tuyển dụng không?',
+            'confirm' => 'Xác nhận',
         ],
         'joinWorkshop' => [
             "pending" => "Chờ duyệt",

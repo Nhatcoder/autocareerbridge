@@ -218,6 +218,7 @@ class JobsController extends Controller
             $pending = $universityJobs['pending'];
             $approved = $universityJobs['approved'];
             $rejected = $universityJobs['rejected'];
+
             return view('management.pages.company.university_job.index', compact('pending', 'approved', 'rejected'));
         } catch (\Exception $exception) {
             Log::error('Lỗi : ' . $exception->getMessage());
@@ -274,21 +275,64 @@ class JobsController extends Controller
         return view('management.pages.company.custommer_job.index', $data);
     }
 
+    /**
+     * Update the status of a user job application.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id, status, and interview time.
+     * @author TRAN VAN NHAT
+     * @throws \Exception If updating the status fails.
+     * @see JobService::changeStatusUserAplly()
+     */
     public function changeStatusUserAplly(Request $request)
     {
         try {
+            DB::beginTransaction();
             $data = $request->only(['id', 'status', 'interview_time']);
-
             $this->jobService->changeStatusUserAplly($data);
+            DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => __('message.company.job.update_status_job'),
             ], 201);
         } catch (\Exception $exception) {
+            DB::rollBack();
             $this->logExceptionDetails($exception);
 
-            return redirect()->back()->with('status_fail', __('message.company.job.error_update'));
+            return response()->json([
+                'success' => false,
+                'message' => __('message.company.job.error_status_job'),
+            ]);
+        }
+    }
+
+    /**
+     * Check if the user has seen a job application or not.
+     * If the user has seen the job application, update the seen status to 1.
+     * If the user has not seen the job application, return an error message.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id.
+     * @author TRAN VAN NHAT
+     * @throws \Exception If an error occurs during the process.
+     */
+    public function checkUserJobSeen(Request $request)
+    {
+        try {
+            $data = $request->only(['id']);
+            $user = $this->jobService->checkUserJobSeen($data);
+            if ($user->is_seen == SEEN) {
+                return response()->json([
+                    'success' => true,
+                ], 201);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('message.company.job.check_seen'),
+                ], 201);
+            }
+        } catch (\Exception $exception) {
+            $this->logExceptionDetails($exception);
+            return redirect()->back()->with('status_fail', $exception->getMessage());
         }
     }
 }

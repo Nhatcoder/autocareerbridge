@@ -43,11 +43,11 @@
 
 <body>
     <!-- preloader Start -->
-    <div id="preloader">
+    {{-- <div id="preloader">
         <div id="status"><img src="{{ asset('clients/images/header/loadinganimation.gif') }}" id="preloader_image"
                 alt="loader">
         </div>
-    </div>
+    </div> --}}
     <!-- Top Scroll End -->
 
     <!-- Header Wrapper Start -->
@@ -96,9 +96,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-
     <!-- File custom.js -->
-    <script src="{{ asset('clients/js/main.js') }}"></script>
+    <script type="module" src="{{ asset('clients/js/main.js') }}"></script>
     @yield('js')
 </body>
 
