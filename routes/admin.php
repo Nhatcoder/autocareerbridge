@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\Admin\FieldsController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\JobsController;
-use App\Http\Controllers\Admin\MajorsController;
 use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Admin\WorkshopsController;
+use App\Http\Controllers\Admin\FieldsController;
+use App\Http\Controllers\Admin\MajorsController;
 use App\Http\Controllers\NotificationsController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\WorkshopsController;
 use App\Http\Controllers\Auth\Management\LoginController;
 use App\Http\Controllers\Auth\Management\RegistersController;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------

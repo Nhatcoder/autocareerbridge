@@ -2,16 +2,12 @@
 
 namespace App\Services\Managements;
 
-use App\Mail\PasswordReset;
 use Illuminate\Support\Str;
-
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 use App\Events\PasswordResetRequested;
 use App\Events\EmailConfirmationRequired;
 use App\Repositories\Auth\Managements\AuthRepositoryInterface;
-use Dotenv\Util\Regex;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -54,6 +50,10 @@ class AuthService
     public function login($data)
     {
         $user = $this->authRepository->login($data);
+        if (empty($user)) {
+            return ['success' => false, 'message' => 'Tài khoản không chính xác.'];
+        }
+
         $credentialsByEmail = ['email' => $data['email'], 'password' => $data['password']];
         $credentialsByUsername = ['user_name' => $data['email'], 'password' => $data['password']];
 
