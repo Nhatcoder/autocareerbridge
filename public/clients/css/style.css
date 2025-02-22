@@ -390,7 +390,7 @@ ul {
     color: #ffffff !important;
 }
 
-.mainmenu ul ul li:last-child>a {
+.mainmenu ul ul li:last-child> {
     border-bottom: 0px;
 }
 
@@ -4170,7 +4170,7 @@ ul {
 }
 
 .dropdown-menu {
-    margin-top: 60px !important;
+    margin-top: 38px !important;
     min-width: 220px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -4326,6 +4326,11 @@ ul {
     background: #3b4774;
 }
 
+.icon_notification:focus {
+    background: #23c0e9;
+    color: #fff;
+}
+
 .icon_notification:hover,
 .icon_message:hover {
     color: #fff;
@@ -4334,11 +4339,84 @@ ul {
 
 .notification_count {
     position: absolute;
-    top: -8px;
-    right: -5px;
+    top: -5px;
+    right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #ff0000;
     color: #fff;
+    width: 20px;
+    height: 20px;
     font-size: 12px;
-    padding: 2px 6px;
     border-radius: 50%;
+}
+
+.notification-box {
+    max-width: 360px;
+    border-radius: 8px;
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.box_header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f4f5f5;
+}
+
+.notification-item {
+    padding: 10px;
+    position: relative;
+    border-bottom: 1px solid #f4f5f5;
+}
+
+.notification-item:hover,
+.notification-item:hover .is-seen {
+    cursor: pointer;
+    display: block;
+}
+
+.notification-item:hover .title {
+    color: #18bae2;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item .title {
+    font-weight: bold;
+    color: #333;
+}
+
+
+.notification-item .time {
+    font-size: 12px;
+    color: #999;
+}
+
+.mark-read {
+    color: #18bae2;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    float: right;
+}
+
+.mark-read:hover {
+    text-decoration: underline;
+}
+
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.is-seen {
+    display: none;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: #01a3ff;
 }

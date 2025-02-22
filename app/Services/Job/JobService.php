@@ -420,7 +420,7 @@ class JobService
 
     /**
      * Allows a user to apply for a job.
-     *
+     * @author Tran Van Nhat
      * @param array $data The job application data, including job_id and other relevant details.
      * @return mixed The result of creating the job application in the repository.
      */
@@ -429,5 +429,81 @@ class JobService
         $user = Auth::guard('web')->user()->id;
         $data['user_id'] = $user;
         return $this->userJobRepository->create($data);
+    }
+
+    /**
+     * This function handles customer job applications.
+     * @author Tran Van Nhat
+     */
+    public function custommerApplicateJob()
+    {
+        $companyId = auth()->guard('admin')->user()->company->id ?? auth()->guard('admin')->user()->hiring->company_id;
+        $userJobs = $this->jobRepository->getUserApplyJob($companyId);
+
+        return $userJobs;
+    }
+
+
+    /**
+     * This function handles change status of a user job applying
+     * @author Tran Van Nhat
+     */
+    public function changeStatusUserAplly($data)
+    {
+        $userJob = $this->userJobRepository->find($data['id']);
+        if (empty($userJob)) {
+            return null;
+        }
+
+        $status = '';
+        if ($data['status'] == STATUS_UNFIT) {
+            $status .= 'chưa phù hợp';
+        } elseif ($data['status'] == STATUS_HIRED) {
+            $status .= 'đã tuyển';
+        }
+
+        switch ($data['status']) {
+            case STATUS_FIT:
+                $this->userJobRepository->update($userJob->id, [
+                    'interview_time' => $data['interview_time'],
+                    'status' => $data['status'],
+                ]);
+                $notification = $this->notificationService->create([
+                    'user_id' => $userJob->user_id,
+                    'title' => ($userJob->job->company->name ? "Công ty " . $userJob->job->company->name : NAME_COMPANY) . ' vừa cập nhật trạng thái CV của bạn là Phù hợp',
+                    'link' => route('detailJob', $userJob->job->slug),
+                ]);
+                $this->notificationService->renderNotificationRealtimeClient($notification);
+                break;
+            default:
+                $this->userJobRepository->update($userJob->id, [
+                    'status' => $data['status'],
+                ]);
+
+                $notification = $this->notificationService->create([
+                    'user_id' => $userJob->user_id,
+                    'title' => ($userJob->job->company->name ? "Công ty " . $userJob->job->company->name : NAME_COMPANY) . ' vừa cập nhật trạng thái CV của bạn là ' . $status,
+                    'link' => route('detailJob', $userJob->job->slug),
+                ]);
+                $this->notificationService->renderNotificationRealtimeClient($notification);
+                break;
+        }
+        return $userJob;
+    }
+
+    /**
+     * This function checks if the user has seen a job application or not.
+     * @author Tran Van Nhat
+     * @param array $data The job application data, including job_id and other relevant details.
+     * @return mixed The result of checking if the user has seen the job application in the repository.
+     */
+    public function checkUserJobSeen($data)
+    {
+        $userJob = $this->userJobRepository->find($data['id']);
+        if (empty($userJob)) {
+            return null;
+        }
+
+        return $userJob;
     }
 }

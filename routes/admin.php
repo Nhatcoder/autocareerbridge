@@ -40,7 +40,8 @@ Route::group(['prefix' => 'management', 'as' => 'management.'], function () {
 });
 
 Route::get('notifications', [NotificationsController::class, 'index'])->name('notifications');
-Route::get('notifications/seen', [NotificationsController::class, 'seen'])->name('notifications.seen');
+Route::post('notifications/seen', [NotificationsController::class, 'seen'])->name('notifications.seen');
+Route::get('notifications/mark-seen-all', [NotificationsController::class, 'markSeenAll'])->name('markSeenAll');
 Route::delete('notifications/destroy/{id}', [NotificationsController::class, 'destroy'])->name('notifications.destroy');
 
 Route::prefix('admin')

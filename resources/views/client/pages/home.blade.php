@@ -185,10 +185,10 @@
                                                                     </a>
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                                    <div class="jp_job_post_right_btn_wrapper">
+                                                                    <div class="jp_job_post_right_btn_wrapper btn-block">
                                                                         <ul>
                                                                             <li>
-                                                                                <a width="140px"
+                                                                                <a class="btn btn-primary" width="140px"
                                                                                     href="{{ route('detailJob', ['slug' => $job->slug]) }}">Ứng
                                                                                     tuyển</a>
                                                                             </li>

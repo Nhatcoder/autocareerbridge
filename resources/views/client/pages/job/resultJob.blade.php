@@ -168,15 +168,15 @@
                                                                                                         ->university ??
                                                                                                         null);
                                                                                                 $jobUniversityStatus = null;
-                                                                                                if ($university) {
-                                                                                                    $jobUniversityStatus = $university
-                                                                                                        ->universityJobs()
-                                                                                                        ->where(
-                                                                                                            'job_id',
-                                                                                                            $job->id,
-                                                                                                        )
-                                                                                                        ->first();
-                                                                                                }
+                                                                                                // if ($university) {
+                                                                                                //     $jobUniversityStatus = $university
+                                                                                                //         ->universityJobs()
+                                                                                                //         ->where(
+                                                                                                //             'job_id',
+                                                                                                //             $job->id,
+                                                                                                //         )
+                                                                                                //         ->first();
+                                                                                                // }
 
                                                                                                 $custommer =
                                                                                                     auth()

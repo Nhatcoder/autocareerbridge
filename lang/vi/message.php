@@ -67,6 +67,7 @@ return [
             'delete_job' => 'Xóa bài tuyển dụng thành công',
             'update_status_job' => 'Cập nhật trạng thái thành công',
             'error_status_job' => 'Lỗi cập nhật trạng thái',
+            'check_seen'  => 'Bạn phải xem hồ sơ ứng viên trước',
         ]
     ],
     'errors' => [

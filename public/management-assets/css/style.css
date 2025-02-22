@@ -15400,6 +15400,7 @@ ul {
 .nav-header img {
     object-fit: cover;
 }
+
 @media only screen and (max-width: 87.5rem) {
     .nav-header .brand-logo {
         padding-left: 1.25rem;
@@ -35521,6 +35522,7 @@ code {
 
 .table {
     --bs-table-bg: var(--card);
+    font-family: "Roboto", serif;
 }
 
 .table th,
@@ -40559,7 +40561,9 @@ a.btn.dlab-load-more {
     color: #717579;
     font-size: 14px;
     font-weight: 300;
-}.author-profile .info-list li p:last-child {
+}
+
+.author-profile .info-list li p:last-child {
     color: #717579;
     font-size: 16px;
     font-weight: 500;

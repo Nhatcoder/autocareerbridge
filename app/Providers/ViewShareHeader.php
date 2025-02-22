@@ -48,10 +48,12 @@ class ViewShareHeader extends ServiceProvider
             ]);
         });
 
-        View::composer(['client.partials.header'], function ($view) use ($chatMessageRepository) {
+        View::composer(['client.partials.header'], function ($view) use ($chatMessageRepository, $notificationRepository) {
             if (auth()->guard('admin')->check() || auth()->guard('web')->check()) {
                 $view->with([
-                    'userChatHeader' => $chatMessageRepository->userChat()
+                    'userChatHeader' => $chatMessageRepository->userChat(),
+                    'notificationCount' => $notificationRepository->getNotificationCount(),
+                    'notificationsHeader' => $notificationRepository->getNotifications()
                 ]);
             }
         });

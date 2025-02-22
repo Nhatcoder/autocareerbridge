@@ -48,4 +48,5 @@ interface JobRepositoryInterface extends BaseRepositoryInterface
 
     public function getPendingJobsByIds(array $jobIds);
 
+    public function getUserApplyJob($company_id);
 }

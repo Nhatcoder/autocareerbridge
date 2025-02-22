@@ -14,7 +14,7 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
 
     public function getNotifications()
     {
-        $user = auth()->guard('admin')->user();
+        $user = auth()->guard('admin')->user() ?? auth()->guard('web')->user();
         $filters = [];
         if ($user->role == ROLE_UNIVERSITY || $user->role == ROLE_SUB_UNIVERSITY) {
             if (isset($user->university->id)) {
@@ -34,6 +34,8 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             }
         } elseif (isset($user->id) && $user->role == ROLE_ADMIN) {
             $filters['admin'] = $user->id;
+        } elseif (isset($user->id) && $user->role == ROLE_USER) {
+            $filters['user'] = $user->id;
         } else {
             return [];
         }
@@ -51,12 +53,15 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             $query->where('admin_id', $filters['admin']);
         }
 
+        if (isset($filters['user'])) {
+            $query->where('user_id', $filters['user']);
+        }
         return $query->orderBy('created_at', 'desc')->paginate(LIMIT_10);
     }
 
     public function getNotificationCount()
     {
-        $user = auth()->guard('admin')->user();
+        $user = auth()->guard('admin')->user() ?? auth()->guard('web')->user();
         $filters = [];
         if ($user->role == ROLE_UNIVERSITY || $user->role == ROLE_SUB_UNIVERSITY) {
             if (isset($user->university->id)) {
@@ -76,6 +81,8 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             }
         } elseif (isset($user->id) && $user->role == ROLE_ADMIN) {
             $filters['admin'] = $user->id;
+        } elseif (isset($user->id) && $user->role == ROLE_USER) {
+            $filters['user'] = $user->id;
         } else {
             return [];
         }
@@ -91,6 +98,10 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
 
         if (isset($filters['admin'])) {
             $query->where('admin_id', $filters['admin']);
+        }
+
+        if (isset($filters['user'])) {
+            $query->where('user_id', $filters['user']);
         }
 
         $query->where('is_seen', UNSEEN);
@@ -133,10 +144,42 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
             $query = $query->where('admin_id', $args['admin']);
         }
 
+        if (isset($args['user'])) {
+            $query = $query->where('user_id', $args['user']);
+        }
+
         if (isset($args['id'])) {
             $query = $query->where('id', $args['id']);
         }
 
+        return $query->update(['is_seen' => 1]);
+    }
+
+    /**
+     * Count notifycation user.
+     * @author TranVanNhat
+     * @param int $userId
+     * @return int
+     */
+    public function countNotifycationUser($userId)
+    {
+        return $this->model->where('user_id', $userId)->count();
+    }
+
+    public function markSeenAll()
+    {
+        $id = auth()->guard('web')->user()->id ?? (auth()->guard('admin')->user()->role == ROLE_ADMIN ?
+            auth()->guard('admin')->user()->id : ((auth()->guard('admin')->user()->company->id ?? auth()->guard('admin')->user()->hiring->company_id) ?? (auth()->guard('admin')->user()->university->id ?? auth()->guard('admin')->user()->academicAffair->university_id)));
+        $query = $this->model;
+        if ($id) {
+            $query = $query->where('is_seen', UNSEEN)
+                ->where(function ($q) use ($id) {
+                    $q->where('user_id', $id)
+                        ->orWhere('company_id', $id)
+                        ->orWhere('university_id', $id)
+                        ->orWhere('admin_id', $id);
+                });
+        }
         return $query->update(['is_seen' => 1]);
     }
 }

@@ -74,7 +74,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="card-title mb-0">{{ __('label.notification.list_notification') }}</h4>
-                <a href="{{ route('notifications.seen') }}" class="btn btn-primary"
+                <a href="{{ route('markSeenAll') }}" class="btn btn-primary"
                     id="mark-all-read">{{ __('label.notification.mark_all_as_read') }}</a>
             </div>
             <div class="card-body table-container ">
@@ -106,8 +106,7 @@
                                         data-message="{{ __('label.notification.delete_confirm') }}"
                                         data-irreversible_action="{{ __('label.notification.irreversible_action') }}"
                                         data-delete="{{ __('label.notification.delete') }}"
-                                        data-cancel="{{ __('label.notification.cancel') }}"
-                                        href="javascript:void(0)"
+                                        data-cancel="{{ __('label.notification.cancel') }}" href="javascript:void(0)"
                                         data-url="{{ route('notifications.destroy', $noty->id) }}">
                                         <i class="fa fa-trash"></i>
                                     </a>

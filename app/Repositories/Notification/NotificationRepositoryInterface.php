@@ -14,4 +14,8 @@ interface NotificationRepositoryInterface extends BaseRepositoryInterface
     public function getNotificationCount();
 
     public function getCountNotificationRealtime($companyId = null, $universityId = null, $adminId = null);
+
+    public function countNotifycationUser($userId);
+
+    public function markSeenAll();
 }

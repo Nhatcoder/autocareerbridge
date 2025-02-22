@@ -67,17 +67,18 @@ class NotificationsController extends Controller
 
     public function seen(Request $request)
     {
-
-        if (!auth()->guard('admin')->user()) return redirect()->back()->with('status_fail', 'Lỗi đăng nhập');
+        if (!auth()->guard('admin')->user() && !auth()->guard('web')->user()) return redirect()->back()->with('status_fail', 'Lỗi đăng nhập');
 
         $args = [];
-        $user = auth()->guard('admin')->user();
+        $user = auth()->guard('admin')->user() ?? auth()->guard('web')->user();
         if ($user->role == ROLE_UNIVERSITY) {
             $args['university'] = $user->university->id;
         } elseif ($user->role == ROLE_COMPANY) {
             $args['company'] = $user->company->id;
         } elseif ($user->role == ROLE_ADMIN) {
             $args['admin'] = $user->id;
+        } elseif ($user->role == ROLE_USER) {
+            $args['user'] = $user->id;
         } else {
             return redirect()->back()->with('status_fail', 'Bạn không có quyền!');
         }
@@ -86,6 +87,46 @@ class NotificationsController extends Controller
         }
         try {
             $result = $this->notificationsService->seen($args);
+            if ($request->ajax()) {
+                return response()->json([
+                    'code' => 200,
+                    'message' => __('message.admin.update_success')
+                ], 200);
+            }
+            if (!$result) return redirect()->back()->with('status_fail', 'Cập nhật thất bại');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('status_fail', $e->getMessage());
+        }
+    }
+
+    /**
+     * Get data scroll notification.
+     * @author TranVanNhat
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function getDataScrollNotifycation(Request $request)
+    {
+        try {
+            $notifications = $this->notificationsService->getNotifications();
+            if ($request->ajax()) {
+                return response()->json($notifications->items());
+            }
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ]);
+            }
+            return redirect()->back()->with('status_fail', $e->getMessage());
+        }
+    }
+
+    public function markSeenAll()
+    {
+        try {
+            $result = $this->notificationsService->markSeenAll();
             if (!$result) return redirect()->back()->with('status_fail', 'Cập nhật thất bại');
             return redirect()->back();
         } catch (\Exception $e) {
