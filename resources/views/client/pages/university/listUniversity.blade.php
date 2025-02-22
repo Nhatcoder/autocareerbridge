@@ -91,8 +91,8 @@
                                         value="{{ request('searchName') }}">
                                 </div>
                                 <div class="ms-3">
-                                    <select class="form-select form-control-lg" id="select2" name="searchProvince"
-                                        style="height: 50px !important;">
+                                    <select class="form-select form-control-lg single-select" id="select2"
+                                        name="searchProvince" style="height: 50px !important;">
                                         <option value="">Tất cả tỉnh thành</option>
                                         @foreach ($provinces as $province)
                                             <option value="{{ $province->id }}"
@@ -309,12 +309,6 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            $('#select2').select2({
-                allowClear: false,
-                containerCssClass: "select2-height-fix",
-                width: '300px'
-            });
-
             const activeTab = localStorage.getItem("activeTab");
             if (activeTab) {
                 document.querySelector(`a[href="${activeTab}"]`).click();

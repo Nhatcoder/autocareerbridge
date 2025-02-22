@@ -215,7 +215,7 @@
 
             @if (isset($workshops) && count($workshops) > 0)
                 <div class="jp_listing_related_heading_wrapper">
-                    <h2>Work Shop</h2>
+                    <h2>Workshop</h2>
                     <div class="jp_listing_related_slider_wrapper">
                         <div class="owl-carousel owl-theme">
                             @foreach ($workshops as $workshop)
@@ -225,7 +225,7 @@
                                             <div class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
                                                 <div class="jp_job_post_main_wrapper">
                                                     <div class="row">
-                                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                             <a href="{{ route('detailWorkShop', $workshop->slug) }}">
                                                                 <div class="jp_job_post_side_img">
                                                                     <img style="width: 100%; height: 100px; object-fit: cover; object-position: center;"
@@ -255,17 +255,7 @@
                                                                 </div>
                                                             </a>
                                                         </div>
-                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                            <div class="jp_job_post_right_btn_wrapper">
-                                                                <ul>
-                                                                    <li>
-                                                                        <a width="140px"
-                                                                            href="{{ route('detailWorkShop', $workshop->slug) }}">Xem
-                                                                            chi tiết</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
+
                                                     </div>
                                                 </div>
                                                 <div class="jp_job_post_keyword_wrapper">

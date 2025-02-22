@@ -43,11 +43,11 @@
 
 <body>
     <!-- preloader Start -->
-    {{-- <div id="preloader">
+    <div id="preloader">
         <div id="status"><img src="{{ asset('clients/images/header/loadinganimation.gif') }}" id="preloader_image"
                 alt="loader">
         </div>
-    </div> --}}
+    </div>
     <!-- Top Scroll End -->
 
     <!-- Header Wrapper Start -->

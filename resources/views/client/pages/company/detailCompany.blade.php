@@ -1,5 +1,5 @@
 @extends('client.layout.main')
-@section('title',$company->name ?? 'Chi tiết doanh nghiệp' )
+@section('title', $company->name ?? 'Chi tiết doanh nghiệp')
 @section('content')
     {{--    breacrumb --}}
     <div class="jp_tittle_main_wrapper">
@@ -50,9 +50,9 @@
                             <div id="map" style="width:100%; float:left; height:300px;">
                                 @if (!empty($company->address))
                                     <iframe width="100%" height="300" loading="lazy"
-                                            referrerpolicy="no-referrer-when-downgrade" style="border:0"
-                                            src="https://www.google.com/maps?q={{ $company->address }}&output=embed"
-                                            allowfullscreen>
+                                        referrerpolicy="no-referrer-when-downgrade" style="border:0"
+                                        src="https://www.google.com/maps?q={{ $company->address }}&output=embed"
+                                        allowfullscreen>
                                     </iframe>
                                 @endif
                             </div>
@@ -82,22 +82,21 @@
                                                     class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
                                                     <div class="jp_job_post_main_wrapper">
                                                         <div class="row">
-                                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                 <a href="{{ route('detailJob', ['slug' => $job->slug]) }}">
                                                                     <div class="jp_job_post_side_img">
                                                                         <img data-bs-toggle="tooltip"
-                                                                             title="{{ $job->company->name }}"
-                                                                             src="{{isset($job->company->avatar_path) ? asset($job->company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
-                                                                             alt="post_img"/>
+                                                                            title="{{ $job->company->name }}"
+                                                                            src="{{ isset($job->company->avatar_path) ? asset($job->company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
+                                                                            alt="post_img" />
                                                                     </div>
 
                                                                     <div class="jp_job_post_right_cont jp_cl_job_cont">
                                                                         <h4 data-bs-toggle="tooltip"
                                                                             title="{{ $job->name }}">
                                                                             {{ str()->limit($job->name, 40) }}</h4>
-                                                                        <p style="color:#e69920;"
-                                                                           data-bs-toggle="tooltip"
-                                                                           title="{{ ucfirst($job->company->name) }}">
+                                                                        <p style="color:#e69920;" data-bs-toggle="tooltip"
+                                                                            title="{{ ucfirst($job->company->name) }}">
                                                                             {{ ucfirst($job->company->name) }}</p>
                                                                     </div>
                                                                     <div
@@ -106,7 +105,7 @@
                                                                             <li data-bs-toggle="tooltip"
                                                                                 title="{{ ucwords($company->province) }}, {{ ucwords($company->district) }}">
                                                                                 <i class="fa-solid fa-location-dot"
-                                                                                   style="color: #ff5353;"></i>
+                                                                                    style="color: #ff5353;"></i>
                                                                                 {{ ucwords($company->province) }}
                                                                             </li>
                                                                         </ul>
@@ -116,17 +115,6 @@
                                                                         </p>
                                                                     </div>
                                                                 </a>
-                                                            </div>
-                                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                                <div class="jp_job_post_right_btn_wrapper">
-                                                                    <ul>
-                                                                        <li>
-                                                                            <a
-                                                                                href="{{ route('detailJob', ['slug' => $job->slug]) }}">Ứng
-                                                                                tuyển</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -156,19 +144,14 @@
                                 </div>
                                 <div class="jp_jop_overview_img_wrapper">
                                     <div class="jp_jop_overview_img">
-                                        <img
-                                            src="{{ $company->avatar_path ? asset($company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
-                                            alt="post_img"/>
+                                        <img src="{{ $company->avatar_path ? asset($company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
+                                            alt="post_img" />
                                     </div>
                                 </div>
                                 <div class="jp_job_listing_single_post_right_cont">
                                     <h4>{{ $company->name }}</h4>
                                     <div style="display: flex; justify-content: space-evenly; margin: 20px 0;">
-                                        @foreach ([
-                                            ['label' => 'Quy mô', 'value' => $company->size],
-                                            ['label' => 'Lĩnh vực', 'value' => $company->fields->count()],
-                                            ['label' => 'Liên kết', 'value' => $company->collaborations->count()]
-                                        ] as $stat)
+                                        @foreach ([['label' => 'Quy mô', 'value' => $company->size], ['label' => 'Lĩnh vực', 'value' => $company->fields->count()], ['label' => 'Liên kết', 'value' => $company->collaborations->count()]] as $stat)
                                             <div>
                                                 <h3 class="m-b-0">{{ $stat['value'] }}</h3>
                                                 <p>{{ $stat['label'] }}</p>
@@ -197,8 +180,8 @@
                                                             ->where('status', STATUS_PENDING)
                                                             ->where('university_id', $universityId)
                                                             ->exists();
-                                                }
                                                     }
+                                                }
                                             @endphp
                                             @if ($universityId)
                                                 @if ($isPending)
@@ -211,7 +194,7 @@
                                                     </div>
                                                 @else
                                                     <button type="button" class="" data-toggle="modal"
-                                                            data-target="#exampleModal">Yêu cầu hợp tác
+                                                        data-target="#exampleModal">Yêu cầu hợp tác
                                                     </button>
                                                 @endif
                                             @endif
@@ -294,7 +277,7 @@
                         <div class="mb-3">
                             <label for="end_date" class="col-form-label required">Thời gian hết hạn hợp đồng:</label>
                             <input type="date" name="end_date" class="form-control" id="end_date"
-                                   min="{{ now()->addMonths(3)->format('Y-m-d') }}">
+                                min="{{ now()->addMonths(3)->format('Y-m-d') }}">
                         </div>
 
                         <div class="mb-3">
@@ -305,7 +288,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
                         <button type="submit" id="collaborationRequestForm" onclick="submitForm()"
-                                class="btn btn-primary">Gửi yêu cầu
+                            class="btn btn-primary">Gửi yêu cầu
                         </button>
                     </div>
                 </form>
@@ -316,7 +299,7 @@
 
 @section('js')
     <script>
-        $('#collaborationRequestForm').click(function (e) {
+        $('#collaborationRequestForm').click(function(e) {
             e.preventDefault();
 
             // Disable the submit button to prevent multiple submissions
@@ -327,7 +310,7 @@
             let end_date = $('input[name="end_date"]').val().trim();
 
             if (!title) {
-                  toastr.error("", "Tiêu đề là bắt buộc")
+                toastr.error("", "Tiêu đề là bắt buộc")
                 // Re-enable the submit button if validation fails
                 $(this).prop('disabled', false);
                 return; // Dừng việc gửi form nếu không có tiêu đề
@@ -341,7 +324,7 @@
             }
 
             if (!end_date) {
-                  toastr.error("", "Ngày kết thúc phải cách hôm nay 3 tháng")
+                toastr.error("", "Ngày kết thúc phải cách hôm nay 3 tháng")
                 // Re-enable the submit button if validation fails
                 $(this).prop('disabled', false);
                 return; // Dừng việc gửi form nếu không có nội dung
@@ -370,7 +353,7 @@
                     content: contentData,
                     company_id: $('input[name="company_id"]').val()
                 },
-                success: function (response) {
+                success: function(response) {
 
                     // Thành công
 
@@ -382,11 +365,11 @@
 
                     // Đóng modal và reload trang sau khi thông báo
                     $('#exampleModal').modal('hide');
-                    setTimeout(function () {
+                    setTimeout(function() {
                         location.reload(); // Reload lại trang
                     }, 2000); // Chờ thông báo hoàn tất
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     const errors = xhr.responseJSON.errors; // Lấy danh sách lỗi từ response
                     const res = xhr.responseJSON
 
@@ -410,15 +393,15 @@
         });
     </script>
     <script>
-        $(document).ready(function () {
-            $(document).on('click', '#detailWorkshop', function (e) {
+        $(document).ready(function() {
+            $(document).on('click', '#detailWorkshop', function(e) {
                 var slug = $(this).data('slug');
                 console.log(slug);
                 var url = '{{ route('detailWorkShop', ':slug') }}'.replace(':slug', slug);
                 $.ajax({
                     url: url,
                     method: 'GET',
-                    success: function (response) {
+                    success: function(response) {
                         console.log(response);
                         $('#detailsModal #workShopForm #name').text(response.name);
                         $('#avatar_path').attr('src', response.avatar_path);
@@ -431,7 +414,7 @@
                         $('#detailsModal .content .detailWorkshop').html(response.content);
 
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.log('Lỗi: ', error);
                     }
                 });
