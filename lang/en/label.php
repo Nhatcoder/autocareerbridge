@@ -200,6 +200,13 @@ return [
         ],
 
         'company' => 'Company',
+        'header' => [
+            'profile' => 'Profile',
+            'notification' => 'Notification',
+            'cv' => 'CV',
+            'logout' => 'Logout',
+            'location_client' => 'Go to client website',
+        ],
         'profile' => [
             'information' => 'General information',
             'about' => 'About',
@@ -350,8 +357,10 @@ return [
             'manage_hiring' => 'Manage hiring',
             'manage_collaboration' => 'Manage collaboration',
             'search_university' => 'Search university',
-            'manage_applied_jobs' => 'Manage applied jobs',
+            'manage_applied_jobs' => 'Candidate',
             'manage_workshop' => 'Manage Join workshop',
+            'school_candidate' => 'University',
+            'custommer_candidate' => 'Customer',
         ],
         'collaboration' => [
             'filter' => 'Filter',
@@ -457,7 +466,7 @@ return [
                 'update' => 'Update',
             ]
 
-            ],
+        ],
         'applyJob' => [
             'manage_applied_jobs' => 'Manage applied jobs',
             "pending" => "Pending",
@@ -465,13 +474,23 @@ return [
             "approved" => "Approved",
             "name" => "Job Name",
             "university" => "University",
+            "candicate" => "Candicate",
             "date" => "Creation Date",
+            "time_applied" => "Dated submission",
             "action" => "Action",
             "status" => "Status",
             "approve" => "Approve",
             "reject" => "Reject",
             'no_data' => "No data available",
-
+            'all_data' => 'All',
+            'w_eval' => 'Waiting for evaluation',
+            'fit'    => 'Fit',
+            'no_fit' => 'No fit',
+            'interv' => 'Interviewing',
+            'hired'  => 'Hired',
+            'unfit'  => 'Unfit',
+            'message_confirm' => 'Do you want to change the status of the job application?',
+            'confirm' => 'Confirm',
         ],
         'joinWorkshop' => [
             "pending" => "Pending",
@@ -626,7 +645,7 @@ return [
                 'update' => 'Update',
             ]
 
-            ],
+        ],
         'applyWorkshop' => [
             'manage_applied_workshops' => 'Manage copany applied workshops',
             "pending" => "Pending",

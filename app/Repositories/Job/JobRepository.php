@@ -5,6 +5,7 @@ namespace App\Repositories\Job;
 use App\Models\CompanyWorkshop;
 use App\Models\Job;
 use App\Models\UniversityJob;
+use App\Models\UserJob;
 use App\Repositories\Base\BaseRepository;
 use Carbon\Carbon;
 use Exception;
@@ -16,11 +17,13 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
 {
     protected $universityJob;
     protected $companyWorkshop;
+    protected $userJob;
 
-    public function __construct(UniversityJob $universityJob, CompanyWorkshop $companyWorkshop)
+    public function __construct(UserJob $userJob, UniversityJob $universityJob, CompanyWorkshop $companyWorkshop)
     {
         $this->companyWorkshop = $companyWorkshop;
         $this->universityJob = $universityJob;
+        $this->userJob = $userJob;
         parent::__construct();
     }
 
@@ -462,5 +465,30 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             ->whereIn('id', $jobIds)
             ->where('status', STATUS_PENDING)
             ->get();
+    }
+
+    /**
+     * Retrieve a list of user job applications related to a company.
+     * @author TranVanNhat
+     * @param int $company_id The ID of the company to query.
+     * @return array A list of user job applications, including the 'all', 'w_eval', 'fit', 'interv', 'hired', and 'unfit' keys.
+     */
+    public function getUserApplyJob($company_id)
+    {
+        $userJob = $this->userJob
+            ->with('user')
+            ->whereHas('job', function ($query) use ($company_id) {
+                $query->where('user_id', $company_id);
+            })
+            ->orderBy('id', 'desc');
+
+        return [
+            'all' => clone $userJob->paginate(PAGINATE_LIST_COMPANY),
+            'w_eval' => (clone $userJob)->where('status', STATUS_W_EVAL)->paginate(PAGINATE_LIST_COMPANY),
+            'fit' => (clone $userJob)->where('status', STATUS_FIT)->paginate(PAGINATE_LIST_COMPANY),
+            'interv' => (clone $userJob)->where('status', STATUS_INTERV)->paginate(PAGINATE_LIST_COMPANY),
+            'hired' => (clone $userJob)->where('status', STATUS_HIRED)->paginate(PAGINATE_LIST_COMPANY),
+            'unfit' => (clone $userJob)->where('status', STATUS_UNFIT)->paginate(PAGINATE_LIST_COMPANY),
+        ];
     }
 }

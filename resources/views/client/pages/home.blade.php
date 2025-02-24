@@ -139,7 +139,7 @@
                                                     <div class="jp_job_post_main_wrapper_cont">
                                                         <div class="jp_job_post_main_wrapper">
                                                             <div class="row">
-                                                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 ">
+                                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                     <a
                                                                         href="{{ route('detailJob', ['slug' => $job->slug]) }}">
                                                                         <div class="jp_job_post_side_img">
@@ -183,17 +183,6 @@
                                                                             </span>
                                                                         </div>
                                                                     </a>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                                    <div class="jp_job_post_right_btn_wrapper">
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a width="140px"
-                                                                                    href="{{ route('detailJob', ['slug' => $job->slug]) }}">Ứng
-                                                                                    tuyển</a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

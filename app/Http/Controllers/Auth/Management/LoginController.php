@@ -21,7 +21,7 @@ class LoginController extends Controller
     public function viewLogin()
     {
         if (auth('admin')->check()) {
-            return redirect()->back();
+            abort(404);
         }
         return view('management.auth.login');
     }
@@ -31,7 +31,7 @@ class LoginController extends Controller
         $data = $request->only('email', 'password');
         $response = $this->authService->login($data);
 
-        if(!$response['success']) {
+        if (!$response['success']) {
             return back()->withInput()->with('error', $response['message']);
         }
 
@@ -41,21 +41,18 @@ class LoginController extends Controller
             return redirect()->route('admin.home')->with('status_success', __('message.login_success'));
         } elseif ($user->role === ROLE_COMPANY) {
             return redirect()->route('company.home')->with('status_success', __('message.login_success'));
-        } elseif ($user->role === ROLE_UNIVERSITY ) {
+        } elseif ($user->role === ROLE_UNIVERSITY) {
             if (empty($user->university)) {
-                return redirect()->route('university.register',['id' => $user->id])->with('error', 'Vui lòng cập nhật thông tin trường học !');
+                return redirect()->route('university.register', ['id' => $user->id])->with('error', 'Vui lòng cập nhật thông tin trường học !');
             } else {
                 return redirect()->route('university.home')->with('success', __('message.login_success'));
             }
         } elseif ($user->role === ROLE_HIRING) {
-
             return redirect()->route('company.manageJob')->with('status_success', __('message.login_success'));
         } elseif ($user->role === ROLE_SUB_UNIVERSITY) {
-
             return redirect()->route('university.students.index')->with('status_success', __('message.login_success'));
         }
     }
-
 
     public function viewForgotPassword()
     {

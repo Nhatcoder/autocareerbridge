@@ -51,7 +51,8 @@
                                     @if (Auth::guard('web')->check() && Auth::guard('web')->user()->userJob()->count() > 0)
                                         <ul>
                                             <li class="parent"><a href="{{ route('search') }}">Tìm việc làm</a></li>
-                                            <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã ứng tuyển</a></li>
+                                            <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã ứng
+                                                    tuyển</a></li>
                                         </ul>
                                     @endif
                                 </li>
@@ -75,7 +76,7 @@
                                     @if (auth()->user()->role == 7)
                                         <li
                                             class="gc_main_navigation parent {{ Request::routeIs('myCv') ? 'active' : '' }}">
-                                            <a href="{{ route('myCv') }}" class="gc_main_navigation">Quản lý CV</a> 
+                                            <a href="{{ route('myCv') }}" class="gc_main_navigation">Quản lý CV</a>
                                         </li>
                                     @endif
                                 @endauth
@@ -251,7 +252,9 @@
                     <div class="jp_navi_right_btn_wrapper float-end ">
                         <ul class="gc_header_wrapper menu-item dropdown d-flex gap-2">
                             @if (Auth::guard('admin')->check())
-                                @if (Auth::guard('admin')->user()->role !== ROLE_ADMIN)
+                                @if (Auth::guard('admin')->user()->role !== ROLE_ADMIN &&
+                                        Auth::guard('admin')->user()->role === ROLE_COMPANY &&
+                                        Auth::guard('admin')->user()->role === ROLE_HIRING)
                                     <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('admin')->user()->company->id]) }}"
                                         class="chat-company">
                                         <svg width="25px" height="25px" viewBox="0 0 24 24"
@@ -320,12 +323,6 @@
                                             {{ __('label.admin.header.profile') }}</a>
                                     @endif
 
-                                    <a href="{{ route('file') }}" class="dropdown-item"> <i class="fas fa-file"></i>
-                                        {{ __('label.admin.header.cv') }}</a>
-
-                                    <a href="" class="dropdown-item"> <i class="fas fa-bell"></i>
-                                        {{ __('label.admin.header.notification') }}</a>
-
                                     @if (Auth::guard('admin')->user()->role === ROLE_ADMIN || Auth::guard('admin')->user()->role === ROLE_SUB_ADMIN)
                                         <a href="{{ route('admin.home') }}" class="dropdown-item"> <i
                                                 class="fa-solid fa-screwdriver-wrench"></i>
@@ -350,10 +347,53 @@
                                 </div>
                             @else
                                 @if (Auth::guard(name: 'web')->user())
-                                    <a class="icon_notification" href="jvavascript:void(0);">
-                                        <span class="notification_count">54</span>
+                                    <a class="icon_notification" role="button" class="menu-link"
+                                        data-bs-toggle="dropdown" aria-expanded="false" href="jvavascript:void(0);">
+                                        <span data-count="{{ $notificationCount > 0 ? $notificationCount : 0 }}"
+                                            class="notification_count {{ $notificationCount > 0 ? $notificationCount : 'd-none' }}">
+                                            {{ $notificationCount }}</span>
                                         <i class="fa-regular fa-bell"></i>
                                     </a>
+
+                                    <div class="dropdown-menu" style="width: 360px;">
+                                        <div class="notification-box">
+                                            <div class="box_header d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0 fw-bold">Thông báo</h5>
+                                                @if ($notificationCount > 0)
+                                                    <a href="{{ route('markSeenAll') }}" class="mark-read">Đánh dấu
+                                                        là đã
+                                                        đọc</a>
+                                                @endif
+                                            </div>
+
+                                            <div class="notification-list" data-role="{{ USER }}"
+                                                data-id-chanel="{{ Auth::guard('web')->user()->id }}">
+                                                @forelse ($notificationsHeader as $item)
+                                                    <a href="{{ $item->link }}" class="notification-item d-block"
+                                                        data-id="{{ $item->id }}">
+                                                        <div
+                                                            class="title {{ $item->is_seen == UNSEEN ? 'fw-bold' : 'fw-medium' }}">
+                                                            {{ $item->title }}
+                                                        </div>
+                                                        <div class="time">
+                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i') }}
+                                                        </div>
+                                                        @if ($item->is_seen == SEEN)
+                                                            <div class="is-seen">
+                                                                <i class="fa-solid fa-check"></i>
+                                                            </div>
+                                                        @endif
+                                                    </a>
+                                                @empty
+                                                    <div class="no_notifycation title fw-medium text-center pt-2">Không
+                                                        có thông báo
+                                                        nào
+                                                    </div>
+                                                @endforelse
+                                            </div>
+
+                                        </div>
+                                    </div>
                                     <a href="{{ route('conversations', ['id' => $userChatHeader->to_id ?? Auth::guard('web')->user()->id]) }}"
                                         class="icon_message">
                                         <svg width="25px" height="25px" viewBox="0 0 24 24"

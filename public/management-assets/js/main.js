@@ -1,18 +1,19 @@
 // Notification
-async function changeStatus(id) {
-    fetch(`/notifications/seen?id=${id}`, {
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Content-Type': 'application/json',
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
+function changeStatus(id) {
+    $.ajax({
+        url: `${window.location.origin}/notifications/seen`,
+        type: 'POST',
+        data: {
+            id: id,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (data) {
             console.log(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
 }
 
 // Theme admin

@@ -17,7 +17,7 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('management-assets/css/style.css') }}">
-    <link href="{{ asset('management-assets/images/favicon.png') }}" type="" rel="shortcut icon">
+    <link href="{{ asset('management-assets/images/favicon.ico') }}" type="" rel="shortcut icon">
 
 </head>
 
@@ -31,13 +31,15 @@
                         <h1 class="">
                             <p class="text-white">
                                 <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">{{ __('label.auth.page_forgot_password.title_box_left') }}</font>
+                                    <font style="vertical-align: inherit;">
+                                        {{ __('label.auth.page_forgot_password.title_box_left') }}</font>
                                 </font>
                             </p>
                         </h1>
                         <p class="sub-title">
                             <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">{{ __('label.auth.page_forgot_password.description_box_left') }}</font>
+                                <font style="vertical-align: inherit;">
+                                    {{ __('label.auth.page_forgot_password.description_box_left') }}</font>
                             </font>
                         </p>
 
@@ -55,7 +57,8 @@
                         <h2>Không sao cả!</h2>
                         <p>
                             <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">{{ __('label.auth.page_forgot_password.description_box_right') }}</font>
+                                <font style="vertical-align: inherit;">
+                                    {{ __('label.auth.page_forgot_password.description_box_right') }}</font>
                             </font>
                         </p>
                     </div>
@@ -75,8 +78,7 @@
                                 </font>
                             </label>
                             <input type="text" name="email"
-                                class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                                value="">
+                                class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="">
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -85,13 +87,15 @@
                         <div class="text-center mb-4">
                             <button type="submit" class="btn btn-primary btn-block">
                                 <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">{{ __('label.auth.page_forgot_password.send') }}</font>
+                                    <font style="vertical-align: inherit;">
+                                        {{ __('label.auth.page_forgot_password.send') }}</font>
                                 </font>
                             </button>
                         </div>
 
                         <p class="text-center">{{ __('label.auth.page_forgot_password.have_acount') }}
-                            <a class="btn-link text-primary" href="{{ route('management.login') }}">{{ __('label.auth.login') }}</a>
+                            <a class="btn-link text-primary"
+                                href="{{ route('management.login') }}">{{ __('label.auth.login') }}</a>
                         </p>
 
                     </form>

@@ -54,6 +54,7 @@ return [
             'delete_job' => 'Deleted job successfully',
             'update_status_job' => 'Updated status job successfully',
             'error_status_job' => 'Error updating status job',
+            'check_seen'  => 'You must see the job first',
         ]
     ],
     'errors' => [

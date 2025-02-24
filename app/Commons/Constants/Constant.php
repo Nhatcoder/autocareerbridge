@@ -56,3 +56,12 @@ define('REGEX_PASSWORD', "/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.
 
 define('TYPE_CV_CREATE', 0);
 define('TYPE_CV_UPLOAD', 1);
+
+define('STATUS_W_EVAL', 1);
+define('STATUS_FIT', 2);
+define('STATUS_INTERV', 3);
+define('STATUS_HIRED', 4);
+define('STATUS_UNFIT', 5);
+
+define('COMPANY', 'company');
+define('USER', 'user');

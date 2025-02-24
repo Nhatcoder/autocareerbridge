@@ -24,14 +24,17 @@ class AuthRepository extends BaseRepository implements AuthRepositoryInterface
 
     public function login($data)
     {
-        $user = $this->model->where(function ($query) use ($data) {
-            $query->where('email', $data['email'])
-                ->orWhere('user_name', $data['email']);
-        })->first();
+        $user = $this->model
+            ->where('role', '<>', ROLE_USER)
+            ->where(function ($query) use ($data) {
+                $query->where('email', $data['email'])
+                    ->orWhere('user_name', $data['email']);
+            })->first();
 
         if (empty($user)) {
             return null;
         }
+
         return $user;
     }
 
