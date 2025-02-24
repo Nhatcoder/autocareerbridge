@@ -100,6 +100,7 @@
     <!-- File custom.js -->
     <script src="{{ asset('clients/js/main.js') }}"></script>
     @yield('js')
+    @stack('js')
 </body>
 
 </html>

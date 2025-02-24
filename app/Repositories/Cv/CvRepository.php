@@ -24,8 +24,27 @@ class CvRepository extends BaseRepository implements CvRepositoryInterface
             'referrers'
         ]);
     }
+
+    public function getCvUpload($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
     public function getMyCv()
     {
-        return $this->model->where('user_id', auth()->id())->get();
+        return $this->model
+            ->where('user_id', auth()->id())
+            ->where('type', TYPE_CV_CREATE)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+    }
+
+    public function getMyCvUpload()
+    {
+        return $this->model
+            ->where('user_id', auth()->id())
+            ->where('type', TYPE_CV_UPLOAD)
+            ->orderBy('updated_at', 'desc')
+            ->get();
     }
 }

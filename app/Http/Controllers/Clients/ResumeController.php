@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cv\CvRequest;
+use App\Http\Requests\Cv\UploadCv;
+use App\Models\Cv;
 use App\Services\Cv\CvService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -39,14 +41,15 @@ class ResumeController extends Controller
     public function myCv()
     {
         try {
-            $cvs = $this->cvService->getMyCV();
+            $cv_creates = $this->cvService->getMyCV();
+            $cv_uploads = $this->cvService->getMyCVUpload();
 
-            if (!$cvs) {
+            if (!$cv_creates && !$cv_uploads) {
 
                 return redirect()->back()->with('error', 'Bạn chưa có CV nào.');
             }
 
-            return view('client.pages.cv.my-cv', compact('cvs'));
+            return view('client.pages.cv.my-cv', compact('cv_creates', 'cv_uploads'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
@@ -165,8 +168,16 @@ class ResumeController extends Controller
      * @param string $template
      * @return \Illuminate\Contracts\View\View
      */
-    public function createCV($template)
+    public function createCV(Request $request)
     {
+        $template = $request->query('type');
+
+        $validTemplates = ['minimal', 'modern'];
+
+        if (!in_array($template, $validTemplates)) {
+            abort(404);
+        }
+
         return view('client.pages.cv.template', compact('template'));
     }
 
@@ -209,6 +220,12 @@ class ResumeController extends Controller
         ]);
     }
 
+    /**
+     * Delete a CV by its ID.
+     *
+     * @param int $id The ID of the CV to delete.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteCv($id)
     {
         try {
@@ -216,6 +233,135 @@ class ResumeController extends Controller
             return redirect()->route('myCv')->with('status_success', 'Xóa CV thành công!');
         } catch (\Exception $e) {
             Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Change the template of a CV.
+     *
+     * @param int $id The ID of the CV to update.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeCvTemplate(Request $request, $id)
+    {
+        try {
+            $this->cvService->updateCv($request, $id);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => 'Đổi CV thành công!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Lỗi đổi CV: ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Display the CV upload page.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function uploadCv()
+    {
+        return view('client.pages.cv.upload');
+    }
+
+
+    /**
+     * Store the uploaded CV.
+     *
+     * @param UploadCv $request The request object containing the uploaded CV.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadStoreCv(UploadCv $request)
+    {
+        $result = $this->cvService->upload($request);
+
+        if ($result['success']) {
+            return response()->json([
+                'redirect' => route('myCv'),
+                'success'  => true,
+                'message'  => 'Upload thành công',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $result['message'] ?? 'Lỗi không xác định!',
+        ]);
+    }
+
+    /**
+     * Display the uploaded CV.
+     *
+     * @param int $id The ID of the CV to display.
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function uploadCvView($id)
+    {
+        $cv = $this->cvService->getCvUpload($id);
+
+        if (!$cv) {
+            abort(404, 'CV không tồn tại!');
+        }
+
+        $filePath = storage_path('app/public/' . str_replace('storage/', '', $cv->upload));
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File không tồn tại!');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+
+    /**
+     * Download the uploaded CV.
+     *
+     * @param int $id The ID of the CV to download.
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function uploadCvDown($id)
+    {
+        $cv = $this->cvService->getCvUpload($id);
+
+        if (!$cv) {
+            abort(404);
+        }
+
+        $filePath = storage_path('app/public/' . str_replace('storage/', '', $cv->upload));
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        return response()->download($filePath, $cv->title . '.pdf');
+    }
+
+
+    /**
+     * Update the title of a CV upload.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing the new title.
+     * @param int $id The ID of the CV to update.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateTitleCv(Request $request, $id)
+    {
+        try {
+            $this->cvService->updateTitleCv($request, $id);
+
+            return response()->json([
+                'redirect' => route('myCv'),
+                'type' => 'success',
+                'message' => 'Cập nhật CV thành công!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Lỗi cập nhật CV: ' . $e->getMessage());
         }
     }
 }

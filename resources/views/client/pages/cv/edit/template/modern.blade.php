@@ -1,110 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
+<style>
+    body {
+        font-family: {{ $cv->font }};
+    }
 
-<head>
-    <style>
-        body {
-            font-family: {{ $cv->font }};
-        }
+    #work-experience-cv strong {
+        color: #212529;
+    }
 
-        #work-experience-cv strong {
-            color: #212529;
-        }
+    .main-container-modern {
+        display: flex;
+        background-color: #fff;
+        align-items: stretch;
+        min-height: 1123px;
+    }
 
-        .main-container-modern {
-            display: flex;
-            background-color: #fff;
-            align-items: stretch;
-            min-height: 1123px;
-        }
+    .sidebar {
+        background-color: #2b3f6c;
+        color: #fff;
+        padding: 30px 20px;
+        width: 35%;
+        box-sizing: border-box;
+    }
 
-        .sidebar {
-            background-color: #2b3f6c;
-            color: #fff;
-            padding: 30px 20px;
-            width: 35%;
-            box-sizing: border-box;
-        }
+    .sidebar h1 {
+        color: {{ $cv->color }};
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
 
-        .sidebar h1 {
-            color: {{ $cv->color }};
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+    .sidebar p {
+        margin: 10px 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
 
-        .sidebar p {
-            margin: 10px 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }
+    .sidebar .section {
+        margin-top: 30px;
+        font-size: 18px;
+        font-weight: 500;
+        border-bottom: 2px solid #ccd4e3;
+        padding-bottom: 5px;
+    }
 
-        .sidebar .section {
-            margin-top: 30px;
-            font-size: 18px;
-            font-weight: 500;
-            border-bottom: 2px solid #ccd4e3;
-            padding-bottom: 5px;
-        }
+    .sidebar .section h3 {
+        color: {{ $cv->color }};
+        font-size: 18px;
+        font-weight: 600;
+    }
 
-        .sidebar .section h3 {
-            color: {{ $cv->color }};
-            font-size: 18px;
-            font-weight: 600;
-        }
+    .sidebar ul {
+        padding-left: 25px;
+    }
 
-        .sidebar ul {
-            padding-left: 25px;
-        }
+    .sidebar li {
+        font-size: 14px;
+        margin-bottom: 10px;
+        font-weight: 100;
+    }
 
-        .sidebar li {
-            font-size: 14px;
-            margin-bottom: 10px;
-            font-weight: 100;
-        }
+    .main {
+        padding: 30px;
+        width: 65%;
+        box-sizing: border-box;
+    }
 
-        .main {
-            padding: 30px;
-            width: 65%;
-            box-sizing: border-box;
-        }
+    .main h3 {
+        font-size: 18px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        color: {{ $cv->color }};
+    }
 
-        .main h3 {
-            font-size: 18px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            color: {{ $cv->color }};
-        }
+    .main ul {
+        padding-left: 20px;
+        list-style-type: disc;
+    }
 
-        .main ul {
-            padding-left: 20px;
-            list-style-type: disc;
-        }
+    .main p,
+    li {
+        font-size: 14px;
+        color: #000;
+    }
 
-        .main p,
-        li {
-            font-size: 14px;
-            color: #000;
-        }
+    .main ul li {
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
 
-        .main ul li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
+    .avatar-modern {
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-        .avatar-modern {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .avatar-modern img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-        }
-    </style>
-</head>
+    .avatar-modern img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+    }
+</style>
 
 <body>
     <div class="main-container-modern">
@@ -157,7 +152,6 @@
     </div>
 </body>
 
-</html>
 <script>
     // change style
     document.getElementById('cv-color').addEventListener('input', function() {
@@ -287,50 +281,50 @@
         const newSection = document.createElement('div');
         newSection.classList.add('input-section', 'd-flex', 'flex-column', 'mb-3');
         newSection.innerHTML = /*html*/ `
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-danger delete-work-experience-button">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <input type="hidden" name="experience_id[]" value="${data.id || ''}">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Tên Công Ty</label>
-                        <input type="text" class="form-control company-input" name="company_name[]" value="${data.company_name || ''}" data-target="#${sectionId}-company">
-                        <small class="text-danger error-message"></small>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Vị Trí</label>
-                        <input type="text" class="form-control position-input" name="position[]" value="${data.position || ''}" data-target="#${sectionId}-position">
-                        <small class="text-danger error-message"></small>
-                    </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-danger delete-work-experience-button">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        <input type="hidden" name="experience_id[]" value="${data.id || ''}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Tên Công Ty</label><span class="text-danger"> *</span>
+                    <input type="text" class="form-control company-input" name="company_name[]" value="${data.company_name || ''}" data-target="#${sectionId}-company">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Thời Gian Bắt Đầu</label>
-                        <input type="month" class="form-control start-date-input" name="start_date_exp[]" value="${data.start_date || ''}" data-target="#${sectionId}-start-date">
-                        <small class="text-danger error-message"></small>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Thời Gian Kết Thúc</label>
-                        <input type="month" class="form-control end-date-input" name="end_date_exp[]" value="${data.end_date || ''}" data-target="#${sectionId}-end-date">
-                        <small class="text-danger error-message"></small>
-                    </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Vị Trí</label><span class="text-danger"> *</span>
+                    <input type="text" class="form-control position-input" name="position[]" value="${data.position || ''}" data-target="#${sectionId}-position">
+                    <small class="text-danger error-message"></small>
                 </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Mô Tả Công Việc</label>
-                <textarea class="form-control description-input" rows="4" name="description[]" data-target="#${sectionId}-description">${data.description || ''}</textarea>
-                <small class="text-danger error-message"></small>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Thời Gian Bắt Đầu</label><span class="text-danger"> *</span>
+                    <input type="month" class="form-control start-date-input" name="start_date_exp[]" value="${data.start_date || ''}" data-target="#${sectionId}-start-date">
+                    <small class="text-danger error-message"></small>
+                </div>
             </div>
-        `;
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Thời Gian Kết Thúc</label><span class="text-danger"> *</span>
+                    <input type="month" class="form-control end-date-input" name="end_date_exp[]" value="${data.end_date || ''}" data-target="#${sectionId}-end-date">
+                    <small class="text-danger error-message"></small>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mô Tả Công Việc</label>
+            <textarea class="form-control description-input" rows="4" name="description[]" data-target="#${sectionId}-description">${data.description || ''}</textarea>
+            <small class="text-danger error-message"></small>
+        </div>
+    `;
 
         workExperienceContainer.appendChild(newSection);
         workExperienceContainer.style.display = "block";
@@ -338,14 +332,14 @@
         const cvEntry = document.createElement('div');
         cvEntry.id = sectionId;
         cvEntry.innerHTML = /*html*/ `
-            <strong><span id="${sectionId}-position">${data.position || 'Chức vụ'}</span> | <span id="${sectionId}-company">${data.company_name || 'Tên Công Ty'}</span></strong>
-            <p><span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> - <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span></p>
-            <ul>
-                <li id="${sectionId}-description">
-                    ${data.description || 'Mô Tả Công Việc'}
-                </li>
-            </ul>
-        `;
+        <strong><span id="${sectionId}-position">${data.position || 'Chức vụ'}</span> | <span id="${sectionId}-company">${data.company_name || 'Tên Công Ty'}</span></strong>
+        <p><span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> - <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span></p>
+        <ul>
+            <li id="${sectionId}-description">
+                ${data.description || 'Mô Tả Công Việc'}
+            </li>
+        </ul>
+    `;
 
 
         workExperienceCV.appendChild(cvEntry);
@@ -408,52 +402,52 @@
         const newSection = document.createElement('div');
         newSection.classList.add('input-section', 'd-flex', 'flex-column', 'mb-3');
         newSection.innerHTML = /*html*/ `
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-danger delete-education-button">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-        <input type="hidden" name="education_id[]" value="${data.id || ''}">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Tên Trường</label>
-                    <input type="text" class="form-control school-input" name="school[]" value="${data.university_name || ''}" data-target="#${sectionId}-school">
-                    <small class="text-danger error-message"></small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Chuyên Ngành</label>
-                    <input type="text" class="form-control major-input" name="major[]" value="${data.major || ''}" data-target="#${sectionId}-major">
-                    <small class="text-danger error-message"></small>
-                </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger delete-education-button">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+    <input type="hidden" name="education_id[]" value="${data.id || ''}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Tên Trường</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control school-input" name="school[]" value="${data.university_name || ''}" data-target="#${sectionId}-school">
+                <small class="text-danger error-message"></small>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <label class="form-label">Loại Tốt Nghiệp</label>
-                    <input type="text" class="form-control degree-input" name="degree[]" value="${data.type_graduate || ''}" data-target="#${sectionId}-degree">
-                    <small class="text-danger error-message"></small>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <label class="form-label">Thời Gian Bắt Đầu</label>
-                    <input type="month" class="form-control start-date-input" name="start_date_education[]" value="${data.start_date || ''}" data-target="#${sectionId}-start-date">
-                    <small class="text-danger error-message"></small>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3">
-                    <label class="form-label">Thời Gian Kết Thúc</label>
-                    <input type="month" class="form-control end-date-input" name="end_date_education[]" value="${data.end_date || ''}" data-target="#${sectionId}-end-date">
-                    <small class="text-danger error-message"></small>
-                </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Chuyên Ngành</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control major-input" name="major[]" value="${data.major || ''}" data-target="#${sectionId}-major">
+                <small class="text-danger error-message"></small>
             </div>
         </div>
-        `;
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="mb-3">
+                <label class="form-label">Loại Tốt Nghiệp</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control degree-input" name="degree[]" value="${data.type_graduate || ''}" data-target="#${sectionId}-degree">
+                <small class="text-danger error-message"></small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-3">
+                <label class="form-label">Thời Gian Bắt Đầu</label><span class="text-danger"> *</span>
+                <input type="month" class="form-control start-date-input" name="start_date_education[]" value="${data.start_date || ''}" data-target="#${sectionId}-start-date">
+                <small class="text-danger error-message"></small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-3">
+                <label class="form-label">Thời Gian Kết Thúc</label><span class="text-danger"> *</span>
+                <input type="month" class="form-control end-date-input" name="end_date_education[]" value="${data.end_date || ''}" data-target="#${sectionId}-end-date">
+                <small class="text-danger error-message"></small>
+            </div>
+        </div>
+    </div>
+    `;
 
         educationContainer.appendChild(newSection);
         educationContainer.style.display = "block";
@@ -461,11 +455,11 @@
         const cvEntry = document.createElement('div');
         cvEntry.id = sectionId;
         cvEntry.innerHTML = /*html*/ `
-            <strong style="font-size:16px;" id="${sectionId}-school"><span>${data.university_name || 'Tên Trường'}</span></strong>
-            <p><span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> - <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span></p>
-            <p id="${sectionId}-major">${sectionId}-major">${data.major || 'Chuyên Ngành'}</p>
-            <p>Loại Tốt Nghiệp: <span id="${sectionId}-degree">${data.type_graduate || 'Loại Tốt Nghiệp'}</span></p>
-        `;
+        <strong style="font-size:16px;" id="${sectionId}-school"><span>${data.university_name || 'Tên Trường'}</span></strong>
+        <p><span id="${sectionId}-start-date">${data.start_date ? formatDate(data.start_date) : 'Bắt đầu'}</span> - <span id="${sectionId}-end-date">${data.end_date ? formatDate(data.end_date) : 'Kết thúc'}</span></p>
+        <p id="${sectionId}-major">${sectionId}-major">${data.major || 'Chuyên Ngành'}</p>
+        <p>Loại Tốt Nghiệp: <span id="${sectionId}-degree">${data.type_graduate || 'Loại Tốt Nghiệp'}</span></p>
+    `;
         educationCV.appendChild(cvEntry);
         const section = educationCV.closest('.section');
         section.style.display = "block";
@@ -557,43 +551,43 @@
         const newSection = document.createElement('div');
         newSection.classList.add('input-section', 'd-flex', 'flex-column', 'mb-3');
         newSection.innerHTML = /*html*/ `
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-danger delete-personal-introduce-button">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-        <input type="hidden" name="referrer_id[]" value="${data.id || ''}">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Tên người liên hệ</label>
-                    <input type="text" class="form-control" name="contact_name[]" value="${data.name || ''}" data-target="#${sectionId}-name" placeholder="Khánh Nguyên">
-                    <small class="text-danger error-message"></small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Tên công ty</label>
-                    <input type="text" class="form-control" name="contact_company_name[]" value="${data.company_name || ''}" data-target="#${sectionId}-company" placeholder="Công ty ABC">
-                    <small class="text-danger error-message"></small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Chức vụ</label>
-                    <input type="text" class="form-control" name="contact_position[]" value="${data.position || ''}" data-target="#${sectionId}-position" placeholder="Chức vụ">
-                    <small class="text-danger error-message"></small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="text" class="form-control" name="contact_phone[]" value="${data.phone || ''}" data-target="#${sectionId}-phone" placeholder="0123456789" required>
-                    <small class="text-danger error-message"></small>
-                </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger delete-personal-introduce-button">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+    <input type="hidden" name="referrer_id[]" value="${data.id || ''}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Tên người liên hệ</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control" name="contact_name[]" value="${data.name || ''}" data-target="#${sectionId}-name" placeholder="Khánh Nguyên">
+                <small class="text-danger error-message"></small>
             </div>
         </div>
-        `;
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Tên công ty</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control" name="contact_company_name[]" value="${data.company_name || ''}" data-target="#${sectionId}-company" placeholder="Công ty ABC">
+                <small class="text-danger error-message"></small>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Chức vụ</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control" name="contact_position[]" value="${data.position || ''}" data-target="#${sectionId}-position" placeholder="Chức vụ">
+                <small class="text-danger error-message"></small>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Số điện thoại</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control" name="contact_phone[]" value="${data.phone || ''}" data-target="#${sectionId}-phone" placeholder="0123456789" required>
+                <small class="text-danger error-message"></small>
+            </div>
+        </div>
+    </div>
+    `;
 
         personalIntroduceContainer.appendChild(newSection);
         personalIntroduceContainer.style.display = "block";
@@ -602,11 +596,11 @@
         cvEntry.id = sectionId;
         cvEntry.classList.add('referrer-cv', 'mt-2');
         cvEntry.innerHTML = /*html*/ `
-            <p id="${sectionId}-name">${data.name || 'Tên người liên hệ'}</p>
-            <p id="${sectionId}-company">${data.company_name || 'Tên công ty'}</p>
-            <p id="${sectionId}-position">${data.position || 'Chức vụ'}</p>
-            <p id="${sectionId}-phone">${data.phone || 'Số điện thoại'}</p>
-        `;
+        <p id="${sectionId}-name">${data.name || 'Tên người liên hệ'}</p>
+        <p id="${sectionId}-company">${data.company_name || 'Tên công ty'}</p>
+        <p id="${sectionId}-position">${data.position || 'Chức vụ'}</p>
+        <p id="${sectionId}-phone">${data.phone || 'Số điện thoại'}</p>
+    `;
         personalIntroduceCV.appendChild(cvEntry);
         const section = personalIntroduceCV.closest('.section');
         section.style.display = "block";

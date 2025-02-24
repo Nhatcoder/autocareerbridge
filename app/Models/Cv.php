@@ -11,6 +11,8 @@ class Cv extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'type',
+        'upload',
         'title',
         'font',
         'color',

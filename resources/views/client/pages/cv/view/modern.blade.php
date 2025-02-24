@@ -198,7 +198,7 @@
                     </p>
                     <p><i class="fas fa-map-marker-alt"></i> {{ $cv->address }}</p>
                 </div>
-                @if (!empty($cv->educations))
+                @if ($cv->educations->isNotEmpty())
                     <div class="section">
                         <h3>HỌC VẤN</h3>
                         @foreach ($cv->educations as $edu)
@@ -211,7 +211,7 @@
                         @endforeach
                     </div>
                 @endif
-                @if (!empty($cv->cv_skill))
+                @if ($cv->cv_skill->isNotEmpty())
                     <div class="section">
                         <h3>KỸ NĂNG</h3>
                         @foreach ($cv->cv_skill as $skill)
@@ -219,7 +219,7 @@
                         @endforeach
                     </div>
                 @endif
-                @if (!empty($cv->certificates))
+                @if ($cv->certificates->isNotEmpty())
                     <div class="section">
                         <h3>CHỨNG CHỈ</h3>
                         @foreach ($cv->certificates as $certificate)
@@ -236,7 +236,7 @@
                         <p id="cv-introduce" style="white-space: pre-wrap;">{{ $cv->introduce }}</p>
                     </div>
                 @endif
-                @if (!empty($cv->experiences))
+                @if ($cv->experiences->isNotEmpty())
                     <div class="section">
                         <h3>KINH NGHIỆM LÀM VIỆC</h3>
                         @foreach ($cv->experiences as $experience)
@@ -251,7 +251,7 @@
                         @endforeach
                     </div>
                 @endif
-                @if (!empty($cv->referrers))
+                @if ($cv->referrers->isNotEmpty())
                     <div class="section">
                         <h3>NGƯỜI GIỚI THIỆU</h3>
                         @foreach ($cv->referrers as $referrer)

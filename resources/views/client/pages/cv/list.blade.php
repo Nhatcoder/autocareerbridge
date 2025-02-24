@@ -39,7 +39,7 @@
                                             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#previewModal-{{ $index }}">
                                                 Xem trước
                                             </button>
-                                            <a href="{{ route('cv.create', ['template' => $item['name_btn']]) }}" class="btn btn-primary">Dùng mẫu</a>
+                                            <a href="{{ route('cv.create', ['type' => $item['name_btn']]) }}" class="btn btn-primary">Dùng mẫu</a>
                                         </div>
                                     </div>
                                 </div>

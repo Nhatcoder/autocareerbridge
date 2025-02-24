@@ -9,7 +9,7 @@
             padding: 20px;
             background-color: #f8f9fa;
             /* height: 100vh;
-                                                                                                                                overflow: hidden; */
+                                                                                                                                                                                                                                                    overflow: hidden; */
         }
 
         .form-container {
@@ -63,61 +63,112 @@
             zoom: 65%
         }
 
-
-        /* .header h1 {
-            margin: 0;
-            margin-top: 20px;
-            font-size: 30px;
-            font-family: {{ $cv->font }};
-            color: {{ $cv->color }};
-        }
-
-        .header img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
-        .content {
-            display: flex;
-            padding: 20px;
-        }
-
-        .left-section {
-            width: 35%;
-            border-right: 1px solid #ddd;
-            padding-right: 20px;
-        }
-
-        .right-section {
-            width: 65%;
-            padding-left: 20px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-        }
-
-        .input-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
+        .template-item {
+            position: relative;
+            overflow: hidden;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #f9f9f9;
+            padding: 10px;
         }
 
-        .section h3 {
-            font-size: 18px;
-            color: {{ $cv->color }};
-            margin-bottom: 10px;
-            font-weight: 600;
-            font-family: {{ $cv->font }};
-        } */
+        .template-item img {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
 
+        .template-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .template-item button {
+            width: 200px;
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .template-item:hover button {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .template-item button:hover {
+            background-color: #0056b3;
+        }
+
+        .template-name {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chọn mẫu CV</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @php
+                    $view = [
+                        [
+                            'title' => 'Mẫu cơ bản',
+                            'image' => 'clients/images/cv/minimal.png',
+                            'name_btn' => 'minimal',
+                        ],
+                        [
+                            'title' => 'Mẫu hiện đại',
+                            'image' => 'clients/images/cv/modern.png',
+                            'name_btn' => 'modern',
+                        ],
+                    ];
+                @endphp
+                <div class="modal-body">
+                    <div class="row">
+                        @foreach ($view as $index => $item)
+                            @if ($item['name_btn'] !== $template)
+                                <div class="col-md-4 text-center">
+                                    <div class="template-item" data-template="{{ $item['name_btn'] }}">
+                                        <img src="{{ asset($item['image']) }}" alt="{{ $item['title'] }}" class="img-fluid">
+                                        <button type="button" class="btn btn-primary mt-2 select-template-btn"
+                                            data-template="{{ $item['name_btn'] }}">
+                                            Dùng mẫu này
+                                        </button>
+                                    </div>
+                                    <p class="template-name mt-2">{{ $item['title'] }}</p>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="main-container">
         <!-- Form Section -->
         <div class="form-container">
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Đổi mẫu
+                </button>
+            </div>
             <h3>Nhập Thông Tin CV</h3>
             <form action="{{ route('updateCv', ['id' => $cv->id]) }}" method="PUT" enctype="multipart/form-data"
                 data-id="{{ $cv->id }}" id="formCv">
@@ -148,7 +199,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tiêu đề hồ sơ</label>
+                    <label for="name" class="form-label">Tiêu đề hồ sơ</label><span class="text-danger"> *</span>
                     <input type="text" id="title" name="title" class="form-control"
                         placeholder="Nhập tiêu đề hồ sơ" value="{{ $cv->title }}">
                     <small class="text-danger error-message"></small>
@@ -171,22 +222,22 @@
                         <!-- Cột 1 -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Họ và Tên</label>
+                                <label for="name" class="form-label">Họ và Tên</label><span class="text-danger"> *</span>
                                 <input type="text" id="name" name="name" class="form-control"
                                     placeholder="Họ và tên" value="{{ $cv->username }}">
                                 <small class="text-danger error-message"></small>
                             </div>
 
                             <div class="mb-3">
-                                <label for="title" class="form-label">Email</label>
-                                <input type="text" id="email" name="email" class="form-control" placeholder="Email"
-                                    value="{{ $cv->email }}">
+                                <label for="title" class="form-label">Email</label><span class="text-danger"> *</span>
+                                <input type="text" id="email" name="email" class="form-control"
+                                    placeholder="Email" value="{{ $cv->email }}">
                                 <small class="text-danger error-message"></small>
 
                             </div>
 
                             <div class="mb-3">
-                                <label for="title" class="form-label">Ngày sinh</label>
+                                <label for="title" class="form-label">Ngày sinh</label><span class="text-danger"> *</span>
                                 <input type="date" id="birthdate" name="birthdate" class="form-control"
                                     placeholder="Ngày sinh" value="{{ $cv->birthdate }}">
                                 <small class="text-danger error-message"></small>
@@ -198,21 +249,21 @@
                         <!-- Cột 2 -->
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Vị trí</label>
+                                <label for="name" class="form-label">Vị trí</label><span class="text-danger"> *</span>
                                 <input type="text" id="position" name="position_name" class="form-control"
                                     placeholder="Developer" value="{{ $cv->position }}">
                                 <small class="text-danger error-message"></small>
                             </div>
 
                             <div class="mb-3">
-                                <label for="title" class="form-label">Điện thoại</label>
+                                <label for="title" class="form-label">Điện thoại</label><span class="text-danger"> *</span>
                                 <input type="text" id="phone" name="phone" class="form-control"
                                     placeholder="Điện thoại" value="{{ $cv->phone }}">
                                 <small class="text-danger error-message"></small>
                             </div>
 
                             <div class="mb-3">
-                                <label for="title" class="form-label">Địa chỉ</label>
+                                <label for="title" class="form-label">Địa chỉ</label><span class="text-danger"> *</span>
                                 <input type="text" id="address" name="address" class="form-control"
                                     placeholder="Địa chỉ" value="{{ $cv->address }}">
                                 <small class="text-danger error-message"></small>
@@ -252,23 +303,30 @@
                 </div>
 
                 <!-- Kỹ Năng -->
-                <div>
-                    <h3>Kỹ Năng</h3>
-                    <div class="input-section">
+                <h3>Kỹ Năng</h3>
+                <div class="input-section">
+                    @if ($cv->cv_skill->isEmpty())
+                        <textarea id="skills" name="skills" rows="4" placeholder="Danh sách kỹ năng..."></textarea>
+                    @else
                         @foreach ($cv->cv_skill as $skill)
                             <textarea id="skills" name="skills" rows="4" placeholder="Danh sách kỹ năng...">{{ $skill->name }}</textarea>
-                            <small class="text-danger error-message"></small>
                         @endforeach
-                    </div>
+                    @endif
+                    <small class="text-danger error-message"></small>
                 </div>
+
 
                 <!-- Chứng Chỉ -->
                 <h3>Chứng Chỉ</h3>
                 <div class="input-section">
-                    @foreach ($cv->certificates as $certificate)
-                        <textarea id="certifications" name="certifications" rows="4" placeholder="Danh sách chứng chỉ...">{{ $certificate->description }}</textarea>
-                        <small class="text-danger error-message"></small>
-                    @endforeach
+                    @if ($cv->certificates->isEmpty())
+                        <textarea id="certifications" name="certifications" rows="4" placeholder="Danh sách chứng chỉ..."></textarea>
+                    @else
+                        @foreach ($cv->certificates as $certificate)
+                            <textarea id="certifications" name="certifications" rows="4" placeholder="Danh sách chứng chỉ...">{{ $certificate->description }}</textarea>
+                        @endforeach
+                    @endif
+                    <small class="text-danger error-message"></small>
                 </div>
 
                 <div>
@@ -291,8 +349,6 @@
         <div class="cv-container">
             @if ($template == 'minimal')
                 @include('client.pages.cv.edit.template.minimal')
-            @elseif ($template == 'elegant')
-                @include('client.pages.cv.edit.template.elegant')
             @elseif ($template == 'modern')
                 @include('client.pages.cv.edit.template.modern')
             @else
@@ -300,8 +356,8 @@
             @endif
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+@endsection
+@push('js')
     <script>
         $(document).ready(function() {
             $('#formCv').on('submit', function(e) {
@@ -372,6 +428,42 @@
                 });
             });
         });
-    </script>
 
-@endsection
+        document.querySelectorAll('.select-template-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const selectedTemplate = this.getAttribute('data-template');
+                const formCv = document.getElementById('formCv');
+                const cvId = formCv.getAttribute('data-id');
+
+                const templateInput = document.querySelector('input[name="template"]');
+                if (templateInput) {
+                    templateInput.value = selectedTemplate;
+                }
+
+                let formData = new FormData(formCv);
+
+                $.ajax({
+                    url: `/cv/${cvId}/change`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                        toastr.success("", response.message);
+
+                    },
+                    error: function(xhr) {
+                        console.error('Lỗi:', xhr.responseText);
+                        toastr.error("", "Có lỗi xảy ra khi cập nhật CV!");
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

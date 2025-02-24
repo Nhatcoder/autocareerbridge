@@ -9,7 +9,7 @@
             padding: 20px;
             background-color: #f8f9fa;
             /* height: 100vh;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            overflow: hidden; */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                overflow: hidden; */
         }
 
         .form-container {
@@ -91,43 +91,54 @@
         .template-item {
             position: relative;
             overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #f9f9f9;
+            padding: 10px;
         }
 
         .template-item img {
             width: 100%;
             height: 300px;
             border-radius: 8px;
+            transition: transform 0.3s ease;
         }
 
         .template-item:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .template-item:hover a.btn-primary {
+        .template-item button {
+            width: 200px;
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .template-item:hover button {
             opacity: 1;
             visibility: visible;
         }
 
-        .template-item a.btn-primary {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #007bff;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+        .template-item button:hover {
+            background-color: #0056b3;
         }
 
         .template-name {
-            margin-top: 8px;
+            margin-top: 10px;
             font-weight: bold;
+            color: #333;
         }
     </style>
 
@@ -142,34 +153,41 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                @php
+                    $view = [
+                        [
+                            'title' => 'Mẫu cơ bản',
+                            'image' => 'clients/images/cv/minimal.png',
+                            'name_btn' => 'minimal',
+                        ],
+                        [
+                            'title' => 'Mẫu hiện đại',
+                            'image' => 'clients/images/cv/modern.png',
+                            'name_btn' => 'modern',
+                        ],
+                    ];
+                @endphp
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-4 text-center">
-                            <div class="template-item" data-template="minimal">
-                                <img src="{{ asset('clients/images/cv/minimal.png') }}" alt="Minimal Template">
-                                <button type="button" onclick="changeTemplate('minimal')">Minimal</button>
-                            </div>
-                            <p class="template-name">Minimal</p>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <div class="template-item" data-template="elegant">
-                                <img src="{{ asset('clients/images/cv/elegant.png') }}" alt="Elegant Template">
-                                <button type="button" onclick="changeTemplate('elegant')">Elegant</button>
-                            </div>
-                            <p class="template-name">Elegant</p>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <div class="template-item" data-template="modern">
-                                <img src="{{ asset('clients/images/cv/modern.png') }}" alt="Modern Template">
-                                <button type="button" onclick="changeTemplate('modern')">Modern</button>
-                            </div>
-                            <p class="template-name">Modern</p>
-                        </div>
+                        @foreach ($view as $index => $item)
+                            @if ($item['name_btn'] !== $template)
+                                <div class="col-md-4 text-center">
+                                    <div class="template-item" data-template="{{ $item['name_btn'] }}">
+                                        <img src="{{ asset($item['image']) }}" alt="{{ $item['title'] }}" class="img-fluid">
+                                        <a href="{{ route('cv.create', ['type' => $item['name_btn']]) }}">
+                                            <button class="btn btn-primary mt-2">Dùng mẫu này</button>
+                                        </a>
+                                    </div>
+                                    <p class="template-name mt-2">{{ $item['title'] }}</p>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Form và CV -->
     <div class="main-container">
@@ -206,7 +224,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tiêu đề hồ sơ</label>
+                    <label for="name" class="form-label">Tiêu đề hồ sơ</label><span class="text-danger"> *</span>
                     <input type="text" id="title" name="title" class="form-control"
                         placeholder="Nhập tiêu đề hồ sơ">
                     <small class="text-danger error-message"></small>
@@ -221,8 +239,8 @@
                             </div>
                             <div class="mt-2">
                                 <label for="avatar" class="form-label">Tải lên ảnh đại diện</label>
-                                <input type="file" id="avatar" name="avatar" class="form-control"
-                                    accept="image/*" onchange="previewAvatar(event)">
+                                <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*"
+                                    onchange="previewAvatar(event)">
                                 <small class="text-danger error-message"></small>
                             </div>
                         </div>
@@ -230,7 +248,8 @@
                             <!-- Họ và Tên - Vị trí -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Họ và Tên</label>
+                                    <label for="name" class="form-label">Họ và Tên<span class="text-danger">
+                                            *</span></label>
                                     <input type="text" id="name" name="name" class="form-control"
                                         placeholder="Họ và tên">
                                     <small class="text-danger error-message"></small>
@@ -238,7 +257,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="position" class="form-label">Vị trí</label>
+                                    <label for="position" class="form-label">Vị trí ứng tuyển<span class="text-danger">
+                                            *</span></label>
                                     <input type="text" id="position" name="position_name" class="form-control"
                                         placeholder="Developer">
                                     <small class="text-danger error-message"></small>
@@ -248,7 +268,8 @@
                             <!-- Email - Điện thoại -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email" class="form-label">Email<span class="text-danger">
+                                            *</span></label>
                                     <input type="text" id="email" name="email" class="form-control"
                                         placeholder="Email">
                                     <small class="text-danger error-message"></small>
@@ -256,7 +277,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="phone" class="form-label">Điện thoại</label>
+                                    <label for="phone" class="form-label">Điện thoại<span class="text-danger">
+                                            *</span></label>
                                     <input type="text" id="phone" name="phone" class="form-control"
                                         placeholder="Điện thoại">
                                     <small class="text-danger error-message"></small>
@@ -266,7 +288,8 @@
                             <!-- Ngày sinh - Địa chỉ -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="birthdate" class="form-label">Ngày sinh</label>
+                                    <label for="birthdate" class="form-label">Ngày sinh<span class="text-danger">
+                                            *</span></label>
                                     <input type="date" id="birthdate" name="birthdate" class="form-control"
                                         placeholder="Ngày sinh">
                                     <small class="text-danger error-message"></small>
@@ -274,7 +297,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="address" class="form-label">Địa chỉ</label>
+                                    <label for="address" class="form-label">Địa chỉ<span class="text-danger">
+                                            *</span></label>
                                     <input type="text" id="address" name="address" class="form-control"
                                         placeholder="Địa chỉ">
                                     <small class="text-danger error-message"></small>
@@ -347,19 +371,12 @@
 
 
 
-        <div class="cv-container">
-            @if ($template == 'minimal')
-                @include('client.pages.cv.all.minimal')
-            @elseif ($template == 'elegant')
-                @include('client.pages.cv.all.elegant')
-            @elseif ($template == 'modern')
-                @include('client.pages.cv.all.modern')
-            @else
-                <p>Không tìm thấy mẫu CV phù hợp.</p>
-            @endif
+        <div class="cv-container" id="cvContainer">
+            @include('client.pages.cv.all.' . $template)
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+@endsection
+@push('js')
     <script>
         $(document).ready(function() {
             $('#formCv').on('submit', function(e) {
@@ -426,4 +443,4 @@
             });
         });
     </script>
-@endsection
+@endpush
