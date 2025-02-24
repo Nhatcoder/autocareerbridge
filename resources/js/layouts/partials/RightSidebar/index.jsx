@@ -146,7 +146,7 @@ function RightSidebar() {
                                         scrollThreshold={0.8}
                                     >
                                         {file.map((file, i) => (
-                                            <li key={i} onClick={() => downloadFile(file.file_path)} className={cx("item_file")}>
+                                            <li key={i} onClick={() => downloadFile(`${window.location.origin}${file.file_path}`)} className={cx("item_file")}>
                                                 <span className={cx("icon_file")}>
                                                     <i className="fa-regular fa-file-lines"></i>
                                                 </span>
