@@ -3,10 +3,15 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { groupByMonthAndYear } from "@/utils";
 import { ROLE_USER } from "@/constants";
 import { useChat } from "@/contexts/chat-context";
-import classNames from "classnames/bind";
-import styles from "./RightSidebar.module.scss";
+
 import Job from "@/components/Job";
 import Loader from "@/components/Loader";
+import { Fancybox } from "@fancyapps/ui";
+import { saveAs } from 'file-saver';
+
+import classNames from "classnames/bind";
+import styles from "./RightSidebar.module.scss";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const cx = classNames.bind(styles);
 
@@ -66,6 +71,12 @@ function RightSidebar() {
         }
     }
 
+    Fancybox.bind("[data-fancybox]");
+
+    const downloadFile = (filePath) => {
+        saveAs(filePath);
+    }
+
     return (
         <div className={cx("col-md-3", "p-3", "border-left")}>
             {checkRole != true ? (<div className={cx("job_apply_list")}>
@@ -105,11 +116,14 @@ function RightSidebar() {
                                             <div className={cx("list_images")}>
                                                 {groupedData[groupKey].map((item, i) => (
                                                     <div key={i} className={cx("item_image")}>
-                                                        <img
-                                                            className={cx('item__image_img')}
-                                                            src={item.file_path}
-                                                            alt={item.name || `Image ${i}`}
-                                                        />
+                                                        <a href={item.file_path} data-fancybox="data-fancybox" data-caption={item.name || `Image ${i}`}>
+                                                            <img
+                                                                className={cx('item__image_img')}
+                                                                src={item.file_path}
+                                                                alt={item.name || `Image ${i}`}
+                                                            />
+                                                        </a>
+
                                                     </div>
                                                 ))}
                                             </div>
@@ -132,7 +146,7 @@ function RightSidebar() {
                                         scrollThreshold={0.8}
                                     >
                                         {file.map((file, i) => (
-                                            <li key={i} className={cx("item_file")}>
+                                            <li key={i} onClick={() => downloadFile(file.file_path)} className={cx("item_file")}>
                                                 <span className={cx("icon_file")}>
                                                     <i className="fa-regular fa-file-lines"></i>
                                                 </span>
