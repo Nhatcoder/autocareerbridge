@@ -206,7 +206,7 @@ function Content() {
     };
 
     return (
-        <div className={cx("col-md-6 col-sm-12 position-relative px-0")}>
+        <div className={cx("col-md-6 col-xs-6 col-sm-12  position-relative px-0")}>
             <h4 className={cx("slogan")}>
                 Cách mới để theo đuổi cơ hội của bạn.
                 <span className={cx("text-primary")}>Tham gia nhiều hơn, thành công hơn</span>

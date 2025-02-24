@@ -16,6 +16,10 @@ function Chat({ ...props }) {
     const date = new Date(message.sent_time);
     const formattedDate = `${date.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} ${date.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
 
+    const downloadFile = (filePath) => {
+        saveAs(filePath);
+    }
+
     return (
         <>
             {message.message.length > 0 &&
@@ -55,10 +59,12 @@ function Chat({ ...props }) {
                         {message.attachments.map((file, index) => {
                             if (file.type == 1) {
                                 return <div key={index} className={cx("attachment_image")}>
-                                    <img className={cx("attachment_image__img")} src={`${window.location.origin}${file.file_path || "/clients/images/no-image.jpg"}`} alt={file.name} />
+                                    <a href={file.file_path} data-fancybox="data-fancybox" data-caption={file.name || `Image ${i}`}>
+                                        <img className={cx("attachment_image__img")} src={`${window.location.origin}${file.file_path || "/clients/images/no-image.jpg"}`} alt={file.name} />
+                                    </a>
                                 </div>
                             } else {
-                                return <div key={index} className={cx("attachment_file")}>
+                                return <div key={index} onClick={() => downloadFile(`${window.location.origin}${file.file_path}`)} className={cx("attachment_file")}>
                                     <span className={cx("icon_file")}><i className="fa-regular fa-file-lines"></i></span>
                                     <span className={cx("attachment_file__name")} data-file={`${window.location.origin}${file.file_path}`}>{file.name}
                                     </span></div>
