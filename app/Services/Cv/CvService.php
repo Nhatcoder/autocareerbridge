@@ -10,9 +10,12 @@ use App\Repositories\Experience\ExperienceRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\LogHelper;
 
 class CvService
 {
+    use LogHelper;
+
     protected $cvRepository;
     protected $experienceRepository;
     protected $educationRepository;
@@ -148,7 +151,7 @@ class CvService
             return $cv;
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -305,7 +308,7 @@ class CvService
             return $cv;
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -326,23 +329,11 @@ class CvService
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getMyCV()
+    public function getMyCV($type)
     {
-        $cv = $this->cvRepository->getMyCv();
+        $cv = $this->cvRepository->getMyCv($type);
         return $cv;
     }
-
-    /**
-     * Retrieve the current user's uploaded CVs.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getMyCVUpload()
-    {
-        $cv = $this->cvRepository->getMyCvUpload();
-        return $cv;
-    }
-
 
     /**
      * Delete a CV by ID.
@@ -375,7 +366,7 @@ class CvService
             return true;
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
             return false;
         }
     }
@@ -409,13 +400,14 @@ class CvService
             ]);
 
             DB::commit();
+
             return [
                 'success' => true,
                 'cv' => $cv,
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Lỗi upload CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
 
             return [
                 'success' => false,
@@ -455,10 +447,13 @@ class CvService
             $cv->update(['title' => $request->title_file_cv_upload]);
 
             DB::commit();
-            return $cv;
+            return [
+                'success' => true,
+                'cv' => $cv,
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 }

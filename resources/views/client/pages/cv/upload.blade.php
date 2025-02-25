@@ -210,8 +210,8 @@
                         <p class="mt-2 text-success fw-bold" id="file-name">Chưa có file nào</p>
                     </div>
 
-                    <form action="{{ route('cv.upload.store') }}" id="formUploadCv" action="https://www.topcv.vn/upload-cv"
-                        method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('cv.upload.store') }}" id="formUploadCv" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="ta_source" value="UploadCVInManagerCV">
                         <input type="file" name="file_upload_cv" id="file-upload-cv" class="d-none">

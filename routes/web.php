@@ -63,7 +63,7 @@ Route::middleware('web')->group(function () {
             Route::get('cv/upload', [ResumeController::class, 'uploadCv'])->name('cv.upload');
 
             Route::get('cv/upload/{id}/view', [ResumeController::class, 'uploadCvView'])->name('cv.upload.view');
-            Route::get('cv/upload/{id}/down', [ResumeController::class, 'uploadCvDown'])->name('cv.upload.down');
+            Route::get('cv/upload/{id}/down', [ResumeController::class, 'downloadUploadedCv'])->name('cv.upload.down');
 
             Route::put('cv/upload/{id}/update', [ResumeController::class, 'updateTitleCv'])->name('cv.upload.update');
 

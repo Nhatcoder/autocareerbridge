@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Clients;
 
+use App\Helpers\StorageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cv\CvRequest;
 use App\Http\Requests\Cv\UploadCv;
@@ -41,8 +42,8 @@ class ResumeController extends Controller
     public function myCv()
     {
         try {
-            $cv_creates = $this->cvService->getMyCV();
-            $cv_uploads = $this->cvService->getMyCVUpload();
+            $cv_creates = $this->cvService->getMyCV(TYPE_CV_CREATE);
+            $cv_uploads = $this->cvService->getMyCV(TYPE_CV_UPLOAD);
 
             if (!$cv_creates && !$cv_uploads) {
 
@@ -51,7 +52,7 @@ class ResumeController extends Controller
 
             return view('client.pages.cv.my-cv', compact('cv_creates', 'cv_uploads'));
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -73,7 +74,7 @@ class ResumeController extends Controller
                 'redirect' => route('myCv'),
             ]);
         } catch (\Exception $e) {
-            Log::error('Lỗi khi tạo CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -97,7 +98,7 @@ class ResumeController extends Controller
                 'message' => 'Cập nhật CV thành công!'
             ]);
         } catch (\Exception $e) {
-            Log::error('Lỗi cập nhật CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -157,7 +158,7 @@ class ResumeController extends Controller
             }
             return view("client.pages.cv.view.{$cv->template}", compact('cv'));
         } catch (\Exception $e) {
-            Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -198,7 +199,7 @@ class ResumeController extends Controller
 
             return view("client.pages.cv.edit", compact(['cv', 'template']));
         } catch (\Exception $e) {
-            Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -232,14 +233,14 @@ class ResumeController extends Controller
             $this->cvService->deleteCv($id);
             return redirect()->route('myCv')->with('status_success', 'Xóa CV thành công!');
         } catch (\Exception $e) {
-            Log::error('Lỗi không tìm thấy CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
 
     /**
      * Change the template of a CV.
-     *
+     * @param \Illuminate\Http\Request $request The request containing CV template data.
      * @param int $id The ID of the CV to update.
      * @return \Illuminate\Http\JsonResponse
      */
@@ -253,7 +254,7 @@ class ResumeController extends Controller
                 'message' => 'Đổi CV thành công!'
             ]);
         } catch (\Exception $e) {
-            Log::error('Lỗi đổi CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -271,7 +272,6 @@ class ResumeController extends Controller
 
     /**
      * Store the uploaded CV.
-     *
      * @param UploadCv $request The request object containing the uploaded CV.
      * @return \Illuminate\Http\JsonResponse
      */
@@ -307,7 +307,7 @@ class ResumeController extends Controller
             abort(404, 'CV không tồn tại!');
         }
 
-        $filePath = storage_path('app/public/' . str_replace('storage/', '', $cv->upload));
+        $filePath = StorageHelper::getStoragePath($cv->upload);
 
         if (!file_exists($filePath)) {
             abort(404, 'File không tồn tại!');
@@ -325,7 +325,7 @@ class ResumeController extends Controller
      * @param int $id The ID of the CV to download.
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function uploadCvDown($id)
+    public function downloadUploadedCv($id)
     {
         $cv = $this->cvService->getCvUpload($id);
 
@@ -333,7 +333,7 @@ class ResumeController extends Controller
             abort(404);
         }
 
-        $filePath = storage_path('app/public/' . str_replace('storage/', '', $cv->upload));
+        $filePath = StorageHelper::getStoragePath($cv->upload);
 
         if (!file_exists($filePath)) {
             abort(404);
@@ -353,15 +353,16 @@ class ResumeController extends Controller
     public function updateTitleCv(Request $request, $id)
     {
         try {
-            $this->cvService->updateTitleCv($request, $id);
-
-            return response()->json([
-                'redirect' => route('myCv'),
-                'type' => 'success',
-                'message' => 'Cập nhật CV thành công!'
-            ]);
+            $result = $this->cvService->updateTitleCv($request, $id);
+            if ($result['success']) {
+                return response()->json([
+                    'redirect' => route('myCv'),
+                    'type' => 'success',
+                    'message' => 'Cập nhật CV thành công!'
+                ]);
+            }
         } catch (\Exception $e) {
-            Log::error('Lỗi cập nhật CV: ' . $e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 }

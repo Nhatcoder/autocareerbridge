@@ -7,12 +7,22 @@ use App\Repositories\Base\BaseRepository;
 
 class CvRepository extends BaseRepository implements CvRepositoryInterface
 {
-
+    /**
+     * Get the model class.
+     *
+     * @return string
+     */
     public function getModel()
     {
         return Cv::class;
     }
 
+    /**
+     * Get a CV by ID with related data.
+     *
+     * @param int $id
+     * @return \App\Models\Cv
+     */
     public function getCv($id)
     {
         return $this->model->findOrFail($id)->load([
@@ -25,25 +35,28 @@ class CvRepository extends BaseRepository implements CvRepositoryInterface
         ]);
     }
 
+    /**
+     * Get an uploaded CV by ID.
+     *
+     * @param int $id
+     * @return \App\Models\Cv
+     */
     public function getCvUpload($id)
     {
         return $this->model->findOrFail($id);
     }
 
-    public function getMyCv()
+    /**
+     * Get the current user's CVs by type.
+     *
+     * @param string $type (TYPE_CV_CREATE | TYPE_CV_UPLOAD)
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMyCv($type)
     {
         return $this->model
             ->where('user_id', auth()->id())
-            ->where('type', TYPE_CV_CREATE)
-            ->orderBy('updated_at', 'desc')
-            ->get();
-    }
-
-    public function getMyCvUpload()
-    {
-        return $this->model
-            ->where('user_id', auth()->id())
-            ->where('type', TYPE_CV_UPLOAD)
+            ->where('type', $type)
             ->orderBy('updated_at', 'desc')
             ->get();
     }

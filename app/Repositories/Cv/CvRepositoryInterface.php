@@ -11,7 +11,5 @@ interface CvRepositoryInterface extends BaseRepositoryInterface
 
     public function getCvUpload($id);
 
-    public function getMyCv();
-
-    public function getMyCvUpload();
+    public function getMyCv($type);
 }
