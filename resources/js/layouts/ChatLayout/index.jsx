@@ -3,6 +3,8 @@ import styles from "./ChatLayout.module.scss";
 
 import Sidebar from "@/layouts/partials/Sidebar";
 import RightSidebar from "@/layouts/partials/RightSidebar";
+import Footer from "@/layouts/partials/Footer";
+
 const cx = classNames.bind(styles);
 
 function ChatLayout({ children }) {
@@ -12,6 +14,7 @@ function ChatLayout({ children }) {
                 <Sidebar />
                 {children}
                 <RightSidebar />
+                <Footer />
             </div>
         </div >
     );

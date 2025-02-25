@@ -16,4 +16,19 @@
         padding: 5px;
         cursor: pointer;
     }
+
+    .btn_back {
+        background-color: #ffffff;
+        color: #000;
+        border: none;
+        cursor: pointer;
+        font-size: 20px;
+        padding: 5px 10px;
+        margin-right: 5px;
+
+        &:focus {
+            background-color: #ffffff;
+        }
+    }
+
 }

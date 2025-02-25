@@ -1,23 +1,28 @@
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useRef, useEffect } from 'react';
 import { useChat } from "@/contexts/chat-context";
+import { useResponsive } from "@/contexts/ResponsiveContext";
 import { formatDateChat } from "@/utils";
 import Chat from "@/components/Chat";
 import User from '@/components/User';
+
+import InfiniteScroll from "react-infinite-scroll-component";
 import classNames from "classnames/bind";
 import styles from "./Content.module.scss";
 import EmojiPicker from 'emoji-picker-react';
 import NoChat from '@/components/NoChat';
 import Loader from "@/components/Loader";
 import Tippy from "@tippyjs/react";
-import 'tippy.js/dist/tippy.css';
 import axios from 'axios';
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+import 'tippy.js/dist/tippy.css';
 
 const cx = classNames.bind(styles);
 const MAX_TEXTAREA_HEIGHT = 100;
 const BASE_CHAT_HEIGHT = 180;
 const ATTACHMENT_HEIGHT = 120;
 function Content() {
+    const { isTabletOrMobile, isDesktopOrLaptop, boxChat } = useResponsive();
     const { data, setMessageCt } = useChat();
     const chatMessages = data?.chats || [];
     const receiver = data?.receiver;
@@ -31,14 +36,17 @@ function Content() {
     const [hasMoreChat, setHasMoreChat] = useState(chatMessages.current_page < chatMessages.last_page);
     const [currentPage, setCurrentPage] = useState(2);
     const [online, setOnline] = useState(false);
+    const [sender, setSender] = useState(false);
 
     const containerMessageRef = useRef(null);
     const refChat = useRef(null);
     const messageRef = useRef(null);
+    const refContainerChat = useRef(null);
 
     // Lắng nghe sự kiện từ Pusher
     const channelName = `chat.${Math.min(user.id, receiver.id)}.${Math.max(user.id, receiver.id)}`;
     const channel = window.Echo.join(channelName);
+
     useEffect(() => {
         channel.here((users) => {
             const userOnline = users.find((u) => u.id === receiver.id);
@@ -57,11 +65,6 @@ function Content() {
 
         channel.listen("SendMessage", (e) => {
             const newMessage = e.message;
-            console.log(newMessage);
-
-            setMessageCt(() => {
-                return newMessage;
-            });
             setChatMessage((prevItems) => [newMessage, ...prevItems]);
         });
         return () => {
@@ -120,10 +123,16 @@ function Content() {
         const selectedFiles = [];
 
         Array.from(fileList).forEach((file) => {
-            if (file.type.startsWith("image/")) {
+            if (file.type.startsWith("image/") && file.size < 3 * 1024 * 1024) {
                 selectedImages.push({ preview: URL.createObjectURL(file), file: file });
-            } else {
+            } else if ((file.type.endsWith("pdf") || file.type.endsWith("doc") || file.type.endsWith("docx")) && file.size < 3 * 1024 * 1024) {
                 selectedFiles.push(file);
+            } else {
+                toastr.error('Chỉ được phép gửi file pdf, docs và hình ảnh dưới 3MB', '', {
+                    closeButton: true,
+                    timeOut: 3000,
+                    progressBar: true,
+                });
             }
         });
 
@@ -189,32 +198,50 @@ function Content() {
                 formData.append("files[]", file);
             });
 
+            setMessageValue("");
+
             axios.post(route('chatStore'), formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             })
                 .then(() => {
-                    setMessageValue("");
                     setImages([]);
                     setFiles([]);
                 })
                 .catch((error) => {
+                    toastr.error('Gửi tin nhắn thất bại!', '', {
+                        closeButton: true,
+                        timeOut: 3000,
+                        progressBar: true,
+                    });
                     console.error('Error sending message:', error);
                 });
         }
     };
 
+    useEffect(() => {
+        const storedBoxChat = localStorage.getItem("boxChat");
+        if (storedBoxChat !== null) {
+            const isBoxChatOpen = JSON.parse(storedBoxChat);
+            if (isBoxChatOpen)
+                refContainerChat.current.classList.remove("d-none");
+        }
+    }, []);
+
+
     return (
-        <div className={cx("col-md-6 col-xs-6 col-sm-12  position-relative px-0")}>
+        <div ref={refContainerChat} className={cx("chat_container", { "col-md-6": isDesktopOrLaptop, "d-none": isTabletOrMobile }, "position-relative px-0")}>
             <h4 className={cx("slogan")}>
                 Cách mới để theo đuổi cơ hội của bạn.
                 <span className={cx("text-primary")}>Tham gia nhiều hơn, thành công hơn</span>
             </h4>
 
-            {receiver.id !== user.id && (
-                <User online={online} />
-            )}
+            {
+                receiver.id !== user.id && (
+                    <User online={online} refContainerChat={refContainerChat} />
+                )
+            }
 
             <div className={cx("chats", { active: chatMessages.last_page > 1 })} id="scrollableChats" ref={refChat}>
                 <InfiniteScroll

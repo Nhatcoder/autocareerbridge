@@ -3,6 +3,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { groupByMonthAndYear } from "@/utils";
 import { ROLE_USER } from "@/constants";
 import { useChat } from "@/contexts/chat-context";
+import { useResponsive } from "@/contexts/ResponsiveContext";
 
 import Job from "@/components/Job";
 import Loader from "@/components/Loader";
@@ -24,6 +25,8 @@ function RightSidebar() {
     const [image, setImage] = useState([]);
 
     const { data, loading, images, files } = useChat();
+    const { isTabletOrMobile, isDesktopOrLaptop } = useResponsive();
+
     const jobApply = data?.getUserApplyJob;
     const dataImages = images?.data;
     const dataFiles = files?.data;
@@ -77,8 +80,18 @@ function RightSidebar() {
         saveAs(filePath);
     }
 
+    const handleBackHome = () => {
+        const rightSidebar = document.querySelector(".right_sidebar");
+        const jobsList = document.querySelector(".jobs-list");
+        const chatContainer = document.querySelector(".chat_container");
+
+        chatContainer.classList.toggle("d-none");
+        rightSidebar.classList.toggle("d-none");
+        jobsList.classList.toggle("d-none");
+    }
+
     return (
-        <div className={cx("col-md-3", "p-3", "border-left")}>
+        <div className={cx({ "col-md-3": isDesktopOrLaptop, "d-none": isTabletOrMobile }, "p-3", "border-left", "right_sidebar")}>
             {checkRole != true ? (<div className={cx("job_apply_list")}>
                 <h5 className={cx("mb-3", "fs-6", "text-uppercase")}>Tin tuyển dụng đã ứng tuyển</h5>
                 <div className={cx("jobs-list")}>
@@ -88,8 +101,13 @@ function RightSidebar() {
                 </div>
             </div>) : ("")}
 
-            <div className={cx("history_file", { "d-none": !checkRole })}>
-                <h5 className={cx("mb-3", "fs-6", "text-uppercase")}>Quản lý file</h5>
+            <div className={cx("history_file", "d-none")}>
+                <div className="d-flex align-items-center">
+                    {isTabletOrMobile && <button onClick={handleBackHome} className={cx("btn_back")}>
+                        <i className="fa-solid fa-arrow-left" />
+                    </button>}
+                    <h5 className={cx("mb-0", "fs-6", "text-uppercase")}>Quản lý file</h5>
+                </div>
                 <div>
                     <nav>
                         <div className={cx("nav", "nav-tabs")} id="nav-tab" role="tablist">

@@ -26,7 +26,7 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
 
     public function getJobUserApplyChats()
     {
-        $userCurrent = auth('web')->user();
+        $userCurrent = auth('web')->user() ?? auth('admin')->user();
 
         $jobUserApply = $this->model->with('user', 'job.company')
             ->where("user_id", $userCurrent->id)
