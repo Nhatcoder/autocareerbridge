@@ -1,6 +1,5 @@
 import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css';
-
 import classNames from "classnames/bind";
 import styles from "./Chat.module.scss";
 
@@ -26,7 +25,7 @@ function Chat({ ...props }) {
                 <div className={cx("item_message", (checkUser ? "right" : "left"))}>
                     <div className={cx("box__message", {
                     })}>
-                        {!checkUser && isLast && < img src={receiver.avatar_path?.startsWith('http') ? receiver.avatar_path : `${window.location.origin}/${receiver.avatar_path}`} alt="avt" className={cx("user_you")} />}
+                        {!checkUser && isLast && < img src={receiver?.avatar_path ? (receiver.avatar_path.startsWith('/') ? window.location.origin + receiver.avatar_path : receiver.avatar_path.startsWith('http') ? receiver.avatar_path : window.location.origin + "/" + receiver.avatar_path) : ''} alt="avt" className={cx("user_you")} />}
 
                         <Tippy
                             interactive={true}
@@ -75,7 +74,6 @@ function Chat({ ...props }) {
             )}
         </>
     );
-
 }
 
 export default Chat;

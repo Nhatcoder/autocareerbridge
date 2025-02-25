@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@inertiajs/react";
 
 import { formatDate } from "@/utils";
 import { useChat } from "@/contexts/chat-context";
+import { useResponsive } from "@/contexts/ResponsiveContext";
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
 import axios from "axios";
@@ -10,12 +11,14 @@ import axios from "axios";
 const cx = classNames.bind(styles);
 
 function Sidebar() {
+    const { isTabletOrMobile, isDesktopOrLaptop, setBoxChat } = useResponsive();
     const { data, messageCt } = useChat();
     const receiver = data?.receiver || [];
     const user = data?.user;
     const userChatsCt = data?.userChats || [];
 
     const [userChats, setUserChats] = useState(userChatsCt);
+    const refToggleSidebar = useRef(null);
 
     useEffect(() => {
         axios.get(route('getUserChat'))
@@ -28,8 +31,31 @@ function Sidebar() {
             })
     }, [messageCt]);
 
+    const handleToggleChat = () => {
+        if (isTabletOrMobile) {
+            const newState = true;
+            setBoxChat(newState);
+            localStorage.setItem("boxChat", JSON.stringify(newState));
+            refToggleSidebar.current.classList.add("d-none");
+        } else {
+            setBoxChat(false);
+        }
+    };
+
+    useEffect(() => {
+        const storedBoxChat = localStorage.getItem("boxChat");
+        if (storedBoxChat !== null) {
+            const isBoxChatOpen = JSON.parse(storedBoxChat);
+            if (isBoxChatOpen)
+                refToggleSidebar.current.classList.add("d-none");
+        }
+
+        if (isDesktopOrLaptop)
+            localStorage.setItem("boxChat", JSON.stringify(false));
+    }, []);
+
     return (
-        <div className={cx("col-md-3", "sidebar", "border-right", "p-3")}>
+        <div ref={refToggleSidebar} className={cx({ "col-md-3": isDesktopOrLaptop }, "sidebar", "border-right", "p-3")}>
             <div className={cx("top_sidebar d-flex justify-content-between align-items-center")}>
                 <a href={route('home')} className={cx("logo")}>
                     <img src={`${window.location.origin}/clients/images/header/logo2.png`} alt="Logo"
@@ -49,7 +75,7 @@ function Sidebar() {
             <div className={cx("jobs-list")}>
                 {userChats && userChats.map((userChat, index) => {
                     const avatar = userChat.from_id == user.id
-                        ? (userChat.receiver_avatar?.startsWith('http') ? userChat.receiver_avatar : `${window.location.origin}/${userChat.receiver_avatar || ""}`)
+                        ? (userChat.receiver_avatar?.startsWith('http') ? userChat.receiver_avatar : userChat.receiver_avatar?.startsWith('/') ? `${window.location.origin}${userChat.receiver_avatar || ""}` : `${window.location.origin}/${userChat.receiver_avatar || ""}`)
                         : (userChat.sender_avatar?.startsWith('http') ? userChat.sender_avatar : `${window.location.origin}/${userChat.sender_avatar || ""}`);
                     const name = userChat.from_id == user.id ? userChat.receiver_name : userChat.sender_name;
 
@@ -63,7 +89,7 @@ function Sidebar() {
                     const messageLoading = `${you}${message.slice(0, 25)}${message.length > 25 ? "..." : ""}`
 
                     return (
-                        <Link href={route('conversations', idChat)} className={cx("job-item", { active: userChat.to_id === receiver.id })} key={index}>
+                        <Link href={route('conversations', idChat)} onClick={() => { handleToggleChat() }} className={cx("job-item", { active: userChat.to_id === receiver.id })} key={index}>
                             <img src={avatar} alt={name} />
                             <div >
                                 <h6 className={cx("mb-0")}>{name ? name.slice(0, 20) + (name.length > 20 ? "..." : "") : "No Name"}</h6>

@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-
 const ChatContext = createContext();
 
 export function ChatProvider({ children, ...props }) {
@@ -18,6 +17,7 @@ export function ChatProvider({ children, ...props }) {
         messageCt,
         setMessageCt,
     };
+
     return (
         <ChatContext.Provider value={{ ...props, ...value }}>
             {children}
