@@ -380,7 +380,7 @@
                         toastr.success("", response.message);
 
                         setTimeout(function() {
-                            window.location.href = response.redirect;
+                            window.location.href = '/my-cv';
                         }, 1500);
                     },
                     error: function(xhr) {

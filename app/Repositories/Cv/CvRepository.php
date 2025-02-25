@@ -49,15 +49,17 @@ class CvRepository extends BaseRepository implements CvRepositoryInterface
     /**
      * Get the current user's CVs by type.
      *
-     * @param string $type (TYPE_CV_CREATE | TYPE_CV_UPLOAD)
+     * @param string $type (TYPE_CV_CREATE | TYPE_CV_UPLOAD) default is TYPE_CV_CREATE
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getMyCv($type)
+    public function getMyCv($type = TYPE_CV_CREATE)
     {
-        return $this->model
-            ->where('user_id', auth()->id())
-            ->where('type', $type)
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        $query = $this->model->where('user_id', auth()->id());
+
+        if (!is_null($type)) {
+            $query->where('type', $type);
+        }
+
+        return $query->orderBy('updated_at', 'desc')->get();
     }
 }

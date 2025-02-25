@@ -93,7 +93,6 @@ class ResumeController extends Controller
             $this->cvService->updateCv($request, $id);
 
             return response()->json([
-                'redirect' => route('myCv'),
                 'type' => 'success',
                 'message' => 'Cập nhật CV thành công!'
             ]);
@@ -281,7 +280,6 @@ class ResumeController extends Controller
 
         if ($result['success']) {
             return response()->json([
-                'redirect' => route('myCv'),
                 'success'  => true,
                 'message'  => 'Upload thành công',
             ]);
@@ -356,7 +354,6 @@ class ResumeController extends Controller
             $result = $this->cvService->updateTitleCv($request, $id);
             if ($result['success']) {
                 return response()->json([
-                    'redirect' => route('myCv'),
                     'type' => 'success',
                     'message' => 'Cập nhật CV thành công!'
                 ]);

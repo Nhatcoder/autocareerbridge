@@ -292,7 +292,7 @@
                         if (response.success) {
                             toastr.success('', response.message);
                             setTimeout(function() {
-                                window.location.href = response.redirect;
+                                window.location.href = '/my-cv';
                             }, 1500);
                         } else {
                             toastr.error('Có lỗi xảy ra!');
