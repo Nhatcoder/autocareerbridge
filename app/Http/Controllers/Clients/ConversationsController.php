@@ -56,7 +56,7 @@ class ConversationsController extends Controller
     public function conversations(Request $request, $id = null)
     {
         try {
-            $userCurrent = auth('admin')->user()->company ?? auth('web')->user();
+            $userCurrent = auth('admin')->user() ?? auth('web')->user();
             $company = $this->companyService->getCompanyById($id);
 
             $user = null;

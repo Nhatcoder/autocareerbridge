@@ -76,7 +76,7 @@ function Sidebar() {
                 {userChats && userChats.map((userChat, index) => {
                     const avatar = userChat.from_id == user.id
                         ? (userChat.receiver_avatar?.startsWith('http') ? userChat.receiver_avatar : userChat.receiver_avatar?.startsWith('/') ? `${window.location.origin}${userChat.receiver_avatar || ""}` : `${window.location.origin}/${userChat.receiver_avatar || ""}`)
-                        : (userChat.sender_avatar?.startsWith('http') ? userChat.sender_avatar : `${window.location.origin}/${userChat.sender_avatar || ""}`);
+                        : (userChat.sender_avatar?.startsWith('http') ? userChat.sender_avatar : userChat.sender_avatar?.startsWith('/') ? `${window.location.origin}${userChat.sender_avatar || ""}` : `${window.location.origin}/${userChat.sender_avatar || ""}`);
                     const name = userChat.from_id == user.id ? userChat.receiver_name : userChat.sender_name;
 
                     const formatSeenId = userChat.seen_id ? JSON.parse(userChat.seen_id) : [];
