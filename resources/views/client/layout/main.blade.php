@@ -99,6 +99,7 @@
     <!-- File custom.js -->
     <script type="module" src="{{ asset('clients/js/main.js') }}"></script>
     @yield('js')
+    @stack('js')
 </body>
 
 </html>

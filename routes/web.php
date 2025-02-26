@@ -46,7 +46,7 @@ Route::middleware('web')->group(function () {
 
             Route::get('mau-cv', [ResumeController::class, 'listCv'])->name('listCv');
             Route::get('my-cv', [ResumeController::class, 'myCv'])->name('myCv');
-            Route::get('/cv/create/{template}', [ResumeController::class, 'createCV'])->name('cv.create');
+            Route::get('/cv/create', [ResumeController::class, 'createCV'])->name('cv.create');
 
             Route::get('cv/{id}/download', [ResumeController::class, 'download'])->name('cv.download');
             Route::get('cv/{id}/view', [ResumeController::class, 'view'])->name('cv.view');
@@ -58,6 +58,21 @@ Route::middleware('web')->group(function () {
             // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
             Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
             Route::put('cv/{id}/update', [ResumeController::class, 'update'])->name('updateCv');
+
+            Route::post('cv/upload', [ResumeController::class, 'uploadStoreCv'])->name('cv.upload.store');
+            Route::get('cv/upload', [ResumeController::class, 'uploadCv'])->name('cv.upload');
+
+            Route::get('cv/upload/{id}/view', [ResumeController::class, 'uploadCvView'])->name('cv.upload.view');
+            Route::get('cv/upload/{id}/down', [ResumeController::class, 'downloadUploadedCv'])->name('cv.upload.down');
+
+            Route::put('cv/upload/{id}/update', [ResumeController::class, 'updateTitleCv'])->name('cv.upload.update');
+
+            Route::get('load-template/{template}', function ($template) {
+                return view('client.pages.cv.all.' . $template)->render();
+            });
+            Route::put('/cv/{id}/change', [ResumeController::class, 'changeCvTemplate'])->name('cv.change');
+
+
 
             Route::post('apply-job', [JobsController::class, 'applyJob'])->name('applyJob');
 

@@ -10,9 +10,12 @@ use App\Repositories\Experience\ExperienceRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\LogHelper;
 
 class CvService
 {
+    use LogHelper;
+
     protected $cvRepository;
     protected $experienceRepository;
     protected $educationRepository;
@@ -60,6 +63,7 @@ class CvService
 
 
             $cv = $this->cvRepository->create([
+                'type' => TYPE_CV_CREATE,
                 'template' => $request->template,
                 'title' => $request->title,
                 'username' => $request->name,
@@ -147,7 +151,7 @@ class CvService
             return $cv;
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -166,7 +170,7 @@ class CvService
         try {
             $cv = $this->cvRepository->find($cvId);
             if (!$cv) {
-                throw new \Exception("CV not found.");
+                throw new \Exception("Không tìm thấy CV");
             }
 
             if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
@@ -179,6 +183,7 @@ class CvService
 
             // update cvs
             $cv->update([
+                'type' => TYPE_CV_CREATE,
                 'template' => $request->template,
                 'title' => $request->title,
                 'username' => $request->name,
@@ -303,7 +308,7 @@ class CvService
             return $cv;
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
         }
     }
 
@@ -319,9 +324,14 @@ class CvService
         return $cv;
     }
 
-    public function getMyCV()
+    /**
+     * Retrieve the current user's CV created by the template.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMyCV($type)
     {
-        $cv = $this->cvRepository->getMyCv();
+        $cv = $this->cvRepository->getMyCv($type);
         return $cv;
     }
 
@@ -356,8 +366,94 @@ class CvService
             return true;
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            $this->logExceptionDetails($e);
             return false;
+        }
+    }
+
+
+    /**
+     * Handle the upload of a new CV.
+     *
+     * @param \Illuminate\Http\Request $request The request containing the uploaded file information.
+     * @return array The result of the upload process, including status and CV information.
+     */
+    public function upload($request)
+    {
+        DB::beginTransaction();
+        try {
+            if (!$request->hasFile('file_upload_cv')) {
+                throw new \Exception('Vui lòng chọn file!');
+            }
+
+            $file = $request->file('file_upload_cv');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('cvs/pdf', $fileName, 'public');
+
+            $title = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+            $cv = $this->cvRepository->create([
+                'user_id'  => auth()->id(),
+                'type' => TYPE_CV_UPLOAD,
+                'title' => $title,
+                'upload' => 'storage/' . $filePath,
+            ]);
+
+            DB::commit();
+
+            return [
+                'success' => true,
+                'cv' => $cv,
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->logExceptionDetails($e);
+
+            return [
+                'success' => false,
+                'message' => 'Đã xảy ra lỗi khi upload. Vui lòng thử lại!',
+            ];
+        }
+    }
+
+    /**
+     * Retrieve an uploaded CV by its ID.
+     *
+     * @param int $id The ID of the CV.
+     * @return \App\Models\Cv|null Returns the CV object if found, otherwise null.
+     */
+    public function getCvUpload($id)
+    {
+        $cv = $this->cvRepository->getCvUpload($id);
+        return $cv;
+    }
+
+    /**
+     * Update the title of a CV.
+     *
+     * @param \Illuminate\Http\Request $request The request containing the new title.
+     * @param int $id The ID of the CV to update.
+     * @return \App\Models\Cv|null Returns the updated CV object if successful, otherwise null.
+     */
+    public function updateTitleCv($request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $cv = $this->cvRepository->find($id);
+            if (!$cv) {
+                abort(404);
+            }
+
+            $cv->update(['title' => $request->title_file_cv_upload]);
+
+            DB::commit();
+            return [
+                'success' => true,
+                'cv' => $cv,
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->logExceptionDetails($e);
         }
     }
 }
