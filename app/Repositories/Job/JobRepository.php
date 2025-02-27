@@ -500,9 +500,9 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
                 $query->where('user_id', auth()->id())
                     ->where('is_save', SAVE);
             })
-            ->orderByDesc('id')
             ->where('status', STATUS_APPROVED)
-            ->where('end_date', '>=', now())
+            ->orderByRaw("CASE WHEN end_date >= NOW() THEN 1 ELSE 0 END DESC")
+            ->orderByDesc('id')
             ->paginate(LIMIT_10);
     }
 

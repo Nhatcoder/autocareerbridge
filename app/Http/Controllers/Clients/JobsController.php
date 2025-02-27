@@ -74,7 +74,7 @@ class JobsController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Bạn cần đăng nhập để lưu công việc yêu thích.'], 403);
             }
 
-            $isSave = $this->jobWishlistService->wishlistJob($user->id, $jobId);
+            $isSave = $this->jobWishlistService->toggleWishlistJob($user->id, $jobId);
 
             return response()->json([
                 'status' => $isSave == SAVE ? 'added' : 'removed',

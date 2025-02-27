@@ -20,12 +20,11 @@ class JobWishlistService
      * @param int $jobId Job ID
      * @return int New wishlist status (SAVE or UN_SAVE)
      */
-    public function wishlistJob($user, $jobId)
+    public function toggleWishlistJob($user, $jobId)
     {
         $wishlist = $this->jobWishlistRepository->findByUserAndJob($user, $jobId);
 
         if ($wishlist) {
-
             $newStatus = $wishlist->is_save == SAVE ? UN_SAVE : SAVE;
             $this->jobWishlistRepository->update($wishlist->id, ['is_save' => $newStatus]);
 
