@@ -63,12 +63,26 @@ class JobsController extends Controller
             'file_cv' => $request->file_cv,
         ];
 
-        try {
-            $this->jobService->userApplyJob($data);
+        if (empty($data['job_id'])) {
             return response()->json([
-                'success' => true,
-                'message' => "Nộp hồ sơ ứng tuyển thành công"
+                'success' => false,
+                'message' => "Vui lòng chọn hồ sơ ứng tuyển"
             ]);
+        };
+
+        try {
+            $result = $this->jobService->userApplyJob($data);
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Nộp hồ sơ ứng tuyển thành công"
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Nộp hồ sơ ứng tuyển thất bại"
+                ]);
+            }
         } catch (\Exception $e) {
             $this->logExceptionDetails($e);
             return redirect()->back()->with('status_fail', $e->getMessage());

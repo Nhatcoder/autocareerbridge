@@ -588,7 +588,6 @@
                 return;
             }
 
-
             $(".err_name, .err_email, .err_phone").text("");
 
             let name = $('input[name="name"]').val().trim();
@@ -630,6 +629,11 @@
                     success: function(response) {
                         if (response.success) {
                             toastr.success("", response.message)
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000)
+                        } else {
+                            toastr.error("", response.message)
                             setTimeout(function() {
                                 location.reload();
                             }, 1000)
