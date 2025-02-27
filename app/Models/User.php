@@ -100,4 +100,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserJob::class, 'user_id', 'id');
     }
+
+    public function jobWishlists()
+    {
+        return $this->hasMany(JobWishlist::class, 'user_id');
+    }
 }

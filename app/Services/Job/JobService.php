@@ -42,7 +42,8 @@ class JobService
         UniversityRepositoryInterface    $universityRepository,
         NotificationService              $notificationService,
         UserRepositoryInterface          $userRepository,
-        UserJobRepositoryInterface       $userJobRepository
+        UserJobRepositoryInterface       $userJobRepository,
+
     ) {
         $this->companyRepository = $companyRepository;
         $this->jobRepository = $jobRepository;
@@ -318,6 +319,11 @@ class JobService
         return $this->jobRepository->getAllJobs();
     }
 
+    public function getWishlistJobs()
+    {
+        return $this->jobRepository->getWishlistJobs();
+    }
+
     public function getAppliedJobs($university_id)
     {
         return $this->jobRepository->getAppliedJobs($university_id);
@@ -506,4 +512,6 @@ class JobService
 
         return $userJob;
     }
+
+
 }

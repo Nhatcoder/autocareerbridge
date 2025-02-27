@@ -59,4 +59,9 @@ class Job extends Model
     {
         return $this->hasMany(UserJob::class, 'job_id', 'id');
     }
+
+    public function wishlistByUsers()
+    {
+        return $this->hasMany(JobWishlist::class, 'job_id');
+    }
 }

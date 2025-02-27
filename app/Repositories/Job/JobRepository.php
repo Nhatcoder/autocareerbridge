@@ -491,4 +491,20 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             'unfit' => (clone $userJob)->where('status', STATUS_UNFIT)->paginate(PAGINATE_LIST_COMPANY),
         ];
     }
+
+
+    public function getWishlistJobs()
+    {
+        return $this->model::with(['universities', 'universities.universityJobs', 'company', 'major'])
+            ->whereHas('wishlistByUsers', function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->where('is_save', SAVE);
+            })
+            ->orderByDesc('id')
+            ->where('status', STATUS_APPROVED)
+            ->where('end_date', '>=', now())
+            ->paginate(LIMIT_10);
+    }
+
+
 }

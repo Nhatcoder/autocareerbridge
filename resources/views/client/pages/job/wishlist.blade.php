@@ -1,92 +1,17 @@
 @extends('client.layout.main')
-@section('title', 'Tìm kiếm ' . $getJobs->count() . ' việc làm ' . ucfirst(request()->key_search))
+@section('title', 'Việc làm đã lưu')
+
 @section('content')
-    <div class="jp_img_wrapper">
-        <div class="jp_slide_img_overlay"></div>
-        <div class="jp_banner_heading_cont_wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="jp_job_heading_wrapper">
-                            <div class="jp_job_heading">
-                                <h1><span></span> Cơ hội nghề nghiệp hấp dẫn</h1>
-                                <p>Tìm kiếm công việc phù hợp với bạn!</p>
-                            </div>
-                        </div>
-                    </div>
-                    @include('client.pages.components.search.searchForm', [
-                        'getProvince' => $getProvince,
-                        'getMajor' => $getMajor,
-                        'getFiled' => $getFiled,
-                    ])
-                </div>
-            </div>
+    <div class="container" style="margin-top:120px">
+        <div class="row">
+            <h3 class="py-2">Việc làm đã lưu</h3>
+            <p>Xem lại danh sách những việc làm mà bạn đã lưu trước đó. Ứng tuyển ngay để không bỏ lỡ cơ
+                hội nghề nghiệp dành cho bạn.</p>
         </div>
     </div>
     <div class="jp_listing_sidebar_main_wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hidden-sm hidden-xs p" style="position: sticky; top: 0;">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
-                            <div class="jp_filter_wrapper d-flex align-items-center">
-                                <div class="d-flex align-items-center filter-btn">
-                                    <i class="fa-solid fa-filter" style="padding-right: 10px; color: #23c0e9"></i>
-                                    <h4 class="mb-0"> Lọc nâng cao</h4>
-                                </div>
-                                <div class="clear-filter-btn ms-auto d-flex align-items-center" id="">
-                                    <a type="button" onclick="removeFilter()"><i class="fa fa-times-circle"></i> Xoá
-                                        lọc</a>
-                                </div>
-
-                            </div>
-                            <div class="jp_rightside_job_categories_wrapper"
-                                style="max-height: calc(70vh - 10px); overflow-y: auto;">
-                                <div class="jp_rightside_job_categories_heading">
-                                    <h4>Lọc lĩnh vực</h4>
-                                </div>
-                                <div class="jp_rightside_job_categories_content">
-                                    <div class="handyman_sec1_wrapper">
-                                        <div class="content">
-                                            <div class="box">
-                                                @foreach ($getFiled as $field)
-                                                    <p>
-                                                        <input type="checkbox" id="fields-{{ $field->id }}"
-                                                            name="fields[]" value="{{ $field->id }}">
-                                                        <label for="fields-{{ $field->id }}">{{ $field->name }}</label>
-                                                    </p>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="jp_rightside_job_categories_wrapper"
-                                style="max-height: calc(70vh - 10px); overflow-y: auto;">
-                                <div class="jp_rightside_job_categories_heading">
-                                    <h4>Lọc kỹ năng</h4>
-                                </div>
-                                <div class="jp_rightside_job_categories_content">
-                                    <div class="handyman_sec1_wrapper">
-                                        <div class="content">
-                                            <div class="box">
-                                                @foreach ($getSkills as $skill)
-                                                    <p>
-                                                        <input type="checkbox" id="skill-{{ $skill->id }}"
-                                                            name="skills[]" value="{{ $skill->id }}">
-                                                        <label for="skill-{{ $skill->id }}">{{ $skill->name }}</label>
-                                                    </p>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -164,17 +89,11 @@
                                                                                                         ->first()
                                                                                                     : null;
                                                                                             @endphp
-                                                                                            @if (auth()->check() && auth()->user()->role !== ROLE_COMPANY && auth()->user()->role !== ROLE_HIRING)
-                                                                                                <li>
-                                                                                                    <a data-job-id="{{ $getJob->id }}"
-                                                                                                        class="toggle-favorite"
-                                                                                                        style="width:30px; height:30px; border-radius:10px; line-height: 30px; padding: 4px; {{ $wishlist && $wishlist->is_save == SAVE ? 'border: 1px solid red;' : 'border: 1px solid #e9e9e9;' }}"
-                                                                                                        href="javascript:void(0)">
-                                                                                                        <i class="fa-solid fa-heart favorite-icon"
-                                                                                                            style="{{ $wishlist && $wishlist->is_save == SAVE ? 'color:red;' : 'color: #ccc;' }}"></i>
-                                                                                                    </a>
-                                                                                                </li>
-                                                                                            @endif
+                                                                                            <li><a data-job-id="{{ $getJob->id }}"
+                                                                                                    class="btn btn-secondary text-white remove-wishlist"
+                                                                                                    href="javascript:void(0)"><i
+                                                                                                        class="fa-solid fa-trash me-2"></i>Bỏ
+                                                                                                    lưu</a></li>
                                                                                             @php
                                                                                                 $university =
                                                                                                     auth()
@@ -215,7 +134,6 @@
                                                                                                     );
                                                                                                 }
                                                                                             @endphp
-
                                                                                             <li>
                                                                                                 @if (($university && !$jobUniversityStatus) || ($custommer && $jobUserStatus))
                                                                                                     <button
@@ -309,255 +227,30 @@
 @endsection
 @section('js')
     <script>
-        $(document).ready(function() {
-            let loading = false;
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.remove-wishlist')) {
+                let btn = event.target.closest('.remove-wishlist');
+                let jobId = btn.dataset.jobId;
 
-            $('input[type="checkbox"]').on('change', function() {
-                if (loading) return;
-
-                loading = true;
-
-                let selectedFields = [];
-                let selectedSkills = [];
-
-                $('input[name="fields[]"]:checked').each(function() {
-                    selectedFields.push($(this).val());
-                });
-
-                $('input[name="skills[]"]:checked').each(function() {
-                    selectedSkills.push($(this).val());
-                });
-
-                let keySearch = $('input[name="key_search"]').val();
-                console.log(keySearch)
-                $.ajax({
-                    url: '{{ route('search') }}',
-                    method: 'GET',
-                    data: {
-                        key_search: keySearch,
-                        fields: selectedFields,
-                        skills: selectedSkills,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    beforeSend: function() {
-                        $('.tab-content').html(
-                            '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
-                        );
-                    },
-                    success: function(response) {
-                        $('.tab-content').html(response.html);
-                    },
-                    complete: function() {
-                        loading = false;
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Lỗi AJAX:', error);
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            // Xử lý checkbox
-            $('input[type="checkbox"]').on('change', handleFilter);
-
-            // Xử lý click phân trang
-            $(document).on('click', '.pagination a', function(e) {
-                e.preventDefault();
-                let url = $(this).attr('href');
-                loadJobs(url);
-            });
-        });
-
-        function handleFilter() {
-            let selectedFields = [];
-            let selectedSkills = [];
-
-            $('input[name="fields[]"]:checked').each(function() {
-                selectedFields.push($(this).val());
-            });
-
-            $('input[name="skills[]"]:checked').each(function() {
-                selectedSkills.push($(this).val());
-            });
-
-            loadJobs('{{ route('search') }}', {
-                fields: selectedFields,
-                skills: selectedSkills
-            });
-        }
-
-        function loadJobs(url, data = {}) {
-            $('.tab-content').html(
-                '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
-            );
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                data: data,
-                success: function(response) {
-                    $('.tab-content').html(response.html);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Lỗi AJAX:', error);
-                }
-            });
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            // Xử lý checkbox filters với AJAX
-            $('input[type="checkbox"]').on('change', function() {
-                handleSearch(true); // true = use AJAX
-            });
-
-            // Xử lý form tìm kiếm
-            $('.jp_header_form_wrapper').find('select, input').on('change keyup', function() {
-                // Nếu không phải submit button, thực hiện search AJAX
-                handleSearch(true);
-            });
-
-            // Xử lý submit form thông thường
-            $('form').on('submit', function(e) {
-                e.preventDefault();
-                handleSearch(false); // false = normal form submit
-            });
-        });
-
-        function handleSearch(isAjax) {
-            let form = $('form');
-            let formData = {
-                key_search: $('input[name="key_search"]').val(),
-                province_id: $('select[name="province_id"]').val(),
-                major_id: $('select[name="major_id"]').val()
-            };
-
-            // Thêm dữ liệu từ checkbox filters nếu có
-            let selectedFields = [];
-            let selectedSkills = [];
-
-            $('input[name="fields[]"]:checked').each(function() {
-                selectedFields.push($(this).val());
-            });
-
-            $('input[name="skills[]"]:checked').each(function() {
-                selectedSkills.push($(this).val());
-            });
-
-            formData.fields = selectedFields;
-            formData.skills = selectedSkills;
-
-            if (isAjax) {
-                // AJAX search
-                $('.tab-content').html(
-                    '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
-                );
-
-                $.ajax({
-                    url: form.attr('action'),
-                    method: 'GET',
-                    data: formData,
-                    success: function(response) {
-                        $('.tab-content').html(response.html);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Lỗi AJAX:', error);
-                    }
-                });
-            } else {
-                // Normal form submit - Chuyển các filter thành hidden inputs
-                form.find('input[name="fields[]"]').remove();
-                form.find('input[name="skills[]"]').remove();
-
-                selectedFields.forEach(function(field) {
-                    form.append(`<input type="hidden" name="fields[]" value="${field}">`);
-                });
-
-                selectedSkills.forEach(function(skill) {
-                    form.append(`<input type="hidden" name="skills[]" value="${skill}">`);
-                });
-
-                form.submit();
+                fetch('{{ route('job.wishlist') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            job_id: jobId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'removed') {
+                            location.reload();
+                        }
+                    })
+                    .catch(error => console.error('Lỗi:', error));
             }
-        }
-
-        // Xử lý phân trang AJAX
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            let url = $(this).attr('href');
-
-            $('.tab-content').html(
-                '<div class="text-center"><div class="foppy-loader"><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div><div class="foppy-loader__circle"></div></div></div>'
-            );
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(response) {
-                    $('.tab-content').html(response.html);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Lỗi AJAX:', error);
-                }
-            });
         });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const searchInput = document.getElementById("key_search");
-            const clearBtn = document.getElementById("clear_btn");
 
-            clearBtn.addEventListener("click", () => {
-                searchInput.value = "";
-                searchInput.dispatchEvent(new Event("input")); // Kích hoạt sự kiện input
-                searchInput.focus(); // Để người dùng tiếp tục nhập liệu
-            });
-        });
-    </script>
-    <script>
-        function removeFilter() {
-            $('#key_search').val('');
-            $('#province_id').val('');
-            $('#major_id').val('');
-            $('input[name="fields[]"]').prop('checked', false);
-            $('input[name="skills[]"]').prop('checked', false);
-            const url = new URL(window.location.href);
-            url.search = '';
-            window.history.pushState({}, document.title, url.toString());
-            const searchParams = new URLSearchParams(window.location.search);
-            if (searchParams.get('key_search') || searchParams.get('province_id') || searchParams.get('major_id')) {
-                loadJobs(window.location.href, searchParams);
-            } else {
-                loadJobs(window.location.href);
-            }
-
-            function removeFilter() {
-                $('#key_search').val('');
-                $('#province_id').val('');
-                $('#major_id').val('');
-                $('input[name="fields[]"]').prop('checked', false);
-                $('input[name="skills[]"]').prop('checked', false);
-                const url = new URL(window.location.href);
-                url.search = '';
-                window.history.pushState({}, document.title, url.toString());
-
-                const searchParams = new URLSearchParams(window.location.search);
-                if (searchParams.toString()) {
-                    loadJobs(window.location.href, searchParams);
-                } else {
-                    loadJobs(window.location.href);
-                }
-            }
-
-            $(document).ready(function() {
-                // Check nếu có request lên thì hiển thị ra
-                const searchParams = new URLSearchParams(window.location.search);
-                if (searchParams.toString()) {
-                    loadJobs(window.location.href, searchParams);
-                }
-            });
-        }
-    </script>
 @endsection
