@@ -36,4 +36,23 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
             ->values();
         return $jobUserApply;
     }
+
+    /**
+     * Get the latest job application for the authenticated user.
+     * @author TranVanNhat
+     * @return \App\Models\UserJob|null
+     */
+    public function getLatestJobApplication()
+    {
+        $userCurrent = auth('web')->user();
+        if (auth('web')->user()) {
+            $latestJobApplication = $this->model->with('user', 'cv')
+                ->where("user_id", $userCurrent->id)
+                ->latest('created_at')
+                ->first();
+            return $latestJobApplication;
+        }
+
+        return null;
+    }
 }

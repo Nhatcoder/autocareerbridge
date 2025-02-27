@@ -21,4 +21,9 @@ class UserJob extends Model
     {
         return $this->belongsTo(Job::class);
     }
+
+    public function cv()
+    {
+        return $this->belongsTo(Cv::class);
+    }
 }

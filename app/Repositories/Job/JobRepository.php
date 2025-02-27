@@ -478,7 +478,7 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
         $userJob = $this->userJob
             ->with('user')
             ->whereHas('job', function ($query) use ($company_id) {
-                $query->where('user_id', $company_id);
+                $query->where('company_id', $company_id);
             })
             ->orderBy('id', 'desc');
 
