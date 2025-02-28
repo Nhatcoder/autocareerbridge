@@ -4,23 +4,32 @@ namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use App\Services\Company\CompanyService;
+use App\Services\Cv\CvService;
 use App\Services\Job\JobService;
 use App\Services\JobWishlist\JobWishlistService;
+use App\Services\UserJob\UserJobService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Job\ApplyJobRequest;
 
 class JobsController extends Controller
 {
     protected $jobService;
     protected $companyService;
     protected $jobWishlistService;
-    public function __construct(JobService $jobService, CompanyService $companyService, JobWishlistService $jobWishlistService)
+    protected $userJobService;
+    protected $cvService;
+
+    public function __construct(JobService $jobService, CompanyService $companyService, JobWishlistService $jobWishlistService, CvService $cvService, UserJobService $userJobService)
     {
         $this->jobService = $jobService;
         $this->companyService = $companyService;
+        $this->userJobService = $userJobService;
         $this->jobWishlistService = $jobWishlistService;
+        $this->cvService = $cvService;
     }
+
     public function index($slug)
     {
         $job = $this->jobService->findJob($slug);
@@ -31,9 +40,19 @@ class JobsController extends Controller
 
         $slug_company = $job->company->slug;
         $company = $this->companyService->getCompanyBySlug($slug_company);
+        $cvUploads = $this->cvService->getMyCv(TYPE_CV_UPLOAD);
+        $cvCreate = $this->cvService->getMyCv(TYPE_CV_CREATE);
+        $cvApplyLate = $this->userJobService->getLatestJobApplication();
 
-        // Trả về view
-        return view('client.pages.job.detailJob', compact('job', 'company'));
+        $data = [
+            'company' => $company,
+            'job' => $job,
+            'cvUploads' => $cvUploads,
+            'cvCreate' => $cvCreate,
+            'cvApplyLate' => $cvApplyLate
+        ];
+
+        return view('client.pages.job.detailJob', $data);
     }
 
     /**
@@ -41,19 +60,35 @@ class JobsController extends Controller
      *
      * @param Request $request
      */
-    public function applyJob(Request $request)
+    public function applyJob(ApplyJobRequest $request)
     {
         $data = [
             'job_id' => $request->job_id,
+            'cv_id' => $request->cv_id,
+            'phone' => $request->phone,
+            'file_cv' => $request->file_cv,
         ];
+
         try {
             $result = $this->jobService->userApplyJob($data);
-            if ($result) {
-                return redirect()->back()->with('status_success', 'Ứng tuyển thành công');
+
+            if (!$result) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Nộp hồ sơ ứng tuyển thất bại"
+                ]);
             }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Nộp hồ sơ ứng tuyển thành công"
+            ]);
         } catch (\Exception $e) {
-            Log::error($e->getFile() . ':' . $e->getLine() . ' - ' . $e->getMessage());
-            return redirect()->back()->with('status_fail', $e->getMessage());
+            $this->logExceptionDetails($e);
+            return response()->json([
+                'success' => false,
+                'message' => "Có lỗi xảy ra: " . $e->getMessage()
+            ], 500);
         }
     }
 

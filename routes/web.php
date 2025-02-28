@@ -72,8 +72,6 @@ Route::middleware('web')->group(function () {
             });
             Route::put('/cv/{id}/change', [ResumeController::class, 'changeCvTemplate'])->name('cv.change');
 
-
-
             Route::post('apply-job', [JobsController::class, 'applyJob'])->name('applyJob');
 
             Route::get('tro-truyen/{id?}', [ConversationsController::class, 'conversations'])->name('conversations');
