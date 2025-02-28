@@ -9,6 +9,7 @@ use App\Services\Job\JobService;
 use App\Services\UserJob\UserJobService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Job\ApplyJobRequest;
 
 class JobsController extends Controller
 {
@@ -54,7 +55,7 @@ class JobsController extends Controller
      *
      * @param Request $request
      */
-    public function applyJob(Request $request)
+    public function applyJob(ApplyJobRequest $request)
     {
         $data = [
             'job_id' => $request->job_id,
@@ -63,29 +64,26 @@ class JobsController extends Controller
             'file_cv' => $request->file_cv,
         ];
 
-        if (empty($data['job_id'])) {
-            return response()->json([
-                'success' => false,
-                'message' => "Vui lòng chọn hồ sơ ứng tuyển"
-            ]);
-        };
-
         try {
             $result = $this->jobService->userApplyJob($data);
-            if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'message' => "Nộp hồ sơ ứng tuyển thành công"
-                ]);
-            } else {
+
+            if (!$result) {
                 return response()->json([
                     'success' => false,
                     'message' => "Nộp hồ sơ ứng tuyển thất bại"
                 ]);
             }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Nộp hồ sơ ứng tuyển thành công"
+            ]);
         } catch (\Exception $e) {
             $this->logExceptionDetails($e);
-            return redirect()->back()->with('status_fail', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => "Có lỗi xảy ra: " . $e->getMessage()
+            ], 500);
         }
     }
 }

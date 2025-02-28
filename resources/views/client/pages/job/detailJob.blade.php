@@ -548,7 +548,7 @@
                                 <div class="flex m-0 border-b-2 border-transparent w-full">
                                     <div class="flex items-center w-full">
                                         <input type="radio" checked name="cv_id" id="cv${i}" value="" class="m-0 fs-16 ">
-                                        <span class="mx-2 w-70 line-clamp-2 file_name">${fileName}</span>
+                                        <span class="mx-2 w-70 line-clamp-2 file_name__new">${fileName}</span>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv">
@@ -558,13 +558,12 @@
                         `);
                     i++;
                 } else {
-                    $(".list_cv .item_cv .file_name").text(fileName);
+                    $(".list_cv .item_cv .file_name__new").text(fileName);
                 }
             });
 
             $(document).on('click', '.btn_change_cv', function(e) {
-                $(this).find('input[type="radio"]').prop('checked', true);
-                console.log($(this).find('input[type="radio"]').prop('checked', true), "checked");
+                $(`#cv${i}`).prop('checked', true);
 
                 e.preventDefault();
                 $('#upload_cv').click();
@@ -572,7 +571,6 @@
         })
 
         // Applly job
-        let curentSpam = 1;
         $(document).on('submit', '#apply_job', function(e) {
             e.preventDefault();
             let isValid = true;
@@ -619,32 +617,26 @@
                 return
             }
 
-            if (curentSpam === 1) {
-                $.ajax({
-                    url: applyUrl,
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success("", response.message)
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000)
-                        } else {
-                            toastr.error("", response.message)
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000)
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        toastr.error("", "" + error.message);
+            $.ajax({
+                url: applyUrl,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success("", response.message)
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000)
+                    } else {
+                        toastr.error("", response.message)
                     }
-                });
-            }
-            curentSpam++;
+                },
+                error: function(xhr, status, error) {
+                    toastr.error("", "" + error.message);
+                }
+            });
         });
 
         function validateEmail(email) {

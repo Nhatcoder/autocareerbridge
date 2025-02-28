@@ -480,10 +480,11 @@ class JobService
             }
 
             DB::commit();
+            return $userJob;
         } catch (Exception $e) {
             DB::rollBack();
             $this->logExceptionDetails($e);
-            return null;
+            throw $e;
         }
     }
 
