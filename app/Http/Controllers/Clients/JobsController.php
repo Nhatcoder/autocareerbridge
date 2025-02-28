@@ -61,6 +61,7 @@ class JobsController extends Controller
             'job_id' => $request->job_id,
             'cv_id' => $request->cv_id,
             'phone' => $request->phone,
+            'name' => $request->name,
             'file_cv' => $request->file_cv,
         ];
 

@@ -94,7 +94,8 @@
                                     value="{{ request()->query('search') }}">
                             </div>
                             <div class="ms-3">
-                                <select class="form-select form-control-lg" id="province_id" name="province_id">
+                                <select class="form-select form-control-lg single-select" id="province_id"
+                                    name="province_id">
                                     <option value="">Tất cả tỉnh thành</option>
                                     @foreach ($provincies as $province)
                                         <option value="{{ $province->id }}"
@@ -197,15 +198,6 @@
 @endsection
 
 @section('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#province_id').select2({
-                allowClear: false,
-                containerCssClass: "select2-height-fix",
-                width: '300px'
-            });
-        });
-    </script>
     <script>
         $(document).on('click', '#search', function(e) {
             let search = $('#name_search').val();

@@ -4,6 +4,7 @@ namespace App\Repositories\UserJob;
 
 use App\Models\UserJob;
 use App\Repositories\Base\BaseRepository;
+use Carbon\Carbon;
 
 class UserJobRepository extends BaseRepository implements UserJobRepositoryInterface
 {
@@ -54,5 +55,28 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
         }
 
         return null;
+    }
+
+    /**
+     * Update the status of user job interviews.
+     * @author Tran Van Nhat
+     * @return mixed
+     */
+    public function updateStatusUserJobInterView()
+    {
+        $users = $this->model
+            ->where('status', STATUS_FIT)
+            ->where('interview_time', '<', Carbon::now()->subMinutes(30))
+            ->get();
+
+        if ($users->isEmpty()) {
+            return collect([]);
+        }
+
+        $this->model
+            ->whereIn('id', $users->pluck('id'))
+            ->update(['status' => STATUS_INTERV]);
+
+        return $users->each->setAttribute('status', STATUS_INTERV);
     }
 }

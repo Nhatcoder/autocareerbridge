@@ -163,7 +163,7 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
      */
     public function countNotifycationUser($userId)
     {
-        return $this->model->where('user_id', $userId)->count();
+        return $this->model->where('user_id', $userId)->where('is_seen', UNSEEN)->count();
     }
 
     public function markSeenAll()
@@ -180,6 +180,6 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
                         ->orWhere('admin_id', $id);
                 });
         }
-        return $query->update(['is_seen' => 1]);
+        return $query->update(['is_seen' => SEEN]);
     }
 }

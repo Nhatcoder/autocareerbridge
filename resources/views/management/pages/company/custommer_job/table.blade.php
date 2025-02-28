@@ -14,13 +14,13 @@
                 <tr>
                     <td><strong>{{ ($data->currentPage() - 1) * $data->perPage() + $key + 1 }}</strong></td>
                     <td>
-                        <a href="http://127.0.0.1:8000/company/manage-job/detail/business-analyst---upto-2000-di-lam-sau-tet"
-                            rel="noopener noreferrer"
+                        <a target="_blank" href="{{ route('company.showJob', ['slug' => $item->job->slug]) }}"
                             title="{{ $item->job->name ?? '' }}">{{ $item->job->name ?? '' }}</a>
                     </td>
                     <td>
-                        <a style="color: #007bff; text-decoration: none; display: flex; align-items: center;"
-                            target="_blank" href="http://127.0.0.1:8000/truong-hoc/dai-hoc-kinh-te-quoc-dan"
+                        <a class="seen_cv__user" data-id="{{ $item->id }}" target="_blank"
+                            style="color: #007bff; text-decoration: none; display: flex; align-items: center;"
+                            href="{{ $item->cv->type == TYPE_CV_CREATE ? route('cv.view', ['id' => $item->cv->id]) : route('cv.upload.view', ['id' => $item->cv->id]) }}"
                             title="Xem cv">
                             {{ $item->user->name ?? '' }}
                         </a>

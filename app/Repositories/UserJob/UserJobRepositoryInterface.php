@@ -16,4 +16,11 @@ interface UserJobRepositoryInterface extends BaseRepositoryInterface
      * @return \App\Models\UserJob|null
      */
     public function getLatestJobApplication();
+
+    /**
+     * Update the status of user job interviews.
+     * @author Tran Van Nhat
+     * @return mixed
+     */
+    public function updateStatusUserJobInterView();
 }

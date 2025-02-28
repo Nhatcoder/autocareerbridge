@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Company;
 
-use App\Models\Job;
-use App\Models\Skill;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\Job\JobService;
 use Illuminate\Support\Facades\DB;
@@ -333,6 +330,31 @@ class JobsController extends Controller
         } catch (\Exception $exception) {
             $this->logExceptionDetails($exception);
             return redirect()->back()->with('status_fail', $exception->getMessage());
+        }
+    }
+
+    /**
+     * Mark a CV as seen by the user.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id.
+     * @author Tran Van Nhat
+     * @throws \Exception If an error occurs during the process.
+     */
+    public function seenCvUserJob(Request $request)
+    {
+        try {
+            $data = $request->only(['id']);
+            $this->jobService->markCvAsSeen($data);
+            return response()->json([
+                'success' => true,
+                'message' => __('message.company.job.update_status_job'),
+            ], 200);
+        } catch (\Exception $exception) {
+            $this->logExceptionDetails($exception);
+            return response()->json([
+                'success' => false,
+                'message' => __('message.company.job.error_status_job'),
+            ], 500);
         }
     }
 }

@@ -66,6 +66,7 @@ Route::group([
     Route::get('manage-university-job', [JobsController::class, 'manageUniversityJob'])->name('manageUniversityJob');
     Route::get('manage-user-job', [JobsController::class, 'manageUserApplyJob'])->name('manageUserApplyJob');
     Route::get('user-job/check-seen', [JobsController::class, 'checkUserJobSeen'])->name('checkUserJobSeen');
+    Route::post('user-job/seen-cv', [JobsController::class, 'seenCvUserJob'])->name('seenCvUserJob');
     Route::post('manage-user-job/change-status', [JobsController::class, 'changeStatusUserAplly'])->name('changeStatusUserAplly');
     Route::get('manage-university-job/change-status/{id}/{status}', [JobsController::class, 'updateStatus'])->name('updateStatus');
     Route::post('workshop/apply/{companyId}/{workshopId}', [WorkShopsController::class, 'applyWorkshop'])->name('workshop.apply');

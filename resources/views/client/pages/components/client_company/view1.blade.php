@@ -13,7 +13,8 @@
                             </div>
                             <div class="jp_job_post_right_cont jp_job_post_grid_right_cont jp_cl_job_cont">
                                 <a href="{{ route('detailCompany', ['slug' => $company->slug]) }}">
-                                    <h4 style="font-size: 18px" data-bs-placement="top" data-bs-title="{{ $company->name }}" class="company_name d-inline">
+                                    <h4 style="font-size: 18px" data-bs-placement="top"
+                                        data-bs-title="{{ $company->name }}" class="company_name d-inline">
                                         {{ \Illuminate\Support\Str::limit($company->name, 25, '...') }}
                                     </h4>
                                 </a>
@@ -38,7 +39,8 @@
                                     class="jp_job_post_right_btn_wrapper jp_job_post_grid_right_btn_wrapper jp_cl_aply_btn">
                                     <ul>
                                         <li>
-                                            <a href="{{ route('detailCompany', ['slug' => $company->slug]) }}"
+                                            <a class="btn btn-primary"
+                                                href="{{ route('detailCompany', ['slug' => $company->slug]) }}"
                                                 style="background-color: #23c0e9;">
                                                 <label class="h6" style="color: #fff">
                                                     {{ $company->jobs_count }} việc làm

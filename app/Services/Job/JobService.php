@@ -465,15 +465,24 @@ class JobService
 
             $userJob = $this->userJobRepository->create($dataApply);
 
+            $updateUser = [];
             if ($data['phone']) {
-                $this->userRepository->update($user->id, ['phone' => $data['phone']]);
+                $updateUser['phone'] = $data['phone'];
+            }
+
+            if ($data['name']) {
+                $updateUser['name'] = $data['name'];
+            }
+
+            if (count($updateUser) > 0) {
+                $userUpdate =  $this->userRepository->update($user->id, $updateUser);
             }
 
             if ($userJob) {
                 $notification = $this->notificationRepository->create([
-                    'title' => $userJob->user->name . ' ứng tuyển ' . $userJob->job->name,
+                    'title' => ($userJob->user->name ?? $userUpdate->name) . ' ứng tuyển ' . $userJob->job->name,
                     'company_id' => $userJob->job->company->id,
-                    'link' => route('company.showJob', $userJob->job->slug),
+                    'link' => route('company.manageUserApplyJob', ['tab' => 'all']),
                     'type' => TYPE_UNIVERSITY,
                 ]);
                 $this->notificationService->renderNotificationRealtime($notification, $userJob->job->company->id);
@@ -526,7 +535,7 @@ class JobService
                 ]);
                 $notification = $this->notificationService->create([
                     'user_id' => $userJob->user_id,
-                    'title' => ($userJob->job->company->name ? "Công ty " . $userJob->job->company->name : NAME_COMPANY) . ' vừa cập nhật trạng thái CV của bạn là Phù hợp',
+                    'title' => ($userJob->job->company->name ? $userJob->job->company->name : NAME_COMPANY) . ' vừa cập nhật trạng thái CV của bạn là Phù hợp',
                     'link' => route('detailJob', $userJob->job->slug),
                 ]);
                 $this->notificationService->renderNotificationRealtimeClient($notification);
@@ -538,13 +547,41 @@ class JobService
 
                 $notification = $this->notificationService->create([
                     'user_id' => $userJob->user_id,
-                    'title' => ($userJob->job->company->name ? "Công ty " . $userJob->job->company->name : NAME_COMPANY) . ' vừa cập nhật trạng thái CV của bạn là ' . $status,
+                    'title' => ($userJob->job->company->name ? $userJob->job->company->name : NAME_COMPANY) . ' vừa cập nhật trạng thái CV của bạn là ' . $status,
                     'link' => route('detailJob', $userJob->job->slug),
                 ]);
                 $this->notificationService->renderNotificationRealtimeClient($notification);
                 break;
         }
         return $userJob;
+    }
+
+    /**
+     * Update the status of user job interviews.
+     * @author Tran Van Nhat
+     * @return mixed
+     */
+    public function scheduleUpdateStatusUserJobInterView()
+    {
+        try {
+            $userJobs = $this->userJobRepository->updateStatusUserJobInterView();
+
+            if (!empty($userJobs)) {
+                foreach ($userJobs as $job) {
+                    $notification = $this->notificationService->create([
+                        'user_id' => $job->user_id,
+                        'title' => ($job->job->company->name ? $job->job->company->name : NAME_COMPANY) . ' có cuộc phỏng vấn với bạn vị trí ' . $job->job->name . ', vào lúc ' . date('d/m/Y H:i', strtotime($job->interview_time)),
+                        'link' => route('detailJob', $job->job->slug),
+                    ]);
+                    $this->notificationService->renderNotificationRealtimeClient($notification);
+                }
+            }
+
+            return $userJobs;
+        } catch (Exception $e) {
+            $this->logExceptionDetails($e);
+            throw $e;
+        }
     }
 
     /**
@@ -561,5 +598,42 @@ class JobService
         }
 
         return $userJob;
+    }
+
+    /**
+     * This function marks a job application as seen by a user.
+     * @author Tran Van Nhat
+     * @param array $data The job application data, including job_id and other relevant details.
+     * @return mixed The result of marking the job application as seen in the repository.
+     */
+    public function markCvAsSeen($data)
+    {
+        $userJob = $this->userJobRepository->find($data['id']);
+        if (empty($userJob)) {
+            return null;
+        }
+
+        DB::beginTransaction();
+        try {
+            $result = $this->userJobRepository->update($userJob->id, [
+                'is_seen' => SEEN,
+            ]);
+
+            if ($userJob->is_seen == UNSEEN) {
+                $notification = $this->notificationService->create([
+                    'user_id' => $userJob->user_id,
+                    'title' => ($userJob->job->company->name ? $userJob->job->company->name : NAME_COMPANY) . ', Vừa xem CV của bạn',
+                    'link' => route('historyJobApply'),
+                ]);
+                $this->notificationService->renderNotificationRealtimeClient($notification);
+            }
+
+            DB::commit();
+            return $result;
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->logExceptionDetails($e);
+            throw $e;
+        }
     }
 }

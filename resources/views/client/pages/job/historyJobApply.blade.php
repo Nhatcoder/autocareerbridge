@@ -75,7 +75,8 @@
                                                                         <span>Đã ứng tuyển ({{ $item->created_at }})</span>
                                                                     </div>
                                                                     <div>
-                                                                        <a class="btn btn-primary" href="{{ route('conversations', ['id' => $item->user_id]) }}">
+                                                                        <a class="btn btn-primary"
+                                                                            href="{{ route('conversations', ['id' => $item->job->company_id]) }}">
                                                                             Nhắn tin
                                                                         </a>
                                                                     </div>
