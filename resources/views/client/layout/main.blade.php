@@ -96,6 +96,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <script src="{{asset('clients/js/wishlist.js')}}"></script>
+
     <!-- File custom.js -->
     <script type="module" src="{{ asset('clients/js/main.js') }}"></script>
     @yield('js')

@@ -1,36 +1,27 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    @if($getJobs->count() > 0)
-        @foreach($getJobs as $getJob)
-            <div
-                class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
+    @if ($getJobs->count() > 0)
+        @foreach ($getJobs as $getJob)
+            <div class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
                 <div class="item">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div
-                                class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
+                            <div class="jp_job_post_main_wrapper_cont jp_job_post_grid_main_wrapper_cont">
                                 <div class="jp_job_post_main_wrapper">
                                     <div class="row">
-                                        <div
-                                            class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                                             <a href="{{ route('detailJob', ['slug' => $getJob->slug]) }}">
-                                                <div
-                                                    class="jp_job_post_side_img">
-                                                    <img
-                                                        data-bs-toggle="tooltip"
-                                                        title="{{ $getJob->company->name }}"
-                                                        src="{{isset($getJob->company->avatar_path) ? asset($getJob->company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
-                                                        alt="post_img"/>
+                                                <div class="jp_job_post_side_img">
+                                                    <img data-bs-toggle="tooltip" title="{{ $getJob->company->name }}"
+                                                        src="{{ isset($getJob->company->avatar_path) ? asset($getJob->company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
+                                                        alt="post_img" />
                                                 </div>
 
-                                                <div
-                                                    class="jp_job_post_right_cont jp_cl_job_cont">
-                                                    <h4 data-bs-toggle="tooltip"
-                                                        title="{{ ucwords($getJob->name) }}">
+                                                <div class="jp_job_post_right_cont jp_cl_job_cont">
+                                                    <h4 data-bs-toggle="tooltip" title="{{ ucwords($getJob->name) }}">
                                                         {{ Str::limit(ucwords($getJob->name), 45) }}</h4>
-                                                    <p style="color:#e69920;"
-                                                       data-bs-toggle="tooltip"
-                                                       title="{{ strtoupper($getJob->company->name) }}">
-                                                        {{ strtoupper($getJob->company->name)}}</p>
+                                                    <p style="color:#e69920;" data-bs-toggle="tooltip"
+                                                        title="{{ strtoupper($getJob->company->name) }}">
+                                                        {{ strtoupper($getJob->company->name) }}</p>
                                                 </div>
                                                 <div
                                                     class="jp_job_post_right_content d-flex align-items-center justify-content-between">
@@ -38,7 +29,7 @@
                                                         <li data-bs-toggle="tooltip"
                                                             title="{{ ucwords($getJob->company->addresses->first()->province->name) }}, {{ ucwords($getJob->company->addresses->first()->district->name) }}">
                                                             <i class="fa-solid fa-location-dot"
-                                                               style="color: #ff5353;"></i>
+                                                                style="color: #ff5353;"></i>
                                                             {{ ucwords($getJob->company->addresses->first()->province->name) }}
                                                         </li>
                                                     </ul>
@@ -46,7 +37,7 @@
                                                         <li>
                                                             <p class="">
                                                                 Còn
-                                                                <strong>{{ Carbon\Carbon::parse($getJob->end_date)->startOfDay()->diffInDays(now()->startOfDay())}}</strong>
+                                                                <strong>{{ Carbon\Carbon::parse($getJob->end_date)->startOfDay()->diffInDays(now()->startOfDay()) }}</strong>
                                                                 ngày để ứng
                                                                 tuyển
                                                             </p>
@@ -55,13 +46,27 @@
                                                 </div>
                                             </a>
                                         </div>
-                                        <div
-                                            class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                            <div
-                                                class="jp_job_post_right_btn_wrapper btn-block">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                            <div class="jp_job_post_right_btn_wrapper">
                                                 <ul>
+                                                    @php
+                                                        $wishlist = auth()->check()
+                                                            ? $getJob->wishlistByUsers
+                                                                ->where('user_id', auth()->id())
+                                                                ->first()
+                                                            : null;
+                                                    @endphp
+
                                                     <li>
-                                                        <a
+                                                        <a data-job-id="{{ $getJob->id }}" class="toggle-favorite"
+                                                            style="width:30px; height:30px; border-radius:10px; line-height: 30px; padding: 4px; {{ $wishlist && $wishlist->is_save == SAVE ? 'border: 1px solid red;' : 'border: 1px solid #e9e9e9;' }}"
+                                                            href="javascript:void(0)">
+                                                            <i class="fa-solid fa-heart favorite-icon"
+                                                                style="{{ $wishlist && $wishlist->is_save == SAVE ? 'color:red;' : 'color: #ccc;' }}"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="btn btn-primary"
                                                             href="{{ route('detailJob', ['slug' => $getJob->slug]) }}">Ứng
                                                             tuyển</a>
                                                     </li>
@@ -77,15 +82,15 @@
                                         </li>
                                         @if ($getJob->skills)
                                             @foreach ($getJob->skills as $skill)
-                                                <li><a
-                                                        style="text-decoration: none;"
+                                                <li><a style="text-decoration: none;"
                                                         href="#">{{ $skill->name }}</a>
                                                 </li>
                                             @endforeach
                                         @endif
                                         <li class="float-end">
                                             <p>Đã
-                                                đăng {{ Carbon\Carbon::parse($getJob->updated_at)->diffForHumans() }}</p>
+                                                đăng {{ Carbon\Carbon::parse($getJob->updated_at)->diffForHumans() }}
+                                            </p>
                                         </li>
                                     </ul>
                                 </div>
@@ -98,9 +103,9 @@
     @else
         <div class="text-center" style="margin-top: 100px;">
             <img class="lazy entered loaded"
-                 data-src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg"
-                 alt="None suitable job" data-ll-status="loaded"
-                 src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg">
+                data-src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg"
+                alt="None suitable job" data-ll-status="loaded"
+                src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/job-list/foppy-far-far-away.svg">
             <p class="text-center">
                 Chưa tìm thấy việc làm phù hợp với yêu cầu của bạn</p>
         </div>
@@ -131,3 +136,4 @@
         </div>
     </div>
 @endif
+

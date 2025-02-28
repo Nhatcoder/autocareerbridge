@@ -139,7 +139,7 @@
                                                     <div class="jp_job_post_main_wrapper_cont">
                                                         <div class="jp_job_post_main_wrapper">
                                                             <div class="row">
-                                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                                                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                                                                     <a
                                                                         href="{{ route('detailJob', ['slug' => $job->slug]) }}">
                                                                         <div class="jp_job_post_side_img">
@@ -183,6 +183,30 @@
                                                                             </span>
                                                                         </div>
                                                                     </a>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                                    <div class="jp_job_post_right_btn_wrapper">
+                                                                        <ul>
+                                                                            @php
+                                                                                $wishlist = auth()->check()
+                                                                                    ? $job->wishlistByUsers
+                                                                                        ->where('user_id', auth()->id())
+                                                                                        ->first()
+                                                                                    : null;
+                                                                            @endphp
+                                                                            @if (auth()->check() && auth()->user()->role !== ROLE_COMPANY && auth()->user()->role !== ROLE_HIRING)
+                                                                                <li>
+                                                                                    <a data-job-id="{{ $job->id }}"
+                                                                                        class="toggle-favorite"
+                                                                                        style="width:30px; height:30px; border-radius:10px; line-height: 30px; padding: 4px; {{ $wishlist && $wishlist->is_save == SAVE ? 'border: 1px solid red;' : 'border: 1px solid #e9e9e9;' }}"
+                                                                                        href="javascript:void(0)">
+                                                                                        <i class="fa-solid fa-heart favorite-icon"
+                                                                                            style="{{ $wishlist && $wishlist->is_save == SAVE ? 'color:red;' : 'color: #ccc;' }}"></i>
+                                                                                    </a>
+                                                                                </li>
+                                                                            @endif
+                                                                        </ul>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
