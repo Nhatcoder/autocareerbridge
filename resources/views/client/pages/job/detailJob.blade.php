@@ -90,6 +90,24 @@
                             </button>
                         @endif
                     @endif
+                    @php
+                        $wishlist = auth()->check()
+                            ? $job->wishlistByUsers->where('user_id', auth()->id())->first()
+                            : null;
+                    @endphp
+
+                    <ul>
+                        @if (auth()->check() && auth()->user()->role !== ROLE_COMPANY && auth()->user()->role !== ROLE_HIRING)
+                            <li>
+                                <a data-job-id="{{ $job->id }}" class="toggle-favorite"
+                                    style="width:30px; height:30px; border-radius:10px; line-height: 30px; padding: 4px; {{ $wishlist && $wishlist->is_save == SAVE ? 'border: 1px solid red;' : 'border: 1px solid #e9e9e9;' }}"
+                                    href="javascript:void(0)">
+                                    <i class="fa-solid fa-heart favorite-icon"
+                                        style="{{ $wishlist && $wishlist->is_save == SAVE ? 'color:red;' : 'color: #ccc;' }}"></i>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
 
                 </div>
             </div>

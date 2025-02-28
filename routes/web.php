@@ -104,4 +104,9 @@ Route::middleware('web')->group(function () {
                     Route::post('updatePassword', [CustommerController::class, 'updatePassword'])->name('updatePassword');
                 });
         });
+
+    Route::middleware('auth')->group(function () {
+        Route::post('/job/wishlist', [JobsController::class, 'wishlistJob'])->name('job.wishlist');
+        Route::get('/viec-lam-da-luu', [JobsController::class, 'listJobWishlist'])->name('job.wishlist.list');
+    });
 });

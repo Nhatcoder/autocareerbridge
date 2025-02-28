@@ -44,6 +44,8 @@ use App\Repositories\Education\EducationRepository;
 use App\Repositories\Education\EducationRepositoryInterface;
 use App\Repositories\Experience\ExperienceRepository;
 use App\Repositories\Experience\ExperienceRepositoryInterface;
+use App\Repositories\JobWishlist\JobWishlistRepository;
+use App\Repositories\JobWishlist\JobWishlistRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepository;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
 use App\Repositories\UserJob\UserJobRepository;
@@ -91,6 +93,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ReferrerRepositoryInterface::class, ReferrerRepository::class);
         $this->app->bind(ChatMessageRepositoryInterface::class, ChatMessageRepository::class);
         $this->app->bind(UserJobRepositoryInterface::class, UserJobRepository::class);
+        $this->app->bind(JobWishlistRepositoryInterface::class, JobWishlistRepository::class);
     }
 
     /**

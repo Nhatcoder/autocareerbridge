@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Services\Company\CompanyService;
 use App\Services\Cv\CvService;
 use App\Services\Job\JobService;
+use App\Services\JobWishlist\JobWishlistService;
 use App\Services\UserJob\UserJobService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Job\ApplyJobRequest;
 
@@ -15,14 +17,17 @@ class JobsController extends Controller
 {
     protected $jobService;
     protected $companyService;
-    protected $cvService;
+    protected $jobWishlistService;
     protected $userJobService;
-    public function __construct(JobService $jobService, CompanyService $companyService, CvService $cvService, UserJobService $userJobService)
+    protected $cvService;
+
+    public function __construct(JobService $jobService, CompanyService $companyService, JobWishlistService $jobWishlistService, CvService $cvService, UserJobService $userJobService)
     {
         $this->jobService = $jobService;
         $this->companyService = $companyService;
-        $this->cvService = $cvService;
         $this->userJobService = $userJobService;
+        $this->jobWishlistService = $jobWishlistService;
+        $this->cvService = $cvService;
     }
 
     public function index($slug)
@@ -86,5 +91,45 @@ class JobsController extends Controller
                 'message' => "Có lỗi xảy ra: " . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Toggle job wishlist status for the authenticated user.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function wishlistJob(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $jobId = $request->job_id;
+
+            if (!$user) {
+
+                return response()->json(['status' => 'error', 'message' => 'Bạn cần đăng nhập để lưu công việc yêu thích.'], 403);
+            }
+
+            $isSave = $this->jobWishlistService->toggleWishlistJob($user->id, $jobId);
+
+            return response()->json([
+                'status' => $isSave == SAVE ? 'added' : 'removed',
+                'message' => $isSave == SAVE ? 'Lưu công việc thành công' : 'Công việc đã bị xoá khỏi danh sách đã lưu'
+            ]);
+        } catch (\Exception $e) {
+            $this->logExceptionDetails($e);
+        }
+    }
+
+
+    /**
+     * Retrieve the list of jobs saved to the user's wishlist.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function listJobWishlist()
+    {
+        $getJobs = $this->jobService->getWishlistJobs();
+        return view('client.pages.job.wishlist', compact('getJobs'));
     }
 }

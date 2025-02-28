@@ -55,6 +55,12 @@
                                                     tuyển</a></li>
                                         </ul>
                                     @endif
+                                    @if (auth()->check() && auth()->user()->role !== ROLE_COMPANY && auth()->user()->role !== ROLE_HIRING)
+                                        <ul>
+                                            <li class="parent"><a href="{{ route('job.wishlist.list') }}">Việc làm đã
+                                                    lưu</a></li>
+                                        </ul>
+                                    @endif
                                 </li>
 
                                 <li
