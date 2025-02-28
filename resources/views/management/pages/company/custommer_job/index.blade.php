@@ -309,7 +309,7 @@
                 $select.val(initialValue).selectpicker('refresh');
             }
 
-            // Xác nhận xem cv
+            // check seen cv
             function checkSeenCv(idCheck, urlCheck) {
                 return $.ajax({
                     url: urlCheck,
@@ -319,6 +319,22 @@
                     }
                 });
             }
+
+            // Xem cv
+            $(".seen_cv__user").on('click', function(e) {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ route('company.seenCvUserJob') }}",
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: id
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                })
+            })
         });
     </script>
 @endsection

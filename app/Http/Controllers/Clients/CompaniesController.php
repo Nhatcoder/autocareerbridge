@@ -29,7 +29,6 @@ class CompaniesController extends Controller
      * Return data to client.
      * @access public
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      * @author Khuat Van Duy
      */
     public function listCompanies(Request $request)
@@ -49,7 +48,6 @@ class CompaniesController extends Controller
         }
 
         $provincies = $this->provinceService->getAllProvinces();
-
         $listCompanies = $this->companyService->getCompaniesWithJobsAndAddresses();
 
         return view('client.pages.company.listCompany', compact(['companies', 'provincies', 'listCompanies']));
@@ -67,7 +65,7 @@ class CompaniesController extends Controller
         $company = $this->companyService->getCompanyBySlug($slug);
 
         if (!$company) {
-           return 'Không tìm thấy công ty';
+            return 'Không tìm thấy công ty';
         }
         return view('client.pages.company.detailCompany', compact(['company']));
     }

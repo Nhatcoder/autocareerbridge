@@ -20,6 +20,7 @@ class ApplyJobRequest extends FormRequest
             'cv_id' => 'required_without:file_cv',
             'file_cv' => 'required_without:cv_id|file|mimes:pdf|max:2048',
             'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
+            'name' => 'nullable|string|max:255'
         ];
     }
 
@@ -35,6 +36,7 @@ class ApplyJobRequest extends FormRequest
             'phone.regex' => 'Số điện thoại không hợp lệ',
             'phone.min' => 'Số điện thoại phải có ít nhất 10 số',
             'phone.max' => 'Số điện thoại không được vượt quá 15 số',
+            'name.max' => 'Họ và tên không quá 255 ký tự',
         ];
     }
 

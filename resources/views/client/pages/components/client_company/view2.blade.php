@@ -8,14 +8,13 @@
                             <div class="jp_job_post_side_img">
                                 <a href="{{ route('detailCompany', ['slug' => $company->slug]) }}">
                                     <img src="{{ isset($company->avatar_path) ? asset($company->avatar_path) : asset('management-assets/images/no-img-avatar.png') }}"
-                                        id="hiring_img"
-                                        class="rounded-circle"
-                                        alt="image" />
+                                        id="hiring_img" class="rounded-circle" alt="image" />
                                 </a>
                             </div>
                             <div class="jp_job_post_right_cont jp_cl_job_cont">
                                 <a href="{{ route('detailCompany', ['slug' => $company->slug]) }}">
-                                    <h4 style="font-size: 18px" data-bs-placement="top" data-bs-title="{{ $company->name }}" class="company_name d-inline">
+                                    <h4 style="font-size: 18px" data-bs-placement="top"
+                                        data-bs-title="{{ $company->name }}" class="company_name d-inline">
                                         {{ \Illuminate\Support\Str::limit($company->name, 70, '...') }}
                                     </h4>
                                 </a>
@@ -42,7 +41,9 @@
                             <div class="jp_job_post_right_btn_wrapper">
                                 <ul>
                                     <li>
-                                        <a href="{{ route('detailCompany', ['slug' => $company->slug]) }}" style="background-color: #23c0e9;">
+                                        <a class="btn btn-primary"
+                                            href="{{ route('detailCompany', ['slug' => $company->slug]) }}"
+                                            style="background-color: #23c0e9;">
                                             <label class="h6" style="color: #fff">
                                                 {{ $company->jobs_count }} việc làm
                                             </label>
@@ -61,4 +62,3 @@
         <p>Không có doanh nghiệp nào</p>
     </div>
 @endforelse
-

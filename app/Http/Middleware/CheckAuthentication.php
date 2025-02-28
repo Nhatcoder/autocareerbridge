@@ -13,14 +13,22 @@ class CheckAuthentication
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        if (auth()->guard('web')->check()) {
-            $routeNames = ['viewLogin', 'viewRegister', 'loginWithGoogle', 'viewLoginWithGoogle'];
-            if (in_array(request()->route()->getName(), $routeNames)) {
+        $routeNames = ['viewLogin', 'viewRegister', 'loginWithGoogle', 'viewLoginWithGoogle'];
+
+        if (auth()->guard('web')->check() || auth()->guard('admin')->check()) {
+            if ($request->routeIs($routeNames)) {
                 return redirect()->route('home');
             }
         }
+
+        if (!auth()->guard('web')->check() && !auth()->guard('admin')->check()) {
+            if (!$request->routeIs($routeNames)) {
+                return redirect()->route('viewLogin');
+            }
+        }
+
         return $next($request);
     }
 }

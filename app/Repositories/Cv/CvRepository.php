@@ -43,7 +43,7 @@ class CvRepository extends BaseRepository implements CvRepositoryInterface
      */
     public function getCvUpload($id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model->withTrashed()->findOrFail($id);
     }
 
     /**

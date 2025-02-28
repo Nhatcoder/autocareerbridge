@@ -205,7 +205,7 @@
                     </div>
 
                     <input type="hidden" name="job_id" value="{{ $job->id }}">
-                    <div class="modal-body overflow-y-auto h-[calc(100vh-450px)]">
+                    <div class="modal-body overflow-y-auto h-[calc(100vh-290px)]">
                         <div class="mt-4">
                             <input type="file" class="hidden" id="upload_cv" value="" name="file_cv">
                             <label for="upload_cv"
@@ -239,87 +239,92 @@
                                             tôi</span>
                                     </div>
                                 </label>
-
-                                <div class="list_mycv hidden mt-2">
-                                    <div class="cv-selected hidden d-flex justify-between">
-                                        <div class="d-flex items-center">
-                                            <span
-                                                class="cv-selected_name mx-2 line-clamp-1 w-70 file_name leading-8 text-[#263a4d]">Abc
-                                                text selected</span>
-                                            <a target="_blank" href=""
-                                                class="cv-selected_view text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] mx-1 btn_view_cv">
-                                                Xem
-                                            </a>
+                                @if (count($cvCreate) > 0 || count($cvUploads) > 0)
+                                    <div class="list_mycv hidden mt-2">
+                                        <div class="cv-selected hidden d-flex justify-between">
+                                            <div class="d-flex items-center">
+                                                <span
+                                                    class="cv-selected_name mx-2 line-clamp-1 w-70 file_name leading-8 text-[#263a4d]">Abc
+                                                    text selected</span>
+                                                <a target="_blank" href=""
+                                                    class="cv-selected_view text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] mx-1 btn_view_cv">
+                                                    Xem
+                                                </a>
+                                            </div>
+                                            <div class="cv-selected_action">
+                                                <button type="button"
+                                                    class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv_selected">
+                                                    <i class="fa-solid fa-pen"></i> Thay đổi
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="cv-selected_action">
-                                            <button type="button"
-                                                class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv_selected">
-                                                <i class="fa-solid fa-pen"></i> Thay đổi
-                                            </button>
+
+                                        <div class="block_cv">
+                                            @if (count($cvCreate) > 0)
+                                                <h4 class="py-2">CV online</h4>
+                                                @foreach ($cvCreate as $cvCr)
+                                                    <div
+                                                        class="border p-2 mb-1 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
+                                                        <div class="block_cv__item flex items-center flex-start">
+                                                            <span class="mx-2 line-clamp-1 leading-8 file_name"
+                                                                style="width: 24rem;">{{ $cvCr->title }}</span>
+                                                            @if ($cvCr->type == TYPE_CV_CREATE)
+                                                                <a target="_blank"
+                                                                    href="{{ route('cv.view', ['id' => $cvCr->id]) }}"
+                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                    Xem
+                                                                </a>
+                                                            @elseif($cvCr->type == TYPE_CV_UPLOAD)
+                                                                <a target="_blank"
+                                                                    href="{{ route('cv.upload.view', ['id' => $cvCr->id]) }}"
+                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                    Xem
+                                                                </a>
+                                                            @endif
+                                                        </div>
+
+                                                        <div class="float-right">
+                                                            <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
+                                                                data-id="{{ $cvCr->id }}">Chọn CV
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                            @if (count($cvUploads) > 0)
+                                                <h4 class="py-2">CV đã tải lên</h4>
+                                                @foreach ($cvUploads as $cvUp)
+                                                    <div
+                                                        class="border p-2 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
+                                                        <div class="block_cv__item flex items-center flex-start">
+                                                            <span class="mx-2 line-clamp-1 leading-8 file_name"
+                                                                style="width: 24rem;">{{ $cvUp->title }}</span>
+                                                            @if ($cvUp->type == TYPE_CV_CREATE)
+                                                                <a target="_blank"
+                                                                    href="{{ route('cv.view', ['id' => $cvUp->id]) }}"
+                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                    Xem
+                                                                </a>
+                                                            @elseif($cvUp->type == TYPE_CV_UPLOAD)
+                                                                <a target="_blank"
+                                                                    href="{{ route('cv.upload.view', ['id' => $cvUp->id]) }}"
+                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                    Xem
+                                                                </a>
+                                                            @endif
+                                                        </div>
+
+                                                        <div class="float-right">
+                                                            <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
+                                                                data-id="{{ $cvUp->id }}">Chọn
+                                                                CV</span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </div>
-
-                                    <div class="block_cv">
-                                        <h4 class="py-2">CV online</h4>
-                                        @foreach ($cvCreate as $cvCr)
-                                            <div
-                                                class="border p-2 mb-1 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
-                                                <div class="block_cv__item flex items-center flex-start">
-                                                    <span class="mx-2 line-clamp-1 leading-8 file_name"
-                                                        style="width: 24rem;">{{ $cvCr->title }}</span>
-                                                    @if ($cvCr->type == TYPE_CV_CREATE)
-                                                        <a target="_blank"
-                                                            href="{{ route('cv.view', ['id' => $cvCr->id]) }}"
-                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                            Xem
-                                                        </a>
-                                                    @elseif($cvCr->type == TYPE_CV_UPLOAD)
-                                                        <a target="_blank"
-                                                            href="{{ route('cv.upload.view', ['id' => $cvCr->id]) }}"
-                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                            Xem
-                                                        </a>
-                                                    @endif
-                                                </div>
-
-                                                <div class="float-right">
-                                                    <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
-                                                        data-id="{{ $cvCr->id }}">Chọn CV
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                        <h4 class="py-2">CV đã tải lên</h4>
-                                        @foreach ($cvUploads as $cvUp)
-                                            <div
-                                                class="border p-2 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
-                                                <div class="block_cv__item flex items-center flex-start">
-                                                    <span class="mx-2 line-clamp-1 leading-8 file_name"
-                                                        style="width: 24rem;">{{ $cvUp->title }}</span>
-                                                    @if ($cvUp->type == TYPE_CV_CREATE)
-                                                        <a target="_blank"
-                                                            href="{{ route('cv.view', ['id' => $cvUp->id]) }}"
-                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                            Xem
-                                                        </a>
-                                                    @elseif($cvUp->type == TYPE_CV_UPLOAD)
-                                                        <a target="_blank"
-                                                            href="{{ route('cv.upload.view', ['id' => $cvUp->id]) }}"
-                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                            Xem
-                                                        </a>
-                                                    @endif
-                                                </div>
-
-                                                <div class="float-right">
-                                                    <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
-                                                        data-id="{{ $cvUp->id }}">Chọn
-                                                        CV</span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
+                                @endif
 
                             </div>
                         </div>
