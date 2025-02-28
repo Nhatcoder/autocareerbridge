@@ -2,6 +2,8 @@
 
 namespace App\Services\Job;
 
+use App\Helpers\LogHelper;
+use App\Helpers\StorageHelper;
 use Exception;
 use App\Mail\SendMailStudent;
 use App\Mail\NewJobPostedMail;
@@ -20,9 +22,11 @@ use App\Repositories\UserJob\UserJobRepositoryInterface;
 use App\Repositories\University\UniversityRepositoryInterface;
 use App\Repositories\Notification\NotificationRepositoryInterface;
 use App\Repositories\Collaboration\CollaborationRepositoryInterface;
+use App\Repositories\Cv\CvRepositoryInterface;
 
 class JobService
 {
+    use LogHelper;
     protected $jobRepository;
     protected $majorRepository;
     protected $collaborationRepository;
@@ -32,6 +36,8 @@ class JobService
     protected $companyRepository;
     protected $userRepository;
     protected $userJobRepository;
+    protected $storageHelper;
+    protected $cvRepository;
 
     public function __construct(
         CompanyRepositoryInterface       $companyRepository,
@@ -42,7 +48,10 @@ class JobService
         UniversityRepositoryInterface    $universityRepository,
         NotificationService              $notificationService,
         UserRepositoryInterface          $userRepository,
-        UserJobRepositoryInterface       $userJobRepository
+        UserJobRepositoryInterface       $userJobRepository,
+        StorageHelper                    $storageHelper,
+        CvRepositoryInterface            $cvRepository,
+
     ) {
         $this->companyRepository = $companyRepository;
         $this->jobRepository = $jobRepository;
@@ -53,6 +62,8 @@ class JobService
         $this->notificationService = $notificationService;
         $this->userRepository = $userRepository;
         $this->userJobRepository = $userJobRepository;
+        $this->storageHelper = $storageHelper;
+        $this->cvRepository = $cvRepository;
     }
 
     public function getAll()
@@ -426,9 +437,55 @@ class JobService
      */
     public function userApplyJob($data)
     {
-        $user = Auth::guard('web')->user()->id;
-        $data['user_id'] = $user;
-        return $this->userJobRepository->create($data);
+        $user = Auth::guard('web')->user();
+        $dataApply = [
+            'user_id' => $user->id,
+            'job_id' => $data['job_id'],
+            'cv_id' => $data['cv_id'],
+        ];
+
+        DB::beginTransaction();
+        try {
+            $dataUploadCv = [
+                'user_id' => $user->id,
+                'type' => TYPE_CV_UPLOAD,
+            ];
+
+            if ($data['file_cv']) {
+                $uploadFileCV = $this->storageHelper->storageFileUpload($data['file_cv'], 'cvs/pdf');
+                if ($uploadFileCV) {
+                    $dataUploadCv['upload'] = $uploadFileCV['path'];
+                    $name = explode('.pdf', $uploadFileCV['name']);
+                    $dataUploadCv['title'] = $name[0];
+                }
+
+                $result = $this->cvRepository->create($dataUploadCv);
+                $dataApply['cv_id'] = $result->id;
+            }
+
+            $userJob = $this->userJobRepository->create($dataApply);
+
+            if ($data['phone']) {
+                $this->userRepository->update($user->id, ['phone' => $data['phone']]);
+            }
+
+            if ($userJob) {
+                $notification = $this->notificationRepository->create([
+                    'title' => $userJob->user->name . ' ứng tuyển ' . $userJob->job->name,
+                    'company_id' => $userJob->job->company->id,
+                    'link' => route('company.showJob', $userJob->job->slug),
+                    'type' => TYPE_UNIVERSITY,
+                ]);
+                $this->notificationService->renderNotificationRealtime($notification, $userJob->job->company->id);
+            }
+
+            DB::commit();
+            return $userJob;
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->logExceptionDetails($e);
+            throw $e;
+        }
     }
 
     /**
@@ -442,7 +499,6 @@ class JobService
 
         return $userJobs;
     }
-
 
     /**
      * This function handles change status of a user job applying

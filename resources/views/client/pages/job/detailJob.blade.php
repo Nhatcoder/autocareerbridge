@@ -124,7 +124,8 @@
                         </div>
 
                         <button class="bg-[#23c0e9] text-white px-4 py-2 rounded-lg w-full"
-                            onclick="window.location.href='{{ $job->company->website_link }}'">Xem trang công ty</button>
+                            onclick="window.location.href='{{ route('detailCompany', $company->slug) }}'">Xem trang công
+                            ty</button>
                     </div>
                     {{-- <div class="bg-white p-6 rounded-lg shadow-md">
                         <h3 class="text-lg font-bold mb-4">Thông tin chung</h3>
@@ -151,6 +152,7 @@
                             </li>
                         </ul>
                     </div> --}}
+
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h3 class="text-lg font-bold mb-4">Kỹ năng cần có</h3>
                         <div class="flex flex-wrap gap-2 mb-4">
@@ -175,77 +177,171 @@
     <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ứng tuyển <b
-                            class="text-[#23c0e9]">{{ $job->name ?? 'Chi tiết tuyển dụng' }}</b>
-                    </h1>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('applyJob') }}" method="POST">
+                <form id="apply_job" action="{{ route('applyJob') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ứng tuyển <b
+                                class="text-[#23c0e9]">{{ $job->name ?? 'Chi tiết tuyển dụng' }}</b>
+                        </h1>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
                     <input type="hidden" name="job_id" value="{{ $job->id }}">
-                    <div class="modal-body">
+                    <div class="modal-body overflow-y-auto h-[calc(100vh-450px)]">
                         <div class="mt-4">
                             <input type="file" class="hidden" id="upload_cv" value="" name="file_cv">
                             <label for="upload_cv"
                                 class="round w-full text-white flex justify-center items-center cursor-pointer fs-14 bg-[#23c0e9] px-4 py-2 rounded-lg"><i
-                                    class="fa-solid fa-arrow-up-from-bracket"></i> Tải lên hồ sơ sẵn</label>
-                            <span class="text-opacity-75 fs-10 flex justify-center">File .doc, .docx, .pdf dung lượng <= 5
-                                    MB</span>
+                                    class="fa-solid fa-arrow-up-from-bracket"></i> Tải lên hồ sơ sẵn
+                            </label>
+                            <span class="text-opacity-75 fs-10 flex justify-center">Hỗ trợ định dạng pdf có
+                                kích thước dưới 5MB </span>
                         </div>
 
                         <div class="mt-4 list_cv">
-                            <label for="cv2"
-                                class="mt-2 flex gap-x-2 items-center border p-2 rounded-lg bg-gray-50 item_cv">
-                                <input type="radio" name="cv_list" id="cv2" value="1"
-                                    class="m-0 fs-16 accent-[#23c0e9]">
-                                <div class="flex m-0 border-b-2 border-transparent">
-                                    <span class="mr-2 ">Fresher Developer - Đi LàmLàmLàmLàmLàmLàmLàm Ngay </span>
-                                    <a href="javascript:void(0)"
-                                        onclick="alert('Mai xem được không chưa xong mà 🥲 năn nỉ đó. Hứa 😁')"
-                                        class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0]">Xem CV</a>
+                            @if ($cvApplyLate && $cvApplyLate->cv)
+                                <label for="cv_old"
+                                    class="mt-2 flex gap-x-2 items-center border p-2 rounded-lg bg-gray-50 item_cv active bg-white">
+                                    <input type="radio" name="cv_id" checked id="cv_old"
+                                        value="{{ $cvApplyLate->cv->id ?? '' }}" class="m-0 fs-16">
+                                    <div class="flex m-0 border-b-2 border-transparent">
+                                        <span class="mr-2 ">CV ứng tuyển gần nhất:
+                                            {{ $cvApplyLate->cv->title }}</span>
+                                        <a target="_blank" href="{{ route('cv.view', ['id' => $cvApplyLate->cv->id]) }}"
+                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0]">Xem</a>
+                                    </div>
+                                </label>
+                            @endif
+                            <div class="mt-2 border w-100 p-2 rounded-lg bg-gray-50 item_cv btn_more__mycv bg-white">
+                                <label class="flex gap-x-2 items-center">
+                                    <input type="radio" name="cv_id" id="cv_other" value=""
+                                        class="m-0 fs-16">
+                                    <div class="flex m-0 border-b-2 border-transparent">
+                                        <span class="mr-2 text-[#333333] font-weight-[500]">Chọn CV khác trong thư viện của
+                                            tôi</span>
+                                    </div>
+                                </label>
+
+                                <div class="list_mycv hidden mt-2">
+                                    <div class="cv-selected hidden d-flex justify-between">
+                                        <div class="d-flex items-center">
+                                            <span
+                                                class="cv-selected_name mx-2 line-clamp-1 w-70 file_name leading-8 text-[#263a4d]">Abc
+                                                text selected</span>
+                                            <a target="_blank" href=""
+                                                class="cv-selected_view text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] mx-1 btn_view_cv">
+                                                Xem
+                                            </a>
+                                        </div>
+                                        <div class="cv-selected_action">
+                                            <button type="button"
+                                                class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv_selected">
+                                                <i class="fa-solid fa-pen"></i> Thay đổi
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="block_cv">
+                                        <h4 class="py-2">CV online</h4>
+                                        @foreach ($cvCreate as $cvCr)
+                                            <div
+                                                class="border p-2 mb-1 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
+                                                <div class="block_cv__item flex items-center flex-start">
+                                                    <span class="mx-2 line-clamp-1 leading-8 file_name"
+                                                        style="width: 24rem;">{{ $cvCr->title }}</span>
+                                                    @if ($cvCr->type == TYPE_CV_CREATE)
+                                                        <a target="_blank"
+                                                            href="{{ route('cv.view', ['id' => $cvCr->id]) }}"
+                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                            Xem
+                                                        </a>
+                                                    @elseif($cvCr->type == TYPE_CV_UPLOAD)
+                                                        <a target="_blank"
+                                                            href="{{ route('cv.upload.view', ['id' => $cvCr->id]) }}"
+                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                            Xem
+                                                        </a>
+                                                    @endif
+                                                </div>
+
+                                                <div class="float-right">
+                                                    <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
+                                                        data-id="{{ $cvCr->id }}">Chọn CV
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <h4 class="py-2">CV đã tải lên</h4>
+                                        @foreach ($cvUploads as $cvUp)
+                                            <div
+                                                class="border p-2 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
+                                                <div class="block_cv__item flex items-center flex-start">
+                                                    <span class="mx-2 line-clamp-1 leading-8 file_name"
+                                                        style="width: 24rem;">{{ $cvUp->title }}</span>
+                                                    @if ($cvUp->type == TYPE_CV_CREATE)
+                                                        <a target="_blank"
+                                                            href="{{ route('cv.view', ['id' => $cvUp->id]) }}"
+                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                            Xem
+                                                        </a>
+                                                    @elseif($cvUp->type == TYPE_CV_UPLOAD)
+                                                        <a target="_blank"
+                                                            href="{{ route('cv.upload.view', ['id' => $cvUp->id]) }}"
+                                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                            Xem
+                                                        </a>
+                                                    @endif
+                                                </div>
+
+                                                <div class="float-right">
+                                                    <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
+                                                        data-id="{{ $cvUp->id }}">Chọn
+                                                        CV</span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </label>
-                            <label for="cv3"
-                                class="mt-2 flex gap-x-2 items-center border p-2 rounded-lg bg-gray-50 item_cv">
-                                <input type="radio" name="cv_list" id="cv3" value="1"
-                                    class="m-0 fs-16 accent-[#23c0e9]">
-                                <div class="flex m-0 border-b-2 border-transparent">
-                                    <span class="mr-2 ">Fresher Developer - Đi Làm Ngay </span>
-                                    <a href="javascript:void(0)"
-                                        onclick="alert('Mai xem được không chưa xong mà 🥲 năn nỉ đó. Hứa 😁')"
-                                        class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0]">Xem CV</a>
-                                </div>
-                            </label>
+
+                            </div>
                         </div>
 
                         <div class="mt-4">
                             <label class="block fs-13 opacity-75 font-medium">Họ và tên <span
                                     class="text-[#ff0000]">*</span></label>
-                            <input type="text" class="w-full border text-black p-2 rounded-lg"
-                                value="{{ Auth::guard('web')->user()->name ?? '' }}" placeholder="Nhập họ và tên">
+                            <input type="text" class="w-full border p-2 rounded-lg" name="name"
+                                value="{{ Auth::guard('web')->user()->name ?? '' }}"
+                                {{ auth('web')->user()->name ? 'disabled' : '' }} placeholder="Nhập họ và tên">
+                            <span class="text-danger text-sm err_name"></span>
+
                         </div>
 
                         <div class="mt-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block fs-13 opacity-75 font-medium">Email <span
                                         class="text-[#ff0000]">*</span></label>
-                                <input type="email" class="w-full border text-black p-2 rounded-lg"
-                                    value="{{ Auth::guard('web')->user()->email ?? '' }}" placeholder="Nhập email">
+                                <input type="text" class="w-full border p-2 rounded-lg"
+                                    value="{{ Auth::guard('web')->user()->email ?? '' }}"
+                                    {{ auth('web')->user()->email ? 'disabled' : '' }} name="email"
+                                    placeholder="Nhập email">
+                                <span class="text-danger text-sm err_email"></span>
+
                             </div>
                             <div>
                                 <label class="block fs-13 opacity-75 font-medium">Số điện thoại <span
                                         class="text-[#ff0000]">*</span></label>
-                                <input type="text" class="w-full border text-black p-2 rounded-lg"
+                                <input type="text" class="w-full border p-2 rounded-lg"
+                                    {{ auth('web')->user()->phone ? 'disabled' : '' }}
+                                    value="{{ Auth::guard('web')->user()->phone ?? '' }}" name="phone"
                                     placeholder="Nhập số điện thoại">
+                                <span class="text-danger text-sm err_phone"></span>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
-                        <button type="submit" id="collaborationRequestForm"
-                            class="btn text-white bg-[#23c0e9] hover:bg-[#1a8fb0]">Gửi yêu cầu
+                        <button type="submit" class="btn text-white bg-[#23c0e9] hover:bg-[#1a8fb0]"> Nộp
+                            hồ sơ ứng tuyển
                         </button>
                     </div>
                 </form>
@@ -385,15 +481,65 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            let id = null;
             $(document).on('click', '.item_cv', function() {
                 $('.item_cv').removeClass('active');
                 $(this).addClass('active');
             });
 
+            $(document).on('click', '.btn-select-cv', function() {
+                let el = $(this).parent().prev('.block_cv__item');
+                $(".list_mycv").find('.block_cv').addClass("hidden");
+                $(".list_mycv").find('.cv-selected').removeClass("hidden");
+
+                let elName = $(".list_mycv").find('.cv-selected_name');
+                let elView = $(".list_mycv").find('.cv-selected_view');
+                let cvSelectedName = el.find('.file_name').text();
+                let cvSelectedView = el.find('.btn_view_cv').attr('href');
+
+                id = $(this).attr('data-id');
+                $("#cv_other").val(id);
+
+                elName.text(cvSelectedName);
+                elView.attr('href', cvSelectedView);
+            });
+
+            $(document).on('click', '.btn_change_cv_selected', function() {
+                $(".list_mycv").find('.cv-selected').addClass("hidden");
+                $(".list_mycv").find('.block_cv').removeClass("hidden");
+            });
+
+            $(".btn_more__mycv").on('click', function() {
+                $(this).find("input[type=radio]").prop('checked', true);
+                let element = $(this).parent().find('.list_mycv');
+                if (element.hasClass('hidden')) {
+                    element.removeClass('hidden');
+                }
+            })
+
             let i = 1000;
             $('#upload_cv').on('change', function(e) {
-                $(this).parent().hide(); // Ẩn input file
-                var fileName = e.target.files[0].name;
+                let file = e.target.files[0];
+                let fileType = file.type;
+                let fileSize = file.size;
+                if (fileType != 'application/pdf') {
+                    toastr.error('Bạn chỉ được upload file theo định dạng PDF.', "", {
+                        closeButton: true,
+                        timeOut: 3000,
+                        progressBar: true,
+                    })
+                    return;
+                }
+                if (fileSize > 5 * 1024 * 1024) {
+                    toastr.error('Dung lượng file phải nhỏ hơn 5MB', "", {
+                        closeButton: true,
+                        timeOut: 3000,
+                        progressBar: true,
+                    })
+                    return;
+                }
+                $(this).parent().hide();
+                let fileName = file.name;
 
                 if (i === 1000) {
                     $(".list_cv").prepend(`
@@ -401,11 +547,8 @@
                                 class="mt-2 flex justify-between gap-x-2 items-center border p-2 rounded-lg bg-gray-50 item_cv active">
                                 <div class="flex m-0 border-b-2 border-transparent w-full">
                                     <div class="flex items-center w-full">
-                                        <input type="radio" checked name="cv_list" id="cv${i}" value="1" class="m-0 fs-16 accent-[#23c0e9]">
-                                        <span class="mx-2 w-60 line-clamp-2 file_name">${fileName}</span>
-                                        <a href="javascript:void(0)" class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                            Xem CV
-                                        </a>
+                                        <input type="radio" checked name="cv_id" id="cv${i}" value="" class="m-0 fs-16 ">
+                                        <span class="mx-2 w-70 line-clamp-2 file_name__new">${fileName}</span>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv">
@@ -413,19 +556,98 @@
                                 </button>
                             </label>
                         `);
-                    i++; // Tăng i chỉ lần đầu
+                    i++;
                 } else {
-                    $(".list_cv .item_cv .file_name").text(fileName);
+                    $(".list_cv .item_cv .file_name__new").text(fileName);
                 }
             });
 
             $(document).on('click', '.btn_change_cv', function(e) {
-                $(this).find('input[type="radio"]').prop('checked', true);
+                $(`#cv${i}`).prop('checked', true);
+
                 e.preventDefault();
                 $('#upload_cv').click();
             });
-
         })
+
+        // Applly job
+        $(document).on('submit', '#apply_job', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            var applyUrl = $(this).attr('action');
+            let formData = new FormData(this);
+
+            if ($('input[name="cv_id"]:checked').length === 0) {
+                toastr.error('Vui lòng chọn CV trước khi nộp hồ sơ ứng tuyển!', "", {
+                    closeButton: true,
+                    timeOut: 3000,
+                    progressBar: true,
+                });
+                return;
+            }
+
+            $(".err_name, .err_email, .err_phone").text("");
+
+            let name = $('input[name="name"]').val().trim();
+            if (name === '') {
+                $(".err_name").text("Vui lòng nhập họ và tên.");
+                isValid = false;
+            }
+
+            let email = $('input[name="email"]').val().trim();
+            if (email === '') {
+                $(".err_email").text("Vui lòng nhập email.");
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                $(".err_email").text("Vui lòng nhập email đúng định dạng.");
+                isValid = false;
+            }
+
+            let phone = $('input[name="phone"]').val().trim();
+            if (phone === '') {
+                $(".err_phone").text("Vui lòng nhập số điện thoại.");
+                isValid = false;
+            } else if (!validatePhone(phone)) {
+                $(".err_phone").text("Vui lòng nhập số điện thoại đúng định dạng.");
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                return
+            }
+
+            $.ajax({
+                url: applyUrl,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success("", response.message)
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000)
+                    } else {
+                        toastr.error("", response.message)
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.error("", "" + error.message);
+                }
+            });
+        });
+
+        function validateEmail(email) {
+            let re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            let re = /^0[0-9]{9}$/;
+            return re.test(phone);
+        }
 
         $(document).on('click', '#joinButton', function(e) {
             e.preventDefault();
@@ -452,5 +674,4 @@
         });
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 @endsection
