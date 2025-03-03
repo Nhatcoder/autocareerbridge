@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_wishlists', function (Blueprint $table) {
+        Schema::create('interviews', function (Blueprint $table) {
             $table->id();
-            $table->integer('is_save')->default(SAVE);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('job_id')->constrained()->onDelete('cascade');
+            $table->bigInteger('schedule_interview_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_wishlists');
+        Schema::dropIfExists('interviews');
     }
 };
