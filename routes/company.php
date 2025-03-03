@@ -5,10 +5,12 @@ use App\Http\Controllers\Company\CompaniesController;
 use App\Http\Controllers\Company\HiringsController;
 use App\Http\Controllers\Company\JobsController;
 use App\Http\Controllers\Company\MajorsController;
+use App\Http\Controllers\Company\ScheduleInterviewController;
 use App\Http\Controllers\University\WorkShopsController;
 use App\Models\Collaboration;
 use App\Models\WorkShop;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ScheduleInterview;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +51,11 @@ Route::group([
     Route::delete('/major/delete/{majorId}', [MajorsController::class, 'delete'])->name('deleteMajorCompany');
     Route::post('collaboration/change-status', [CollaborationsController::class, 'changeStatus'])->name('changeStatusColab');
     Route::delete('collaboration/delete/{id}', [CollaborationsController::class, 'delete'])->name('collaboration.delete');
+
+    Route::get('/schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('schedule-interviews.list');
+
 });
+
 
 Route::group([
     'prefix' => 'company',

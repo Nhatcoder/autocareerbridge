@@ -244,6 +244,13 @@
                         <span class="nav-text">{{ __('label.company.sidebar.manage_collaboration') }}</span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="{{ route('company.schedule-interviews.list') }}" aria-expanded="false">
+                        <i class="fas fa-user-plus"></i>
+                        <span class="nav-text">Tạo lịch phỏng vấn</span>
+                    </a>
+                </li>
                 {{-- <li>
                     <a href="{{ route('company.searchUniversity') }}" aria-expanded="false">
                         <i class="material-icons">search</i>

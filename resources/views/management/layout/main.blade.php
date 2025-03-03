@@ -13,6 +13,8 @@
     <meta name="robots" content="">
 
     <title>@yield('title', 'Trang chủ')</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css' rel='stylesheet' />
+
 
     <!-- Favicon icon -->
     <link href="{{ asset('clients/images/header/favicon.ico') }}" rel="icon">
@@ -82,6 +84,7 @@
     </div>
     {{-- End main --}}
 
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     {{-- script --}}
     <script src="{{ asset('management-assets/vendor/global/global.min.js') }}"></script>
     <script src="{{ asset('management-assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>

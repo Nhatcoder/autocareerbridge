@@ -12,6 +12,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Clients\UniversitiesController;
 use App\Http\Controllers\Clients\WorkshopsController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\ScheduleInterview;
 
 /*
 |--------------------------------------------------------------------------
