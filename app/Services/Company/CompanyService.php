@@ -91,7 +91,7 @@ class CompanyService
      * @author Hoang Duy Lap
      * @return \Illuminate\Database\Eloquent\Collection A collection of wards.
      */
-    public function getWards($districtId): mixed
+    public function getWards($districtId)
     {
         return $this->companyRepository->getWards($districtId);
     }
