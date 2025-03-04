@@ -46,4 +46,19 @@ class AuthRepository extends BaseRepository implements AuthRepositoryInterface
         }
         return $user;
     }
+
+    /**
+     * Find user by email.
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @param string $email
+     * @return \App\Models\User|null
+     */
+    public function findbyEmail($email)
+    {
+        $user = $this->model->where('email', $email)->first();
+        if (empty($user)) {
+            return null;
+        }
+        return $user;
+    }
 }

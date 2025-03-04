@@ -7,11 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Events\PasswordResetRequested;
 use App\Events\EmailConfirmationRequired;
+use App\Helpers\LogHelper;
 use App\Repositories\Auth\Managements\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
+use Google\Client;
+use Google\Service\Calendar;
 
 class AuthService
 {
+    use LogHelper;
     protected $authRepository;
 
     public function __construct(AuthRepositoryInterface $authRepository)
@@ -154,5 +159,150 @@ class AuthService
             return null;
         }
         Auth::guard('admin')->logout();
+    }
+
+    /**
+     * Redirect the user to the Google authentication page.
+     * @author TranVanNhat <tranvannhat7624@gmail>
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')
+            ->scopes(config('services.google.scopes'))
+            ->with([
+                'access_type' => 'offline',
+                'prompt' => 'consent select_account'
+            ])
+            ->redirect();
+    }
+
+    /**
+     * Handle the callback from Google after authorization and save tokens
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     *
+     */
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            $user = auth('admin')->user();
+
+            if (!$user || $user->role !== ROLE_COMPANY || $user->email !== $googleUser->email) {
+                return null;
+            }
+
+            $user->update([
+                'access_token' => $googleUser->token,
+                'refresh_token' => $googleUser->refreshToken,
+                'token_expires_at' => now()->addSeconds($googleUser->expiresIn),
+            ]);
+
+            return $user;
+        } catch (\Exception $e) {
+            $this->logExceptionDetails($e);
+            return null;
+        }
+    }
+
+    /**
+     * Refresh the Google access token for the authenticated admin user
+     *
+     * @return string The new or current access token
+     * @throws \Exception If refresh token is not found or refresh process fails
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     */
+    public function refreshAccessToken()
+    {
+        try {
+            $user = Auth::guard('admin')->user();
+
+            if (!$user->refresh_token) {
+                throw new \Exception('Không tìm thấy refresh token');
+            }
+
+            $client = new Client();
+            $client->setClientId(config('services.google.client_id'));
+            $client->setClientSecret(config('services.google.client_secret'));
+            $client->setAccessType('offline');
+
+            // Thiết lập token hiện tại
+            $accessToken = [
+                'access_token' => $user->access_token,
+                'refresh_token' => $user->refresh_token,
+                'expires_in' => $user->token_expires_at ? now()->diffInSeconds($user->token_expires_at) : 0,
+            ];
+
+            $client->setAccessToken($accessToken);
+
+            // Kiểm tra và refresh token nếu hết hạn
+            if ($client->isAccessTokenExpired()) {
+                $newAccessToken = $client->fetchAccessTokenWithRefreshToken($user->refresh_token);
+
+                if (isset($newAccessToken['error'])) {
+                    throw new \Exception('Lỗi refresh token: ' . $newAccessToken['error']);
+                }
+
+                // Cập nhật token mới vào database
+                $user->update([
+                    'access_token' => $newAccessToken['access_token'],
+                    'token_expires_at' => now()->addSeconds($newAccessToken['expires_in']),
+                ]);
+
+                return $newAccessToken['access_token'];
+            }
+
+            return $user->access_token;
+        } catch (\Exception $e) {
+            $this->logExceptionDetails($e);
+            throw $e;
+        }
+    }
+
+    /**
+     * Summary of getGoogleClient
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @throws \Exception
+     * @return Client|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function getGoogleClient()
+    {
+        try {
+            $user = Auth::guard('admin')->user();
+
+            // Check if user exists and has required role
+            if (!$user || $user->role !== ROLE_COMPANY) {
+                throw new \Exception('Unauthorized access');
+            }
+
+            // If no tokens, redirect to Google login
+            if (!$user->access_token || !$user->refresh_token) {
+                return $this->redirectToGoogle();
+            }
+
+            $client = new Client();
+            $client->setClientId(config('services.google.client_id'));
+            $client->setClientSecret(config('services.google.client_secret'));
+            $client->setAccessType('offline');
+
+            // Set up token
+            $accessToken = [
+                'access_token' => $user->access_token,
+                'refresh_token' => $user->refresh_token,
+                'expires_in' => $user->token_expires_at ? now()->diffInSeconds($user->token_expires_at) : 0,
+            ];
+
+            $client->setAccessToken($accessToken);
+
+            // If token expired, try to refresh it
+            if ($client->isAccessTokenExpired()) {
+                $user->access_token = $this->refreshAccessToken();
+                $client->setAccessToken($user->access_token);
+            }
+
+            return $client;
+        } catch (\Exception $e) {
+            $this->logExceptionDetails($e);
+            return $this->redirectToGoogle();
+        }
     }
 }

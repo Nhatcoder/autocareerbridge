@@ -1,6 +1,5 @@
 @extends('management.layout.main')
 @section('content')
-
     <div class="row">
         <div class="col-xl-12">
             <div class="row">
@@ -72,6 +71,9 @@
                 },
                 editable: true,
                 selectable: true,
+                events: {
+                    url: "{{ route('company.refreshEvents') }}"
+                },
                 select: function(info) {
                     document.getElementById('eventStartDate').value = info.startStr.split('T')[0];
                     document.getElementById('eventStartTime').value = info.startStr.split('T')[1]

@@ -45,9 +45,10 @@ class CompanyService
      * @throws Exception If an error occurs during retrieval.
      */
 
-     public function getAll() {
+    public function getAll()
+    {
         return $this->companyRepository->getAll();
-     }
+    }
 
     public function findProfile($userId)
     {
@@ -90,7 +91,7 @@ class CompanyService
      * @author Hoang Duy Lap
      * @return \Illuminate\Database\Eloquent\Collection A collection of wards.
      */
-    public function getWards($districtId)
+    public function getWards($districtId): mixed
     {
         return $this->companyRepository->getWards($districtId);
     }
@@ -107,9 +108,9 @@ class CompanyService
      */
     public function editProfile($slug, $userId)
     {
-        if ($slug){
+        if ($slug) {
             return $this->companyRepository->findBySlug($slug);
-        }else
+        } else
             return $this->companyRepository->findById($userId);
     }
 
@@ -144,7 +145,7 @@ class CompanyService
             return $company;
         } catch (Exception $e) {
 
-            throw new Exception('Lỗi khi cập nhật thông tin: '. $e->getFile() . ' - '. $e->getLine() . ' - ' . $e->getMessage());
+            throw new Exception('Lỗi khi cập nhật thông tin: ' . $e->getFile() . ' - ' . $e->getLine() . ' - ' . $e->getMessage());
         }
     }
 

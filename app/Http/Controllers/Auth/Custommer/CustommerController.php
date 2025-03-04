@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CustommerRequest;
 use Illuminate\Http\Request;
 use App\Services\Custommer\CustommerService;
+use App\Services\Managements\AuthService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -24,13 +25,17 @@ use Laravel\Socialite\Facades\Socialite;
 class CustommerController extends Controller
 {
     public $custommerService;
+    public $authService;
+
     /**
      * CustommerService constructor.
      * @param CustommerService $custommerService
+     * @param AuthService $authService
      */
-    public function __construct(CustommerService $custommerService)
+    public function __construct(CustommerService $custommerService, AuthService $authService)
     {
         $this->custommerService = $custommerService;
+        $this->authService = $authService;
     }
 
     /**
@@ -120,6 +125,15 @@ class CustommerController extends Controller
      */
     public function loginWithGoogle()
     {
+        if (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role == ROLE_COMPANY) {
+            $result = $this->authService->handleGoogleCallback();
+            if ($result) {
+                return redirect()->route('company.scheduleInterview')->with('status_success', 'Kết nối với google thành công');
+            } else {
+                return redirect()->route('company.home')->with('status_fail', 'Kết nối với google thất bại');
+            }
+        }
+
         $response = $this->custommerService->loginWithGoogle();
         if ($response['success']) {
             return "<script>window.opener.location.reload(); window.close();</script>";

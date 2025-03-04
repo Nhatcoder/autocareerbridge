@@ -36,5 +36,12 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
         'credentials_path' => env('GOOGLE_CREDENTIALS_PATH'),
+        'scopes' => [
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events',
+            'email',
+            'profile',
+            'openid'
+        ],
     ],
 ];

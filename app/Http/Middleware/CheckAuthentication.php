@@ -15,7 +15,7 @@ class CheckAuthentication
      */
     public function handle(Request $request, Closure $next)
     {
-        $routeNames = ['viewLogin', 'viewRegister', 'loginWithGoogle', 'viewLoginWithGoogle'];
+        $routeNames = ['viewLogin', 'viewRegister', 'viewLoginWithGoogle'];
 
         if (auth()->guard('web')->check() || auth()->guard('admin')->check()) {
             if ($request->routeIs($routeNames)) {
