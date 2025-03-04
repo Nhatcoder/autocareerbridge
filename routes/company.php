@@ -52,7 +52,8 @@ Route::group([
     Route::post('collaboration/change-status', [CollaborationsController::class, 'changeStatus'])->name('changeStatusColab');
     Route::delete('collaboration/delete/{id}', [CollaborationsController::class, 'delete'])->name('collaboration.delete');
 
-    Route::get('/schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('schedule-interviews.list');
+    Route::get('schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('scheduleInterview');
+    Route::get('schedule-interviews-all', [ScheduleInterviewController::class, 'refreshEvents'])->name('refreshEvents');
 
 });
 

@@ -246,7 +246,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('company.schedule-interviews.list') }}" aria-expanded="false">
+                    <a href="{{ route('company.scheduleInterview') }}" aria-expanded="false">
                         <i class="fas fa-user-plus"></i>
                         <span class="nav-text">Tạo lịch phỏng vấn</span>
                     </a>
