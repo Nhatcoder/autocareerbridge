@@ -88,10 +88,8 @@ class CustommerController extends Controller
      *
      * @param CustommerRequest $request
      */
-    // public function login(CustommerRequest $request)
-    public function login(Request $request)
+    public function login(CustommerRequest $request)
     {
-        dd($request->all());
         $data = [
             'email' => $request->email,
             'password' => $request->password,

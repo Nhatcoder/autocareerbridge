@@ -213,38 +213,40 @@ class AuthService
      */
     public function refreshAccessToken()
     {
-        $user = Auth::guard('admin')->user();
+        try {
+            $user = Auth::guard('admin')->user();
 
-        if (!$user->refresh_token) {
-            throw new \Exception('Không tìm thấy refresh token');
-        }
-
-        $client = new Client();
-        $client->setClientId(config('services.google.client_id'));
-        $client->setClientSecret(config('services.google.client_secret'));
-        $client->setAccessType('offline');
-
-        // Thiết lập token hiện tại
-        $accessToken = $this->accessToken($user);
-        $client->setAccessToken($accessToken);
-
-        // Kiểm tra và refresh token nếu hết hạn
-        if ($client->isAccessTokenExpired()) {
-            $newAccessToken = $client->fetchAccessTokenWithRefreshToken($user->refresh_token);
-
-            if (isset($newAccessToken['error'])) {
-                throw new \Exception('Lỗi refresh token: ' . $newAccessToken['error']);
+            if (!$user->refresh_token) {
+                throw new \Exception('Không tìm thấy refresh token');
             }
 
-            // Cập nhật token mới vào database
-            $user->update([
-                'access_token' => $newAccessToken['access_token'],
-                'token_expires_at' => now()->addSeconds($newAccessToken['expires_in']),
-            ]);
+            $client = $this->createGoogleClient();
 
-            return $newAccessToken['access_token'];
+            // Thiết lập token hiện tại
+            $accessToken = $this->accessToken($user);
+            $client->setAccessToken($accessToken);
+
+            // Kiểm tra và refresh token nếu hết hạn
+            if ($client->isAccessTokenExpired()) {
+                $newAccessToken = $client->fetchAccessTokenWithRefreshToken($user->refresh_token);
+
+                if (isset($newAccessToken['error'])) {
+                    throw new \Exception('Lỗi refresh token: ' . $newAccessToken['error']);
+                }
+
+                // Cập nhật token mới vào database
+                $user->update([
+                    'access_token' => $newAccessToken['access_token'],
+                    'token_expires_at' => now()->addSeconds($newAccessToken['expires_in']),
+                ]);
+
+                return $newAccessToken['access_token'];
+            }
+
+            return $user->access_token;
+        } catch (\Exception $e) {
+            throw $e;
         }
-        return $user->access_token;
     }
 
     /**
@@ -268,10 +270,7 @@ class AuthService
                 return $this->redirectToGoogle();
             }
 
-            $client = new Client();
-            $client->setClientId(config('services.google.client_id'));
-            $client->setClientSecret(config('services.google.client_secret'));
-            $client->setAccessType('offline');
+            $client = $this->createGoogleClient();
 
             // Set up token
             $accessToken = $this->accessToken($user);
@@ -296,5 +295,19 @@ class AuthService
             'refresh_token' => $data->refresh_token,
             'expires_in' => $data->token_expires_at ? now()->diffInSeconds($data->token_expires_at) : 0,
         ];
+    }
+
+    /**
+     * Create and configure a new Google Client instance
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @return Client
+     */
+    private function createGoogleClient()
+    {
+        $client = new Client();
+        $client->setClientId(config('services.google.client_id'));
+        $client->setClientSecret(config('services.google.client_secret'));
+        $client->setAccessType('offline');
+        return $client;
     }
 }
