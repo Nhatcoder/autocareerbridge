@@ -32,7 +32,8 @@ class User extends Authenticatable
         'email_verified_at',
         'remember_token',
         'access_token',
-        'refresh_token'
+        'refresh_token',
+        'token_expires_at'
     ];
 
     /**

@@ -226,12 +226,7 @@ class AuthService
             $client->setAccessType('offline');
 
             // Thiết lập token hiện tại
-            $accessToken = [
-                'access_token' => $user->access_token,
-                'refresh_token' => $user->refresh_token,
-                'expires_in' => $user->token_expires_at ? now()->diffInSeconds($user->token_expires_at) : 0,
-            ];
-
+            $accessToken = $this->accessToken($user);
             $client->setAccessToken($accessToken);
 
             // Kiểm tra và refresh token nếu hết hạn
@@ -253,13 +248,12 @@ class AuthService
 
             return $user->access_token;
         } catch (\Exception $e) {
-            $this->logExceptionDetails($e);
             throw $e;
         }
     }
 
     /**
-     * Summary of getGoogleClient
+     * Check token and set up token
      * @author TranVanNhat <tranvannhat7624@gmail.com>
      * @throws \Exception
      * @return Client|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\RedirectResponse
@@ -285,12 +279,7 @@ class AuthService
             $client->setAccessType('offline');
 
             // Set up token
-            $accessToken = [
-                'access_token' => $user->access_token,
-                'refresh_token' => $user->refresh_token,
-                'expires_in' => $user->token_expires_at ? now()->diffInSeconds($user->token_expires_at) : 0,
-            ];
-
+            $accessToken = $this->accessToken($user);
             $client->setAccessToken($accessToken);
 
             // If token expired, try to refresh it
@@ -301,8 +290,16 @@ class AuthService
 
             return $client;
         } catch (\Exception $e) {
-            $this->logExceptionDetails($e);
             return $this->redirectToGoogle();
         }
+    }
+
+    public function accessToken($data)
+    {
+        return [
+            'access_token' => $data->access_token,
+            'refresh_token' => $data->refresh_token,
+            'expires_in' => $data->token_expires_at ? now()->diffInSeconds($data->token_expires_at) : 0,
+        ];
     }
 }

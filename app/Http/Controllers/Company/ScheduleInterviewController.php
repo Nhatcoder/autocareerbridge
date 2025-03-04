@@ -30,7 +30,6 @@ class ScheduleInterviewController extends Controller
     /**
      * Display a list of schedule interviews.
      * @author TranVanNhat, KhanhNguyen <tranvannhat7624@gmail.com>
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
