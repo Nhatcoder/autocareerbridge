@@ -238,6 +238,6 @@ class ScheduleInterviewService
      */
     public function getScheduleInterviewById($id)
     {
-        return $this->scheduleInterviewRepository->getScheduleInterviewById($id);
+        return $this->scheduleInterviewRepository->getScheduleInterviewByEventId($id);
     }
 }

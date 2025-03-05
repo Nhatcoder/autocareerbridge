@@ -96,6 +96,14 @@ class ScheduleInterviewController extends Controller
                     'description' => $event->getDescription(),
                     'start' => $event->start->dateTime ?? $event->start->date,
                     'end' => $event->end->dateTime ?? $event->end->date,
+                    'location' => $event->getLocation(),
+                    'creator' => $event->getCreator(),
+                    'organizer' => $event->getOrganizer(),
+                    'attendees' => $event->getAttendees() ?? [],
+                    'hangoutLink' => $event->getHangoutLink(),
+                    'status' => $event->getStatus(),
+                    'visibility' => $event->getVisibility(),
+                    'recurrence' => $event->getRecurrence() ?? [],
                 ];
             }
 
@@ -108,6 +116,29 @@ class ScheduleInterviewController extends Controller
             ], 500);
         }
     }
+
+
+    // get thông tin từ api theo event id
+    public function getGoogleCalendarEvent($eventId)
+    {
+        try {
+            $client = $this->authService->getGoogleClient();
+            $service = new Calendar($client);
+            $event = $service->events->get('primary', $eventId);
+
+            return response()->json([
+                'id' => $event->id,
+                'title' => $event->getSummary(),
+                'description' => $event->getDescription(),
+                'start' => $event->start->dateTime ?? $event->start->date,
+                'end' => $event->end->dateTime ?? $event->end->date,
+                'hangoutLink' => $event->hangoutLink ?? null,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
 
 
     public function store(Request $request)
@@ -172,21 +203,7 @@ class ScheduleInterviewController extends Controller
      * @param int $id The ID of the interview schedule to update.
      * @return \Illuminate\Http\JsonResponse JSON response indicating success or failure of the update operation.
      */
-    // public function update($id, ScheduleInterviewUpdateRequest $request)
-    // {
-    //     try {
-    //         $schedule = $this->scheduleInterviewService->updateScheduleInterview($id, $request->all());
-    //         return response()->json([
-    //             'message' => 'Cập nhật lịch phỏng vấn thành công',
-    //             'schedule' => $schedule
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'message' => 'Cập nhật lịch phỏng vấn thất bại',
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
+
     public function update($id, ScheduleInterviewUpdateRequest $request)
     {
         try {

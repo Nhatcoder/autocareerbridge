@@ -91,6 +91,7 @@
                     <h5 class="modal-title" id="eventDetailModalLabel">Chi tiết lịch phỏng vấn</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <input type="hidden" id="scheduleInterviewIdHidden">
                 <div class="modal-body">
                     <p><strong>Tiêu đề:</strong> <span id="detailTitle"></span></p>
                     <p><strong>Công ty:</strong> <span id="detailCompany"></span></p>
@@ -191,22 +192,8 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                 },
-                // events: {
-                //     url: '{{ route('company.refreshEvents') }}'
-                // },
-                events: function(fetchInfo, successCallback, failureCallback) {
-                    $.ajax({
-                        url: '{{ route('company.schedule-interviews.data') }}',
-                        method: 'GET',
-                        success: function(data) {
-                            console.log('Data từ API:', data);
-                            successCallback(data);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Lỗi gọi API:', error);
-                            failureCallback(error);
-                        }
-                    });
+                events: {
+                    url: '{{ route('company.refreshEvents') }}'
                 },
                 selectable: true,
                 select: function(info) {
@@ -216,44 +203,71 @@
                 },
                 eventClick: function(info) {
                     currentEvent = info.event;
+                    console.log(currentEvent);
                     let eventId = info.event.id;
+                    console.log("Event ID:", eventId);
 
+                    // Gọi API lấy dữ liệu từ database
                     $.ajax({
                         url: `/company/schedule-interviews/${eventId}/attendees`,
                         method: 'GET',
-                        success: function(data) {
-                            console.log(data);
-                            let attendeesHtml = '';
-                            if (data.length === 0) {
-                                attendeesHtml =
-                                    '<p class="text-muted">Không có người tham gia.</p>';
-                            } else {
-                                data.forEach(function(user) {
-                                    attendeesHtml +=
-                                        `<p>${user.user_name} (${user.email})</p>`;
-                                });
-                            }
+                        success: function(dbData) {
+                            console.log("Dữ liệu từ DB:", dbData);
 
-                            $('#eventDetailModalLabel').text('Chi tiết lịch phỏng vấn');
-                            $('#eventDetailModal').find('.modal-body').html(`
-                            <p><strong>Tiêu đề:</strong> ${info.event.title}</p>
-                            <p><strong>Công ty:</strong> ${info.event.extendedProps.company}</p>
-                            <p><strong>Tin tuyển dụng:</strong> ${info.event.extendedProps.job}</p>
-                            <p><strong>Bắt đầu:</strong> ${info.event.start.toLocaleString()}</p>
-                            <p><strong>Kết thúc:</strong> ${info.event.end ? info.event.end.toLocaleString() : 'N/A'}</p>
-                            <p><strong>Link Google Meet:</strong> ${info.event.extendedProps.link || 'Không có'}</p>
-                            <p><strong>Mô tả:</strong> ${info.event.extendedProps.description || 'Không có'}</p>
-                            <p><strong>Người tham gia:</strong></p>
-                            <div>${attendeesHtml}</div>
-                    `);
+                            $('#scheduleInterviewIdHidden').val(dbData
+                                .schedule_interview_id);
 
-                            $('#eventDetailModal').modal('show');
+                            // Gọi API lấy dữ liệu từ Google Calendar
+                            $.ajax({
+                                url: `/company/api/gg-calendar/${eventId}`,
+                                method: 'GET',
+                                success: function(googleData) {
+                                    console.log("Dữ liệu từ Google Calendar:",
+                                        googleData);
+
+                                    let attendeesHtml = '';
+                                    if (!dbData.attendees || dbData.attendees
+                                        .length === 0) {
+                                        attendeesHtml =
+                                            '<p class="text-muted">Không có người tham gia.</p>';
+                                    } else {
+                                        dbData.attendees.forEach(function(
+                                            user) {
+                                            attendeesHtml +=
+                                                `<p>${user.name} (${user.email})</p>`;
+                                        });
+                                    }
+
+                                    $('#eventDetailModalLabel').text(
+                                        'Chi tiết lịch phỏng vấn');
+                                    $('#eventDetailModal').find('.modal-body')
+                                        .html(`
+                                        <p><strong>Tiêu đề:</strong> ${googleData.title || 'Không có'}</p>
+                                        <p><strong>Công ty:</strong> ${dbData.company || 'Không có'}</p>
+                                        <p><strong>Tin tuyển dụng:</strong> ${dbData.job || 'Không có'}</p>
+                                        <p><strong>Bắt đầu:</strong> ${new Date(googleData.start).toLocaleString()}</p>
+                                        <p><strong>Kết thúc:</strong> ${googleData.end ? new Date(googleData.end).toLocaleString() : 'N/A'}</p>
+                                        <p><strong>Link Google Meet:</strong> ${googleData.hangoutLink ? `<a href="${googleData.hangoutLink}" target="_blank">Tham gia</a>` : 'Không có'}</p>
+                                        <p><strong>Mô tả:</strong> ${googleData.description || 'Không có'}</p>
+                                        <p><strong>Người tham gia:</strong></p>
+                                        <div>${attendeesHtml}</div>
+                                    `);
+
+                                    $('#eventDetailModal').modal('show');
+                                },
+                                error: function() {
+                                    alert(
+                                        'Không lấy được thông tin từ Google Calendar'
+                                    );
+                                }
+                            });
                         },
                         error: function() {
-                            alert('Không tải được người tham gia');
+                            alert('Không tải được thông tin từ database');
                         }
                     });
                 }
+
 
 
             });
@@ -302,10 +316,10 @@
             let selectedUsers = []; // Lưu danh sách user đã chọn
 
             $(document).on('click', '#editEvent', function() {
-                let eventId = currentEvent.id;
+                let id = $('#scheduleInterviewIdHidden').val();
 
                 $.ajax({
-                    url: `/company/schedule-interviews/${eventId}/edit`,
+                    url: `/company/schedule-interviews/${id}/edit`,
                     method: 'GET',
                     success: function(data) {
                         console.log("edit", data);
@@ -532,6 +546,12 @@
                             calendar.addEvent(data.schedule);
 
                             $('#editEventModal').modal('hide');
+
+                            toastr.success("", data.message);
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
                         }
                     })
                     .catch(error => console.error("Lỗi:", error));

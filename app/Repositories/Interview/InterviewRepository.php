@@ -12,23 +12,50 @@ class InterviewRepository extends BaseRepository implements InterviewRepositoryI
         return Interview::class;
     }
 
-
     /**
-     * Retrieve the list of accepted attendees for a given interview schedule ID.
      *
-     * @param int $scheduleId
-     * @return \Illuminate\Support\Collection
+     *
+     * @param string $eventId
+     * @return array
      */
-    public function getAcceptedAttendeesByScheduleId($scheduleId)
+    public function getEventDetailsByEventId($eventId)
     {
-        return $this->model
-            ->where('schedule_interview_id', $scheduleId)
+        $event = $this->model
+            ->whereHas('scheduleInterview', function ($query) use ($eventId) {
+                $query->where('event_id', $eventId);
+            })
+            ->with(['scheduleInterview.company', 'scheduleInterview.job'])
+            ->first();
+
+        if (!$event) {
+            return response()->json(['error' => 'Sự kiện không tồn tại'], 404);
+        }
+
+        $attendees = $this->model
+            ->whereHas('scheduleInterview', function ($query) use ($eventId) {
+                $query->where('event_id', $eventId);
+            })
             ->with('user:id,user_name,email')
             ->where('status', STATUS_JOIN)
             ->get()
-            ->unique('email')
-            ->pluck('user');
+            ->unique('user.email')
+            ->map(function ($interview) {
+                return [
+                    'name'  => $interview->user->user_name ?? 'Không rõ',
+                    'email' => $interview->user->email ?? 'Không rõ',
+                ];
+            });
+
+        return [
+            'schedule_interview_id' => $event->scheduleInterview->id ?? null,
+            'company'   => $event->scheduleInterview->company->name ?? 'Không có thông tin',
+            'job'       => $event->scheduleInterview->job->name ?? 'Không có thông tin',
+            'link'      => $event->scheduleInterview->link ?? null,
+            'description' => $event->scheduleInterview->description ?? null,
+            'attendees' => $attendees,
+        ];
     }
+
 
     /**
      * Delete records based on specified conditions.

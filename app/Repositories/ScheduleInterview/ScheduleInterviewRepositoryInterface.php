@@ -8,5 +8,5 @@ interface ScheduleInterviewRepositoryInterface extends BaseRepositoryInterface
 {
     public function getDataScheduleInterview();
 
-    public function getScheduleInterviewById($id);
+    public function getScheduleInterviewByEventId($id);
 }

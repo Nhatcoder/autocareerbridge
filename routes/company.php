@@ -63,6 +63,10 @@ Route::group([
     Route::get('/schedule-interviews/{id}/edit', [ScheduleInterviewController::class, 'edit'])->name('schedule-interviews.edit');
     Route::put('/schedule-interviews/{id}', [ScheduleInterviewController::class, 'update'])->name('schedule-interviews.update');
     Route::delete('/schedule-interviews/{id}', [ScheduleInterviewController::class, 'destroy'])->name('schedule-interviews.destroy');
+
+
+    // get thông tin từ api theo event id
+    Route::get('/api/gg-calendar/{eventId}', [ScheduleInterviewController::class, 'getGoogleCalendarEvent'])->name('gg-calendar.eventId');
 });
 
 

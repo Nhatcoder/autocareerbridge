@@ -14,7 +14,7 @@ class InterviewService
 
     public function getAttendees($id)
     {
-        $attendees = $this->interviewRepository->getAcceptedAttendeesByScheduleId($id);
+        $attendees = $this->interviewRepository->getEventDetailsByEventId($id);
         return $attendees;
     }
 }

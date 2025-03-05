@@ -33,7 +33,7 @@ class ScheduleInterviewRepository extends BaseRepository implements ScheduleInte
         return $events;
     }
 
-    public function getScheduleInterviewById($id)
+    public function getScheduleInterviewByEventId($id)
     {
         $schedule = $this->model::with(['job', 'interviews.user'])->find($id);
 
@@ -60,5 +60,4 @@ class ScheduleInterviewRepository extends BaseRepository implements ScheduleInte
 
         return null;
     }
-
 }
