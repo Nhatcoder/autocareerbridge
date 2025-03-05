@@ -68,3 +68,10 @@ define('STATUS_UNFIT', 5);
 
 define('COMPANY', 'company');
 define('USER', 'user');
+
+define('TYPE_SCHEDULE_OFF', 1);
+define('TYPE_SCHEDULE_ON', 2);
+
+define('STATUS_WAIT', 1);
+define('STATUS_JOIN', 2);
+define('STATUS_UN_JOIN', 3);

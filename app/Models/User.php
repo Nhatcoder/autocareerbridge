@@ -108,4 +108,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(JobWishlist::class, 'user_id');
     }
+
+    public function interviews()
+    {
+        return $this->hasMany(Interview::class, 'user_id');
+    }
 }

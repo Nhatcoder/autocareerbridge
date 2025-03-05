@@ -641,4 +641,25 @@ class JobService
             throw $e;
         }
     }
+
+    /**
+     * Get all jobs with scheduled interviews from the repository.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection List of approved jobs that have not expired.
+     */
+    public function getALlJobInterview()
+    {
+        return $this->jobRepository->getALlJobInterview();
+    }
+
+    /**
+     * Get job details with applicants.
+     *
+     * @param int $jobId
+     * @return \App\Models\Job|null
+     */
+    public function getJobWithApplicants($jobId)
+    {
+        return $this->jobRepository->getJobWithApplicants($jobId);
+    }
 }

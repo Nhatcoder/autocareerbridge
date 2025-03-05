@@ -18,9 +18,25 @@ class ScheduleInterview extends Model
         'job_id',
         'start_date',
         'end_date',
-        'link',
+        'link', 
         'type',
         'description',
         'event_id',
     ];
+
+    public function job()
+    {
+        return $this->belongsTo(Job::class, 'job_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function interviews()
+    {
+        return $this->hasMany(Interview::class, 'schedule_interview_id');
+    }
+
 }

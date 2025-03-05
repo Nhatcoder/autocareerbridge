@@ -23,4 +23,6 @@ interface UserJobRepositoryInterface extends BaseRepositoryInterface
      * @return mixed
      */
     public function updateStatusUserJobInterView();
+
+    public function getUserJob($id);
 }

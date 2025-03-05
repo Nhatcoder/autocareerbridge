@@ -79,4 +79,9 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
 
         return $users->each->setAttribute('status', STATUS_INTERV);
     }
+
+    public function getUserJob($id)
+    {
+        return $this->model->where('user_id', $id)->with('job.company')->first();
+    }
 }

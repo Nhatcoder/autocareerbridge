@@ -310,4 +310,50 @@ class AuthService
         $client->setAccessType('offline');
         return $client;
     }
+
+    // public function createCalendarEvent($eventData)
+    // {
+    //     try {
+    //         $client = $this->getGoogleClient(); // Lấy client đã được auth sẵn
+
+    //         $service = new Calendar($client); // Tạo service Calendar
+    //         $event = new \Google\Service\Calendar\Event([
+    //             'summary' => $eventData['summary'], // Tiêu đề sự kiện
+    //             'location' => $eventData['location'] ?? '',
+    //             'description' => $eventData['description'] ?? '',
+    //             'start' => [
+    //                 'dateTime' => $eventData['start'], // Thời gian bắt đầu (format ISO8601)
+    //                 'timeZone' => config('app.timezone'),
+    //             ],
+    //             'end' => [
+    //                 'dateTime' => $eventData['end'], // Thời gian kết thúc (format ISO8601)
+    //                 'timeZone' => config('app.timezone'),
+    //             ],
+    //             'attendees' => array_map(fn($email) => ['email' => $email], $eventData['attendees'] ?? []),
+    //             'reminders' => [
+    //                 'useDefault' => false,
+    //                 'overrides' => [
+    //                     ['method' => 'email', 'minutes' => 24 * 60],
+    //                     ['method' => 'popup', 'minutes' => 10],
+    //                 ],
+    //             ],
+    //         ]);
+
+    //         // Gọi API tạo event
+    //         $calendarId = 'primary'; // Thường là "primary" cho calendar mặc định
+    //         $createdEvent = $service->events->insert($calendarId, $event);
+
+    //         return [
+    //             'success' => true,
+    //             'event_id' => $createdEvent->getId(),
+    //             'html_link' => $createdEvent->getHtmlLink(),
+    //         ];
+    //     } catch (\Exception $e) {
+    //         $this->logExceptionDetails($e);
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Không thể tạo sự kiện trên Google Calendar.',
+    //         ];
+    //     }
+    // }
 }

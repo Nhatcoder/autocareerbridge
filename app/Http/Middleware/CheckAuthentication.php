@@ -23,11 +23,11 @@ class CheckAuthentication
             }
         }
 
-        if (!auth()->guard('web')->check() && !auth()->guard('admin')->check()) {
-            if (!$request->routeIs($routeNames)) {
-                return redirect()->route('viewLogin');
-            }
-        }
+        // if (!auth()->guard('web')->check() && !auth()->guard('admin')->check()) {
+        //     if (!$request->routeIs($routeNames)) {
+        //         return redirect()->route('viewLogin');
+        //     }
+        // }
 
         return $next($request);
     }

@@ -11,6 +11,8 @@ use App\Services\Major\MajorService;
 use App\Services\Skill\SkillService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Company\JobRequest;
+use App\Models\Interview;
+use App\Models\Job;
 
 /**
  * JobsController handles job management operations for companies, including listing
@@ -273,6 +275,38 @@ class JobsController extends Controller
     }
 
     /**
+     * Get the list of users who applied for a specific job along with their interview status.
+     *
+     * @author khanhnguyen
+     * @param int $jobId The ID of the job.
+     * @return \Illuminate\Http\JsonResponse JSON response containing a list of applicants.
+     */
+    public function getUserApplyJob($jobId)
+    {
+        $job = $this->jobService->getJobWithApplicants($jobId);
+
+        $candidates = $job->userJob->map(function ($userJob) use ($jobId) {
+            $user = $userJob->user;
+
+            $interview = $user->interviews()
+                ->whereHas('scheduleInterview', function ($query) use ($jobId) {
+                    $query->where('job_id', $jobId);
+                })->first();
+
+
+            return [
+                'id' => $user->id,
+                'user_name' => $user->user_name,
+                'email' => $user->email,
+                'status' => $interview ? $interview->status : 'Chưa có lịch phỏng vấn'
+            ];
+        });
+
+        return response()->json($candidates);
+    }
+
+
+    /**
      * Update the status of a user job application.
      *
      * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id, status, and interview time.
@@ -356,5 +390,16 @@ class JobsController extends Controller
                 'message' => __('message.company.job.error_status_job'),
             ], 500);
         }
+    }
+
+    /**
+     * Retrieve all jobs with scheduled interviews.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response containing the list of approved jobs.
+     */
+    public function getAllJobInterview()
+    {
+        $lists = $this->jobService->getAllJobInterview();
+        return response()->json($lists);
     }
 }
