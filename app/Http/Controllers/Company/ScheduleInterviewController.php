@@ -126,7 +126,6 @@ class ScheduleInterviewController extends Controller
             return $this->errorResponse(
                 false,
                 'Failed to fetch events: ' . $e->getMessage(),
-                500
             );
         }
     }
@@ -158,17 +157,17 @@ class ScheduleInterviewController extends Controller
         try {
             $scheduleInterView = $this->scheduleInterviewService->scheduleInterViewStore($data);
 
-            return response()->json([
-                'success' => true,
-                'message' => __('message.company.schedule_interview.create_success'),
-                'event' => $scheduleInterView
-            ]);
+            return $this->successResponse(
+                $scheduleInterView,
+                true,
+                __('message.company.schedule_interview.create_success')
+            );
         } catch (\Exception $e) {
             $this->logExceptionDetails($e);
-            return response()->json([
-                'success' => false,
-                'message' => __('message.company.schedule_interview.errorr_msg') . $e->getMessage()
-            ], 500);
+            return $this->errorResponse(
+                false,
+                __('message.company.schedule_interview.errorr_msg') . $e->getMessage(),
+            );
         }
     }
 }
