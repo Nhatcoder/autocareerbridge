@@ -72,6 +72,7 @@ return [
         'schedule_interview' => [
             "create_success" => "Đặt lịch phỏng vấn thành công",
             "update_success" => "Cập nhật lịch phỏng vấn thành công",
+            "delete_success" => "Xóa lịch phỏng vấn thành công",
             "errorr_msg" => "Có lỗi đặt lịch",
         ]
     ],

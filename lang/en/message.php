@@ -59,7 +59,8 @@ return [
         'schedule_interview' => [
             "create_success" => "Interview schedule created successfully",
             "update_success" => "Interview schedule updated successfully",
-            "errorr_msg" => "Error interview schedule",
+            "delete_success" => "Interview schedule deleted successfully",
+            "error_msg" => "Error interview schedule",
         ]
     ],
     'errors' => [

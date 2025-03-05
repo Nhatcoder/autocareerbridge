@@ -13,6 +13,7 @@ class ScheduleInterview extends Model
     protected $table = 'schedule_interviews';
 
     protected $fillable = [
+        'id',
         'title',
         'company_id',
         'job_id',
