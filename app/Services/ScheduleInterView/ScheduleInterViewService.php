@@ -149,9 +149,8 @@ class ScheduleInterViewService
      */
     public function deleteScheduleInterview($data)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-
             $scheduleInterview = $this->scheduleInterViewRepository->getScheduleInterViewByEventId($data['event_id']);
             if (!$scheduleInterview) {
                 throw new \Exception('Schedule interview not found');
