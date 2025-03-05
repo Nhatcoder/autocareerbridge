@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Company;
 
 use App\Helpers\LogHelper;
+use App\Helpers\ApiResponse;
 use Google\Service\Calendar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,13 +26,16 @@ use App\Services\ScheduleInterView\ScheduleInterViewService;
  */
 class ScheduleInterviewController extends Controller
 {
-    use LogHelper;
+    use LogHelper, ApiResponse;
     protected $authService;
     protected $userJobService;
     protected $scheduleInterviewService;
 
-    public  function __construct(AuthService $authService, UserJobService $userJobService, ScheduleInterViewService $scheduleInterviewService)
-    {
+    public  function __construct(
+        AuthService $authService,
+        UserJobService $userJobService,
+        ScheduleInterViewService $scheduleInterviewService
+    ) {
         $this->authService = $authService;
         $this->userJobService = $userJobService;
         $this->scheduleInterviewService = $scheduleInterviewService;
@@ -96,10 +100,10 @@ class ScheduleInterviewController extends Controller
             return response()->json($events);
         } catch (\Exception $e) {
             $this->logExceptionDetails($e);
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch events: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse(
+                false,
+                'Failed to fetch events: ' . $e->getMessage(),
+            );
         }
     }
 
@@ -113,13 +117,17 @@ class ScheduleInterviewController extends Controller
     {
         try {
             $userApplyJobs = $this->userJobService->getAllUserJobIdCompany($request->jobId);
-            return response()->json($userApplyJobs);
+            return $this->successResponse(
+                $userApplyJobs,
+                true,
+            );
         } catch (\Exception $e) {
             $this->logExceptionDetails($e);
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch events: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse(
+                false,
+                'Failed to fetch events: ' . $e->getMessage(),
+                500
+            );
         }
     }
 
@@ -139,11 +147,11 @@ class ScheduleInterviewController extends Controller
             'type' => $request->type,
             'start' => [
                 'dateTime' => date('c', strtotime($request->startDate)),
-                'timeZone' => 'Asia/Ho_Chi_Minh',
+                'timeZone' => config('app.timezone'),
             ],
             'end' => [
                 'dateTime' => date('c', strtotime($request->endDate)),
-                'timeZone' => 'Asia/Ho_Chi_Minh',
+                'timeZone' => config('app.timezone'),
             ],
         ];
 

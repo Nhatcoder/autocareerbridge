@@ -115,13 +115,16 @@ class ScheduleInterViewService
             if (isset($data['user_ids'])) {
                 $scheduleInterView->users()->sync($data['user_ids']);
 
+                $firstUserJob = $this->userJobRepository->getUserJob($data['user_ids'][0]);
+                $companyName = $firstUserJob->job->company->name ?? NAME_COMPANY;
+
                 // Send notifications to users
                 foreach ($data['user_ids'] as $userId) {
                     $userJob = $this->userJobRepository->getUserJob($userId);
                     if ($userJob) {
                         $notification = $this->notificationService->create([
                             'user_id' => $userJob->user_id,
-                            'title' => 'Bạn có cuộc phỏng vấn với ' . ($userJob->job->company->name ?? NAME_COMPANY) .
+                            'title' => 'Bạn có cuộc phỏng vấn với ' . $companyName .
                                 ', vị trí ' . $userJob->job->name . ', vào lúc ' .
                                 date('d/m/Y H:i', strtotime($scheduleInterView->start_date)),
                             'link' => route('historyJobApply'),

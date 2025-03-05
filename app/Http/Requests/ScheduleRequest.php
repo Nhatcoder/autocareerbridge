@@ -25,7 +25,7 @@ class ScheduleRequest extends FormRequest
         if ($this->routeIs('company.scheduleInterviewStore')) {
             return [
                 'job_id' => 'required|exists:jobs,id',
-                'user_ids' => 'required:required',
+                'user_ids' => 'required',
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'location' => 'required_if:type,' . TYPE_SCHEDULE_OFF . '|max:255',
@@ -34,19 +34,38 @@ class ScheduleRequest extends FormRequest
                     'date',
                     function ($attribute, $value, $fail) {
                         $companyId = auth()->guard('admin')->id();
-                        $exists = \App\Models\ScheduleInterview::where('company_id', $companyId)
-                            ->where(function ($query) use ($value, $companyId) {
-                                $query->where('start_date', '<=', $value)
-                                    ->where('end_date', '>=', $value);
-                            })
-                            ->exists();
 
-                        if ($exists) {
-                            $fail('Bạn đã có lịch phỏng vấn trong khoảng thời gian này.');
+                        $existingSchedules = \App\Models\ScheduleInterview::where('company_id', $companyId)->get();
+                        foreach ($existingSchedules as $schedule) {
+                            if ($value >= $schedule->start_date && $value < $schedule->end_date) {
+                                $fail('Bạn đã có lịch phỏng vấn trong khoảng thời gian này.');
+                                return;
+                            }
+
+                            if (request('endDate') > $schedule->start_date && $value < $schedule->start_date) {
+                                $fail('Bạn đã có lịch phỏng vấn trong khoảng thời gian này.');
+                                return;
+                            }
                         }
                     }
                 ],
-                'endDate' => 'required|date|after:start_date',
+                'endDate' => [
+                    'nullable',
+                    'date',
+                    'after:startDate',
+                    function ($attribute, $value, $fail) {
+                        $companyId = auth()->guard('admin')->id();
+                        $existingSchedules = \App\Models\ScheduleInterview::where('company_id', $companyId)->get();
+
+                        foreach ($existingSchedules as $schedule) {
+                            if ($value > $schedule->start_date && $value <= $schedule->end_date) {
+                                $fail('Thời gian kết thúc trùng với một lịch khác.');
+                                return;
+                            }
+                        }
+                    }
+                ],
+
                 'type' => 'required|in:' . TYPE_SCHEDULE_OFF . ',' . TYPE_SCHEDULE_ON,
             ];
         }

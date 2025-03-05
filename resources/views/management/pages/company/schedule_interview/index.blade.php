@@ -165,9 +165,10 @@
                             jobId: jobId
                         },
                         success: function(response) {
-                            $('.list-user').html(response.map(function(item) {
-                                return (
-                                    `
+                            if (response.success) {
+                                $('.list-user').html(response.data.map(function(item) {
+                                    return (
+                                        `
                                     <div class="d-flex gap-2">
                                         <input class="form-check-input" type="checkbox" name="user_ids[]" value="${item.user.id}"
                                             id="user_${item.user.id}">
@@ -176,8 +177,10 @@
                                         </label>
                                     </div>
                                     `
-                                )
-                            }));
+                                    )
+                                }));
+                            }
+
                         },
                         error: function(xhr) {
                             console.error("Lỗi Ajax:", xhr.responseText);
@@ -332,16 +335,14 @@
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        console.log(response);
-
                         hideLoading();
                         if (response.success) {
-                            toastr.success(response.message);
+                            toastr.success("", response.message);
                             calendar.refetchEvents();
                             $('#createEventModal').modal('hide');
                             clearInput();
                         } else {
-                            toastr.error(response.message);
+                            toastr.error("", response.message);
                         }
                     },
                     error: function(xhr, status, error) {
