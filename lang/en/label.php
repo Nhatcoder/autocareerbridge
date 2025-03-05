@@ -361,6 +361,7 @@ return [
             'manage_workshop' => 'Manage Join workshop',
             'school_candidate' => 'University',
             'custommer_candidate' => 'Customer',
+            "schedule_interview" => 'Schedule Interview',
         ],
         'collaboration' => [
             'filter' => 'Filter',
