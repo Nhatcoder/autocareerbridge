@@ -25,7 +25,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
     {{-- create --}}
     <div class="modal fade" id="eventModal" tabindex="-1">
         <div class="modal-dialog">
