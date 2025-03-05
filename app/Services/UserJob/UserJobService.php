@@ -32,4 +32,20 @@ class UserJobService
     {
         return $this->userJobRepository->getLatestJobApplication();
     }
+
+    /**
+     * Get all job applications for the company.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection Collection of job applications
+     * @author Tran Van Nhat <tranvannhat7624@gmail.com>
+     */
+    public function getAllUserJobCompany()
+    {
+        return $this->userJobRepository->getAllUserJobCompany();
+    }
+
+    public function getAllUserJobIdCompany($id)
+    {
+        return $this->userJobRepository->getAllUserJobIdCompany($id);
+    }
 }

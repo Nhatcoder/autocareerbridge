@@ -30,6 +30,7 @@ return [
     'distinct' => ':attribute field has a duplicate value.',
     'skill_length' => 'The skill \':skill\' must be between 3 and 242 characters.',
     'skill_duplicate' => 'The skills must not be duplicated.',
+    "required_if" => ':attribute is required.',
     'attributes' => [
         'slug' => 'Slug',
         'user_name' => 'User Name',
@@ -59,9 +60,14 @@ return [
         'graduation_time' => "Time of Graduation",
         'role' => 'Role',
         'fields' => 'Fields',
-        'description'=> 'Description',
-        'string'=> 'String',
+        'description' => 'Description',
+        'string' => 'String',
         'skills' => 'Skills',
+        'title' => 'Title',
+        'location' => 'Location',
+        'startDate' => "Start Date",
+        'endDate' => "End Date",
+        'type' => 'Type',
     ],
 
     'custom' => [

@@ -247,8 +247,8 @@
 
                 <li>
                     <a href="{{ route('company.scheduleInterview') }}" aria-expanded="false">
-                        <i class="fas fa-user-plus"></i>
-                        <span class="nav-text">Tạo lịch phỏng vấn</span>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span class="nav-text">{{ __('label.company.sidebar.schedule_interview') }}</span>
                     </a>
                 </li>
                 {{-- <li>

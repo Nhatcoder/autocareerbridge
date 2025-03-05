@@ -68,6 +68,11 @@ return [
             'update_status_job' => 'Cập nhật trạng thái thành công',
             'error_status_job' => 'Lỗi cập nhật trạng thái',
             'check_seen'  => 'Bạn phải xem hồ sơ ứng viên trước',
+        ],
+        'schedule_interview' => [
+            "create_success" => "Đặt lịch phỏng vấn thành công",
+            "update_success" => "Cập nhật lịch phỏng vấn thành công",
+            "errorr_msg" => "Có lỗi đặt lịch",
         ]
     ],
     'errors' => [

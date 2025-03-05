@@ -79,4 +79,55 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
 
         return $users->each->setAttribute('status', STATUS_INTERV);
     }
+
+    /**
+     * Get all user job applications with company information
+     * @author TranVanNhat <tranvannhat7324@gmail.com>
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllUserJobCompany()
+    {
+        $currentCompanyId = auth('admin')->user()->id;
+        return $this->model->with([
+            'job.company' => function ($query) use ($currentCompanyId) {
+                $query->where('id', $currentCompanyId);
+            },
+            'user'
+        ])->whereHas('job.company', function ($query) use ($currentCompanyId) {
+            $query->where('id', $currentCompanyId);
+        })
+            ->where('status', STATUS_W_EVAL)
+            ->get();
+    }
+
+    /**
+     * Get all user job applications with company information by job id
+     * @author TranVanNhat <tranvannhat7324@gmail.com>
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllUserJobIdCompany($jobId)
+    {
+        $currentCompanyId = auth('admin')->user()->id;
+        return $this->model->with([
+            'job.company' => function ($query) use ($currentCompanyId) {
+                $query->where('id', $currentCompanyId);
+            },
+            'user'
+        ])->whereHas('job.company', function ($query) use ($currentCompanyId) {
+            $query->where('id', $currentCompanyId);
+        })
+            ->where('job_id', $jobId)
+            ->where('status', STATUS_W_EVAL)
+            ->get();
+    }
+
+    /**
+     * Get userjob job by user_id
+     * @author TranVanNhat <tranvannhat7324@gmail.com>
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getUserJob($id)
+    {
+        return $this->model->where('user_id', $id)->with('job.company')->first();
+    }
 }
