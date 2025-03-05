@@ -44,6 +44,11 @@ class UserJobService
         return $this->userJobRepository->getAllUserJobCompany();
     }
 
+    /**
+     * Get all user apllication job for the company.
+     * @return \Illuminate\Database\Eloquent\Collection
+     * @author Tran Van Nhat <tranvannhat7624@gmail.com>
+     */
     public function getAllUserJobIdCompany($id)
     {
         return $this->userJobRepository->getAllUserJobIdCompany($id);

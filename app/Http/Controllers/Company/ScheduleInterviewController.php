@@ -103,6 +103,12 @@ class ScheduleInterviewController extends Controller
         }
     }
 
+    /**
+     * Get user by application job
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @param Request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function getUserJob(Request $request)
     {
         try {
@@ -117,6 +123,11 @@ class ScheduleInterviewController extends Controller
         }
     }
 
+    /**
+     *  Save scheduled interview
+     * @param \App\Http\Requests\ScheduleRequest $request
+     * @return mixed|\Illuminate\Http\JsonResponse
+     */
     public function scheduleInterviewStore(ScheduleRequest $request)
     {
         $data = [
