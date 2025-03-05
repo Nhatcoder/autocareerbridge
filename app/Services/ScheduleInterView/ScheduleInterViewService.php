@@ -142,4 +142,56 @@ class ScheduleInterViewService
             throw $e;
         }
     }
+
+    /**
+     * Delte ScheduleInterview in the database, Delete Google Calendar event
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     */
+    public function deleteScheduleInterview($data)
+    {
+        DB::beginTransaction();
+        try {
+            $scheduleInterview = $this->scheduleInterViewRepository->getScheduleInterViewByEventId($data['event_id']);
+            if (!$scheduleInterview) {
+                throw new \Exception('Schedule interview not found');
+            }
+
+            // Delete from Google Calendar
+            $client = $this->authService->getGoogleClient();
+            $service = new Calendar($client);
+            $service->events->delete('primary', $data['event_id']);
+
+            // Get users before detaching
+            $users = $scheduleInterview->users;
+            if (count($users) > 0) {
+                $firstUserJob = $this->userJobRepository->getUserJob($users[0]->id);
+                $companyName = $firstUserJob->job->company->name ?? NAME_COMPANY;
+
+                // Send notifications to users
+                foreach ($users as $user) {
+                    $userJob = $this->userJobRepository->getUserJob($user->id);
+                    if ($userJob) {
+                        $notification = $this->notificationService->create([
+                            'user_id' => $userJob->user_id,
+                            'title' => 'Cuộc phỏng vấn với ' . $companyName .
+                                ', vị trí ' . $userJob->job->name . ' đã hủy',
+                            'link' => route('historyJobApply'),
+                        ]);
+
+                        $this->notificationService->renderNotificationRealtimeClient($notification);
+                    }
+                }
+            }
+
+            // Delete schedule interview and related data
+            $scheduleInterview->users()->detach();
+            $scheduleInterview->delete();
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
 }

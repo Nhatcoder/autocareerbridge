@@ -54,6 +54,7 @@ Route::group([
 
     Route::get('schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('scheduleInterview');
     Route::post('schedule-interviews-store', [ScheduleInterviewController::class, 'scheduleInterviewStore'])->name('scheduleInterviewStore');
+    Route::post('delete-schedule-interview', [ScheduleInterviewController::class, 'deleteScheduleInterview'])->name('deleteScheduleInterview');
     Route::get('schedule-interviews-all', [ScheduleInterviewController::class, 'refreshEvents'])->name('refreshEvents');
     Route::get('get-user-apply-job', [ScheduleInterviewController::class, 'getUserJob'])->name('getUserJob');
 });

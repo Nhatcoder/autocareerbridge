@@ -212,6 +212,10 @@
                 },
                 editable: true,
                 selectable: true,
+                dayMaxEvents: 3,
+                eventLimit: true,
+                eventLimitText: "Xem thêm",
+                editable: true,
                 loading: function(isLoading) {
                     if (isLoading) {
                         showLoading();
@@ -225,6 +229,14 @@
                         hideLoading();
                         toastr.error('Error while fetching events!');
                     }
+                },
+                eventClick: function(info) {
+                    $('#createEventModal').modal('show');
+                    $("#eventTitle").val(info.event.title);
+                    $(".modal-footer").html(`
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="scheduleInterviewStore()">Lưu</button>
+                    `);
                 },
                 select: function(info) {
                     const now = new Date();
@@ -351,6 +363,39 @@
                     }
                 });
             };
+
+            window.handleDeleteScheduleInterview = function(event_id) {
+                if (confirm("Bạn có muốn xóa không?")) {
+                    showLoading();
+                    $.ajax({
+                        url: "{{ route('company.deleteScheduleInterview') }}",
+                        type: 'POST',
+                        data: {
+                            event_id: event_id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            hideLoading();
+                            if (response.success) {
+                                toastr.success("", response.message);
+                                calendar.refetchEvents();
+                                $(".modal-footer").html(`
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                      
+                        <button type="button" class="btn btn-primary" onclick="scheduleInterviewUpdate('${info.event.id}')">Cập nhật</button>
+                    `);
+                                $('#createEventModal').modal('hide');
+                            } else {
+                                toastr.error("", response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            hideLoading();
+                            toastr.error('Lỗi khi xóa lịch phỏng vấn: ' + error);
+                        }
+                    });
+                }
+            }
 
             // Add to clearInput function
             window.clearInput = function() {

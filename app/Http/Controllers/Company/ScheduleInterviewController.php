@@ -132,6 +132,7 @@ class ScheduleInterviewController extends Controller
 
     /**
      *  Save scheduled interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
      * @param \App\Http\Requests\ScheduleRequest $request
      * @return mixed|\Illuminate\Http\JsonResponse
      */
@@ -167,6 +168,31 @@ class ScheduleInterviewController extends Controller
             return $this->errorResponse(
                 false,
                 __('message.company.schedule_interview.errorr_msg') . $e->getMessage(),
+            );
+        }
+    }
+
+    /**
+     * Delte ScheduleInterview in the database, Delete Google Calendar event
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     */
+    public function deleteScheduleInterview(Request $request)
+    {
+        $data = [
+            'event_id' => $request->event_id,
+        ];
+        try {
+            $scheduleInterView = $this->scheduleInterviewService->deleteScheduleInterview($data);
+            return $this->successResponse(
+                $scheduleInterView,
+                true,
+                __('message.company.schedule_interview.delete_success')
+            );
+        } catch (\Exception $e) {
+            $this->logExceptionDetails($e);
+            return $this->errorResponse(
+                false,
+                __('message.company.schedule_interview.errorr_msg'). $e->getMessage(),
             );
         }
     }
