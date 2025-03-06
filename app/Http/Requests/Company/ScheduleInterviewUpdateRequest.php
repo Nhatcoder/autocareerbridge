@@ -56,14 +56,13 @@ class ScheduleInterviewUpdateRequest extends FormRequest
             $exists = ScheduleInterview::where('company_id', $companyId)
                 ->where('id', '!=', $scheduleId)
                 ->where(function ($query) use ($startDate, $endDate) {
-                    $query->whereBetween('start_date', [$startDate, $endDate])
-                        ->orWhereBetween('end_date', [$startDate, $endDate])
-                        ->orWhere(function ($q) use ($startDate, $endDate) {
-                            $q->where('start_date', '<=', $startDate)
-                                ->where('end_date', '>=', $endDate);
-                        });
+                    $query->where([
+                        ['start_date', '<=', $endDate],
+                        ['end_date', '>=', $startDate],
+                    ]);
                 })
                 ->exists();
+
 
             if ($exists) {
                 $validator->errors()->add('start_date', 'Lịch phỏng vấn bị trùng thời gian!');

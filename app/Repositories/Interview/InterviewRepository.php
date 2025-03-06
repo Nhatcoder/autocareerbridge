@@ -56,18 +56,6 @@ class InterviewRepository extends BaseRepository implements InterviewRepositoryI
         ];
     }
 
-
-    /**
-     * Delete records based on specified conditions.
-     *
-     * @param array $conditions
-     * @return int Number of deleted records
-     */
-    public function deleteWhere(array $conditions)
-    {
-        return $this->model->where($conditions)->delete();
-    }
-
     /**
      * Retrieve records based on specified conditions.
      *

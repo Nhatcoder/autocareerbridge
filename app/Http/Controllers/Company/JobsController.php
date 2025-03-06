@@ -298,7 +298,7 @@ class JobsController extends Controller
                 'id' => $user->id,
                 'user_name' => $user->user_name,
                 'email' => $user->email,
-                'status' => $interview ? $interview->status : 'Chưa có lịch phỏng vấn'
+                'status' => $interview ? $interview->status : STATUS_NOT_INVITE
             ];
         });
 
