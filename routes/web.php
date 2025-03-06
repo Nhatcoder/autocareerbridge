@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\Auth\Custommer\CustommerController;
-use App\Http\Controllers\Clients\ConversationsController;
-use App\Http\Controllers\Clients\CompaniesController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ScheduleInterview;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Clients\HomeController;
 use App\Http\Controllers\Clients\JobsController;
-use App\Http\Controllers\Clients\ResumeController;
-use App\Http\Controllers\Company\CollaborationsController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\Clients\UniversitiesController;
-use App\Http\Controllers\Clients\WorkshopsController;
 use App\Http\Controllers\NotificationsController;
-use App\Http\Controllers\ScheduleInterview;
+use App\Http\Controllers\Clients\ResumeController;
+use App\Http\Controllers\Clients\CompaniesController;
+use App\Http\Controllers\Clients\WorkshopsController;
+use App\Http\Controllers\Clients\UniversitiesController;
+use App\Http\Controllers\Clients\ConversationsController;
+use App\Http\Controllers\Company\CollaborationsController;
+use App\Http\Controllers\Auth\Custommer\CustommerController;
+use App\Http\Controllers\Clients\ScheduleInterviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,5 +110,9 @@ Route::middleware('web')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::post('/job/wishlist', [JobsController::class, 'wishlistJob'])->name('job.wishlist');
         Route::get('/viec-lam-da-luu', [JobsController::class, 'listJobWishlist'])->name('job.wishlist.list');
+        
+        Route::get("lich-phong-van", [ScheduleInterviewController::class, 'listScheduleInterView'])->name("listScheduleInterView");
+        Route::get("get-schedule-interview-user", [ScheduleInterviewController::class, 'refreshScheduleInterView'])->name("refreshScheduleInterView");
+        Route::post("change-status-interview", [ScheduleInterviewController::class, 'changeStatusInterView'])->name("changeStatusInterView");
     });
 });

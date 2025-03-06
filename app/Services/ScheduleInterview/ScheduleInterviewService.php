@@ -48,7 +48,6 @@ class ScheduleInterViewService
         $this->notificationService = $notificationService;
         $this->googleCalendarService = $googleCalendarService;
         $this->interviewRepository = $interviewRepository;
-
     }
 
     /**
@@ -207,8 +206,52 @@ class ScheduleInterViewService
         }
     }
 
+    /**
+     * Get list schedule interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     */
+    public function listScheduleInterView()
+    {
+        return  $this->scheduleInterViewRepository->listScheduleInterView();
+    }
 
+    /**
+     * Change status of interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @param array $data Data containing status update information
+     * @return mixed
+     */
+    public function changeStatusInterView($data)
+    {
+        DB::beginTransaction();
+        try {
+            $interview = $this->scheduleInterViewRepository->changeStatusInterView($data);
+            if (!$interview) {
+                throw new \Exception('Interview not found');
+            }
 
+            $title = $interview->user->name . ($interview->status == STATUS_JOIN ? " đã tham gia" : " đã từ chối");
+            $title .= " cuộc phỏng vấn " . $interview->scheduleInterview->title;
+
+            $companyId = $interview->scheduleInterview->company_id;
+            $notification = $this->notificationService->create([
+                'title' => $title,
+                'company_id' => $companyId,
+                'link' => route('company.scheduleInterview'),
+                'type' => TYPE_JOB,
+            ]);
+
+            $this->notificationService->renderNotificationRealtime(
+                $notification,
+                $companyId
+            );
+            DB::COMMIT();
+            return $interview;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
 
     /**
      * Update an interview schedule.
@@ -306,7 +349,7 @@ class ScheduleInterViewService
                             'user_id' => $userJob->user_id,
                             'title' => 'Cuộc phỏng vấn của bạn với công ty ' . $companyName .
                                 ', vị trí ' . $userJob->job->name . ' đã có thay đổi. Vui lòng kiểm tra lại thông tin.',
-                            'link' => route('historyJobApply'),
+                            'link' => route('listScheduleInterView'),
                         ]);
 
                         $this->notificationService->renderNotificationRealtimeClient($notification);
@@ -322,7 +365,7 @@ class ScheduleInterViewService
                         'user_id' => $userJob->user_id,
                         'title' => 'Cuộc phỏng vấn với công ty ' . $companyName .
                             ', vị trí ' . $userJob->job->name . ' đã bị hủy.',
-                        'link' => route('historyJobApply'),
+                        'link' => route('listScheduleInterView'),
                     ]);
 
                     $this->notificationService->renderNotificationRealtimeClient($notification);
@@ -340,9 +383,6 @@ class ScheduleInterViewService
             throw $e;
         }
     }
-
-
-
 
     /**
      * Retrieve all interview schedules.

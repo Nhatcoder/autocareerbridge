@@ -24,241 +24,212 @@
 @section('content')
     <div class="row">
         <div class="col-xl-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Danh sách lịch phỏng vấn</h2>
-                </div>
-                <div class="card-body">
-                    <div id="calendar"></div>
-                    <div class="loading-overlay">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="page-titles">
-                                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="#"> {{ __('label.company.job.home') }}
-                                            </a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">
-                                            {{ __('label.company.sidebar.schedule_interview') }}
-                                        </li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                        <div class="col-xl-12">
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="card quick_payment">
-                                        <div class="card-body p-0">
-                                            <div class="card-body ">
-                                                <!-- FullCalendar -->
-                                                <div id="calendar"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- create --}}
-                <div class="modal fade" id="createEventModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg ">
-                        <form id="createEventForm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Thêm lịch phỏng vấn</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label class="form-label">Tiêu đề <span style="color:red">*</span></label>
-                                        <input type="text" name="title" class="form-control" id="eventTitle"
-                                            placeholder="Tiêu đề">
-                                        <span class="text-danger title-error"></span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Việc làm phỏng vấn <span
-                                                style="color:red">*</span></label>
-                                        <select name="job_id" class="form-control" id="jobId">
-                                            <option value="">Chọn việc làm phỏng vấn</option>
-                                            @forelse ($userApplyJobs as $key => $userApplyJob)
-                                                <option value="{{ $userApplyJob->job->id }}">
-                                                    {{ $userApplyJob->job->name }}
-                                                </option>
-                                            @empty
-                                                <option value="">Không có việc làm phỏng vấn nào</option>
-                                            @endforelse
-                                        </select>
-                                        <span class="text-danger jobId-error"></span>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Ứng viên <span style="color:red">*</span></label>
-                                        <div class="list-user d-flex gap-2 overflow-x-scroll">
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Thời gian bắt đầu <span style="color:red">*</span></label>
-                                        <div class="d-flex gap-2">
-                                            <input type="date" class="form-control" id="eventStartDate">
-                                            <input type="time" class="form-control" id="eventStartTime">
-                                        </div>
-                                        <span class="text-danger eventStartDate-error"></span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Thời gian kết thúc</label>
-                                        <div class="d-flex gap-2">
-                                            <input type="date" class="form-control" id="eventEndDate">
-                                            <input type="time" class="form-control" id="eventEndTime">
-                                        </div>
-                                        <span class="text-danger eventEndDate-error"></span>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Hình thức <span style="color:red">*</span></label>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <input type="radio" id="type1" checked name="type"
-                                                value="{{ TYPE_SCHEDULE_OFF }}" class="form-check-input">
-                                            <label class="form-label m-0" for="type1">Offline</label>
-                                            <input type="radio" id="type2" name="type"
-                                                value="{{ TYPE_SCHEDULE_ON }}" class="form-check-input ml-3">
-                                            <label class="form-label m-0" for="type2">Online</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 eventLocationDiv">
-                                        <label class="form-label">Địa điểm <span style="color:red">*</span></label>
-                                        <input type="text" class="form-control" id="eventLocation"
-                                            placeholder="Địa điểm">
-                                        <span class="text-danger eventLocation-error"></span>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Mô tả</label>
-                                        <textarea class="form-control" name="descrption" id="eventDescrption" cols="30" rows="4"
-                                            placeholder="Mô tả"></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Đóng</button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="scheduleInterviewStore()">Lưu</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                {{-- view --}}
-                <div class="modal fade" id="eventDetailModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="eventDetailModalLabel">Chi tiết lịch phỏng vấn</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <input type="hidden" id="scheduleInterviewIdHidden">
-                            <div class="modal-body">
-                                <p><strong>Tiêu đề:</strong> <span id="detailTitle"></span></p>
-                                <p><strong>Công ty:</strong> <span id="detailCompany"></span></p>
-                                <p><strong>Công việc:</strong> <span id="detailJob"></span></p>
-                                <p><strong>Bắt đầu:</strong> <span id="detailStart"></span></p>
-                                <p><strong>Kết thúc:</strong> <span id="detailEnd"></span></p>
-                                <p><strong>Mô tả:</strong> <span id="detailDescription"></span></p>
-                                <p><strong>Người tham gia:</strong></p>
-                                <ul id="detailAttendees"></ul>
-                            </div>
-                            <div class="modal-footer">
-                                <a href="#" id="googleMeetLink" target="_blank" class="btn btn-primary">Tham gia
-                                    Google Meet</a>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                <button type="button" class="btn btn-warning" id="editEvent">Sửa</button>
+            <div class="page-titles">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"> {{ __('label.company.job.home') }}
+                            </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {{ __('label.company.sidebar.schedule_interview') }}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card quick_payment">
+                        <div class="card-body p-0">
+                            <div class="card-body ">
+                                <!-- FullCalendar -->
+                                <div id="calendar"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    {{-- create --}}
+    <div class="modal fade" id="createEventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg ">
+            <form id="createEventForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm lịch phỏng vấn</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Tiêu đề <span style="color:red">*</span></label>
+                            <input type="text" name="title" class="form-control" id="eventTitle" placeholder="Tiêu đề">
+                            <span class="text-danger title-error"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Việc làm phỏng vấn <span style="color:red">*</span></label>
+                            <select name="job_id" class="form-control" id="jobId">
+                                <option value="">Chọn việc làm phỏng vấn</option>
+                                @forelse ($userApplyJobs as $key => $userApplyJob)
+                                    <option value="{{ $userApplyJob->job->id }}">
+                                        {{ $userApplyJob->job->name }}
+                                    </option>
+                                @empty
+                                    <option value="">Không có việc làm phỏng vấn nào</option>
+                                @endforelse
+                            </select>
+                            <span class="text-danger jobId-error"></span>
+                        </div>
 
-                {{-- edit --}}
-                <div class="modal fade" id="editEventModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editEventModalLabel">Sửa lịch phỏng vấn</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editEventForm">
-                                    @csrf
-                                    <input type="hidden" name="id" id="editEventId">
-
-                                    <div class="mb-3">
-                                        <label>Tiêu đề</label>
-                                        <input type="text" name="title" id="editTitle" class="form-control">
-                                        <div class="text-danger" id="errorEditTitle"></div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label>Công việc</label>
-                                        <select name="job_id" id="editJobSelect" class="form-control">
-
-                                        </select>
-                                        <div class="text-danger" id="errorEditJobSelect"></div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label>Người tham gia ứng tuyển</label>
-                                        <div id="editApplicantsList"
-                                            style="max-height: 150px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;">
-                                            <p class="text-muted">Chọn công việc trước để hiển thị người tham gia.</p>
-                                        </div>
-                                        <div class="text-danger" id="errorEditApplicantsList"></div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label>Thời gian bắt đầu</label>
-                                        <input type="datetime-local" name="start_date" id="editStartDate"
-                                            class="form-control">
-                                        <div class="text-danger" id="errorEditStartDate"></div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label>Thời gian kết thúc</label>
-                                        <input type="datetime-local" name="end_date" id="editEndDate"
-                                            class="form-control">
-                                        <div class="text-danger" id="errorEditEndDate"></div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label>Địa điểm</label>
-                                        <input type="text" name="location" id="editLocation" class="form-control">
-                                        <div class="text-danger" id="errorEditLocation"></div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label>Mô tả</label>
-                                        <textarea name="description" id="editDescription" class="form-control"></textarea>
-                                        <div class="text-danger" id="errorEditDescription"></div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                <button type="button" class="btn btn-primary" id="updateEvent">Cập nhật</button>
+                        <div class="mb-3">
+                            <label class="form-label">Ứng viên <span style="color:red">*</span></label>
+                            <div class="list-user d-flex gap-2 overflow-x-scroll">
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Thời gian bắt đầu <span style="color:red">*</span></label>
+                            <div class="d-flex gap-2">
+                                <input type="date" class="form-control" id="eventStartDate">
+                                <input type="time" class="form-control" id="eventStartTime">
+                            </div>
+                            <span class="text-danger eventStartDate-error"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Thời gian kết thúc</label>
+                            <div class="d-flex gap-2">
+                                <input type="date" class="form-control" id="eventEndDate">
+                                <input type="time" class="form-control" id="eventEndTime">
+                            </div>
+                            <span class="text-danger eventEndDate-error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hình thức <span style="color:red">*</span></label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="radio" id="type1" checked name="type" value="{{ TYPE_SCHEDULE_OFF }}"
+                                    class="form-check-input">
+                                <label class="form-label m-0" for="type1">Offline</label>
+                                <input type="radio" id="type2" name="type" value="{{ TYPE_SCHEDULE_ON }}"
+                                    class="form-check-input ml-3">
+                                <label class="form-label m-0" for="type2">Online</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 eventLocationDiv">
+                            <label class="form-label">Địa điểm <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" id="eventLocation" placeholder="Địa điểm">
+                            <span class="text-danger eventLocation-error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mô tả</label>
+                            <textarea class="form-control" name="descrption" id="eventDescrption" cols="30" rows="4"
+                                placeholder="Mô tả"></textarea>
+                        </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="scheduleInterviewStore()">Lưu</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- view --}}
+    <div class="modal fade" id="eventDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventDetailModalLabel">Chi tiết lịch phỏng vấn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" id="scheduleInterviewIdHidden">
+                <div class="modal-body">
+                    <p><strong>Tiêu đề:</strong> <span id="detailTitle"></span></p>
+                    <p><strong>Công ty:</strong> <span id="detailCompany"></span></p>
+                    <p><strong>Công việc:</strong> <span id="detailJob"></span></p>
+                    <p><strong>Bắt đầu:</strong> <span id="detailStart"></span></p>
+                    <p><strong>Kết thúc:</strong> <span id="detailEnd"></span></p>
+                    <p><strong>Mô tả:</strong> <span id="detailDescription"></span></p>
+                    <p><strong>Người tham gia:</strong></p>
+                    <ul id="detailAttendees"></ul>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="googleMeetLink" target="_blank" class="btn btn-primary">Tham gia
+                        Google Meet</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-warning" id="editEvent">Sửa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- edit --}}
+    <div class="modal fade" id="editEventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editEventModalLabel">Sửa lịch phỏng vấn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editEventForm">
+                        @csrf
+                        <input type="hidden" name="id" id="editEventId">
+
+                        <div class="mb-3">
+                            <label>Tiêu đề</label>
+                            <input type="text" name="title" id="editTitle" class="form-control">
+                            <div class="text-danger" id="errorEditTitle"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Công việc</label>
+                            <select name="job_id" id="editJobSelect" class="form-control">
+
+                            </select>
+                            <div class="text-danger" id="errorEditJobSelect"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Người tham gia ứng tuyển</label>
+                            <div id="editApplicantsList"
+                                style="max-height: 150px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;">
+                                <p class="text-muted">Chọn công việc trước để hiển thị người tham gia.</p>
+                            </div>
+                            <div class="text-danger" id="errorEditApplicantsList"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Thời gian bắt đầu</label>
+                            <input type="datetime-local" name="start_date" id="editStartDate" class="form-control">
+                            <div class="text-danger" id="errorEditStartDate"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Thời gian kết thúc</label>
+                            <input type="datetime-local" name="end_date" id="editEndDate" class="form-control">
+                            <div class="text-danger" id="errorEditEndDate"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Địa điểm</label>
+                            <input type="text" name="location" id="editLocation" class="form-control">
+                            <div class="text-danger" id="errorEditLocation"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Mô tả</label>
+                            <textarea name="description" id="editDescription" class="form-control"></textarea>
+                            <div class="text-danger" id="errorEditDescription"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="updateEvent">Cập nhật</button>
                 </div>
             </div>
         </div>
@@ -357,10 +328,10 @@
                 select: function(info) {
                     const now = new Date();
                     const selectedStart = new Date(info.start);
-                    const minTime = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+                    const minTime = new Date(now.getTime() + (6 * 60 * 60 * 1000));
 
                     if (selectedStart < minTime) {
-                        toastr.error('Vui lòng chọn thời gian phỏng vấn trước ít nhất 24 giờ.');
+                        toastr.error('Vui lòng chọn thời gian phỏng vấn trước ít nhất 6 giờ.');
                         return;
                     }
 
@@ -455,7 +426,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="user_ids[]" value="${user.id}" id="user_${user.id}">
                             <label class="form-check-label" for="user_${user.id}">
-                                ${user.user_name}
+                                            ${user.name ? user.name : user.user_name}
                             </label>
                         </div>
                     `);
@@ -576,7 +547,7 @@
                                                 <div class="form-check d-flex align-items-center justify-content-between">
                                                     <div>
                                                         <input class="form-check-input" type="checkbox" name="user_ids[]" value="${user.id}" ${isChecked}>
-                                                        <label class="form-check-label">${user.user_name}</label>
+                                                        <label class="form-check-label">${user.name ? user.name : user.user_name}</label>
                                                         <span class="${statusColor}">${statusText}</span>
                                                     </div>
                                                 </div>

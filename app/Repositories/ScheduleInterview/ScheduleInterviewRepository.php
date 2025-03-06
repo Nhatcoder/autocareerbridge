@@ -2,11 +2,20 @@
 
 namespace App\Repositories\ScheduleInterview;
 
+use App\Models\Interview;
 use App\Models\ScheduleInterView;
 use App\Repositories\Base\BaseRepository;
 
+
 class ScheduleInterViewRepository extends BaseRepository implements ScheduleInterViewRepositoryInterface
 {
+    protected $interview;
+    public function __construct(Interview $interview)
+    {
+        parent::__construct();
+        $this->interview = $interview;
+    }
+
     public function getModel()
     {
         return ScheduleInterView::class;
@@ -44,7 +53,6 @@ class ScheduleInterViewRepository extends BaseRepository implements ScheduleInte
         return $events;
     }
 
-
     public function getByEventId($id)
     {
         $schedule = $this->model::with(['job', 'interviews.user'])->find($id);
@@ -73,4 +81,37 @@ class ScheduleInterViewRepository extends BaseRepository implements ScheduleInte
         return null;
     }
 
+    /**
+     * Get schedule interview user ID
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @return mixed The schedule interview data or null if not found
+     */
+    public function listScheduleInterView()
+    {
+        $userId = auth('web')->user()->id;
+        return $this->model->with(['job', 'company', 'interviews' => function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        }])
+            ->select('id', 'job_id', 'company_id', 'title', 'description', 'start_date as start', 'end_date as end', 'type', 'link')
+            ->get();
+    }
+
+    /**
+     * Change status of interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @param array $data Data containing status update information
+     * @return mixed
+     */
+    public function changeStatusInterView($data)
+    {
+        $dataNew = [
+            'status' => $data['status'],
+        ];
+
+        $interview = $this->interview->find($data['id']);
+        if ($interview) {
+            $interview->update($dataNew);
+        }
+        return $interview;
+    }
 }

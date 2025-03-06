@@ -50,7 +50,7 @@ use App\Repositories\JobWishlist\JobWishlistRepository;
 use App\Repositories\JobWishlist\JobWishlistRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepository;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
-use App\Repositories\ScheduleInterview\ScheduleInterviewRepository;
+use App\Repositories\ScheduleInterview\ScheduleInterViewRepository;
 use App\Repositories\ScheduleInterview\ScheduleInterViewRepositoryInterface;
 use App\Repositories\UserJob\UserJobRepository;
 use App\Repositories\UserJob\UserJobRepositoryInterface;
