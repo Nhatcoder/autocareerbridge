@@ -48,7 +48,6 @@ class ScheduleInterViewService
         $this->notificationService = $notificationService;
         $this->googleCalendarService = $googleCalendarService;
         $this->interviewRepository = $interviewRepository;
-
     }
 
     /**
@@ -227,9 +226,12 @@ class ScheduleInterViewService
         DB::beginTransaction();
         try {
             $interview = $this->scheduleInterViewRepository->changeStatusInterView($data);
-            $title = $interview->status == STATUS_JOIN ?
-                ($interview->user->name . " đã tham gia") : ($interview->user->name . " đã từ chối");
-            $title .= " cuộc phỏng vấn ". $interview->scheduleInterview->title;
+            if (!$interview) {
+                throw new \Exception('Interview not found');
+            }
+
+            $title = $interview->user->name . ($interview->status == STATUS_JOIN ? " đã tham gia" : " đã từ chối");
+            $title .= " cuộc phỏng vấn " . $interview->scheduleInterview->title;
 
             $companyId = $interview->scheduleInterview->company_id;
             $notification = $this->notificationService->create([

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('interviews', callback: function (Blueprint $table) {
+        Schema::table('interviews',  function (Blueprint $table) {
             $table->foreign('schedule_interview_id')->references('id')->on('schedule_interviews')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

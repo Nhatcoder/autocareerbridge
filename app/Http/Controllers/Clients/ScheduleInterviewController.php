@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Clients;
 
+use App\Helpers\LogHelper;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,7 @@ use App\Services\ScheduleInterView\ScheduleInterViewService;
  */
 class ScheduleInterviewController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, LogHelper;
 
     protected $scheduleInterViewService;
     public function __construct(ScheduleInterViewService $scheduleInterViewService)
@@ -36,8 +37,13 @@ class ScheduleInterviewController extends Controller
      */
     public function refreshScheduleInterView()
     {
-        $listSchedule = $this->scheduleInterViewService->listScheduleInterView();
-        return response()->json($listSchedule);
+        try {
+            $listSchedule = $this->scheduleInterViewService->listScheduleInterView();
+            return response()->json($listSchedule);
+        } catch (\Exception $e) {
+            $this->logExceptionDetails($e);
+            return $this->errorResponse(false, "Error: " . $e->getMessage());
+        }
     }
 
     /**
