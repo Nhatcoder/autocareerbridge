@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\ScheduleInterView;
+namespace App\Repositories\ScheduleInterview;
 
 use App\Repositories\Base\BaseRepositoryInterface;
 
@@ -14,4 +14,9 @@ interface ScheduleInterViewRepositoryInterface extends BaseRepositoryInterface
      * @return mixed The schedule interview data or null if not found
      */
     public function getScheduleInterviewByEventId($eventId);
+
+    public function getByEventId($id);
+
+    public function getDataScheduleInterview();
+
 }

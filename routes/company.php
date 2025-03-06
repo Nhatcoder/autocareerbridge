@@ -56,6 +56,14 @@ Route::group([
     Route::post('schedule-interviews-store', [ScheduleInterviewController::class, 'scheduleInterviewStore'])->name('scheduleInterviewStore');
     Route::post('delete-schedule-interview', [ScheduleInterviewController::class, 'deleteScheduleInterview'])->name('deleteScheduleInterview');
     Route::get('schedule-interviews-all', [ScheduleInterviewController::class, 'refreshEvents'])->name('refreshEvents');
+
+    // Route::get('/schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('schedule-interviews.list');
+    // Route::get('/schedule-interviews/get-data', [ScheduleInterviewController::class, 'getData'])->name('schedule-interviews.data');
+    Route::get('/schedule-interviews/{id}/attendees', [ScheduleInterviewController::class, 'getAttendees'])->name('schedule-interviews.attendees');
+    Route::get('/schedule-interviews/{id}/edit', [ScheduleInterviewController::class, 'edit'])->name('schedule-interviews.edit');
+    Route::put('/schedule-interviews/{id}', [ScheduleInterviewController::class, 'update'])->name('schedule-interviews.update');
+
+    Route::get('/api/gg-calendar/{eventId}', [ScheduleInterviewController::class, 'getGoogleCalendarEvent'])->name('gg-calendar.eventId');
     Route::get('get-user-apply-job', [ScheduleInterviewController::class, 'getUserJob'])->name('getUserJob');
 });
 
@@ -79,4 +87,10 @@ Route::group([
     Route::get('manage-university-job/change-status/{id}/{status}', [JobsController::class, 'updateStatus'])->name('updateStatus');
     Route::post('workshop/apply/{companyId}/{workshopId}', [WorkShopsController::class, 'applyWorkshop'])->name('workshop.apply');
     Route::get('/workshops/applied', [WorkShopsController::class, 'workshopApplied'])->name('workshops.applied');
+
+    Route::get('/getAllJobInterview', [JobsController::class, 'getAllJobInterview'])->name('getAllJobInterview');
+
+    Route::get('jobs/applicants/{job}', [JobsController::class, 'getUserApplyJob'])->name('getUserApplyJob');
 });
+Route::get('/google/redirect', [ScheduleInterviewController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/callback', [ScheduleInterviewController::class, 'handleGoogleCallback'])->name('google.callback');

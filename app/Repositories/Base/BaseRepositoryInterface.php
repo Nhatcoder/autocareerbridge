@@ -21,4 +21,6 @@ interface BaseRepositoryInterface
     public function deleteByIds(array $ids);
 
     public function deleteByCvId($id);
+
+    public function deleteWhere(array $conditions);
 }

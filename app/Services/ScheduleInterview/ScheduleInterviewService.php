@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\ScheduleInterView;
+namespace App\Services\ScheduleInterview;
 
+use App\Repositories\Interview\InterviewRepositoryInterface;
 use Google\Service\Calendar;
 use Google\Service\Calendar\Event;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,9 @@ use App\Services\Managements\AuthService;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Services\Notification\NotificationService;
 use App\Repositories\UserJob\UserJobRepositoryInterface;
-use App\Repositories\ScheduleInterView\ScheduleInterViewRepositoryInterface;
+use App\Repositories\ScheduleInterview\ScheduleInterViewRepositoryInterface;
+use App\Services\GoogleCalendar\GoogleCalendarService;
+use App\Helpers\LogHelper;
 
 /**
  * CRUD, Schedule and Event Google Clendar Api of ScheduleInterViewService
@@ -19,24 +22,33 @@ use App\Repositories\ScheduleInterView\ScheduleInterViewRepositoryInterface;
  */
 class ScheduleInterViewService
 {
+    use LogHelper;
+
     protected $scheduleInterViewRepository;
     protected $authService;
     protected $userRepository;
     protected $userJobRepository;
     protected $notificationService;
+    protected $googleCalendarService;
+    protected $interviewRepository;
 
     public function __construct(
         ScheduleInterViewRepositoryInterface $scheduleInterViewRepository,
         AuthService $authService,
         UserRepositoryInterface $userRepository,
         NotificationService $notificationService,
-        UserJobRepositoryInterface $userJobRepository
+        UserJobRepositoryInterface $userJobRepository,
+        GoogleCalendarService $googleCalendarService,
+        InterviewRepositoryInterface $interviewRepository
     ) {
         $this->scheduleInterViewRepository = $scheduleInterViewRepository;
         $this->authService = $authService;
         $this->userRepository = $userRepository;
         $this->userJobRepository = $userJobRepository;
         $this->notificationService = $notificationService;
+        $this->googleCalendarService = $googleCalendarService;
+        $this->interviewRepository = $interviewRepository;
+
     }
 
     /**
@@ -193,5 +205,163 @@ class ScheduleInterViewService
             DB::rollBack();
             throw $e;
         }
+    }
+
+
+
+
+    /**
+     * Update an interview schedule.
+     *
+     * @param int $id The interview schedule ID.
+     * @param array $data The updated data.
+     * @return mixed The updated interview schedule.
+     * @throws \Exception If an error occurs.
+     */
+
+    public function updateScheduleInterview($id, $data)
+    {
+        DB::beginTransaction();
+
+        try {
+            $schedule = $this->scheduleInterViewRepository->find($id);
+
+            if (!$schedule) {
+                throw new \Exception('Interview schedule not found.');
+            }
+
+            $eventId = $schedule->event_id;
+
+            // Update the event on Google Calendar
+            $updated = $this->googleCalendarService->updateCalendarEvent($eventId, $data);
+
+            if (!$updated) {
+                throw new \Exception('Failed to update the event on Google Calendar.');
+            }
+
+            // Update schedule details in the database
+            $schedule->update([
+                'title' => $data['title'] ?? $schedule->title,
+                'start_date' => $data['start_date'] ?? $schedule->start_date,
+                'end_date' => $data['end_date'] ?? $schedule->end_date,
+                'description' => $data['description'] ?? $schedule->description,
+                'location' => $data['location'] ?? $schedule->location,
+            ]);
+
+            // Get existing users
+            $existingUserIds = $this->interviewRepository->getWhere([
+                'schedule_interview_id' => $schedule->id
+            ])->pluck('user_id')->toArray();
+
+            // Get new users
+            $newUserIds = $data['user_ids'] ?? [];
+            $userIdsToDelete = array_diff($existingUserIds, $newUserIds);
+            $userIdsToAdd = array_diff($newUserIds, $existingUserIds);
+
+            // Remove users who are no longer selected
+            if (!empty($userIdsToDelete)) {
+                $this->interviewRepository->deleteWhere([
+                    'schedule_interview_id' => $schedule->id,
+                    'user_id' => $userIdsToDelete
+                ]);
+            }
+
+            // Add newly selected users
+            if (!empty($userIdsToAdd)) {
+                foreach ($userIdsToAdd as $userId) {
+                    $this->interviewRepository->create([
+                        'schedule_interview_id' => $schedule->id,
+                        'user_id' => $userId,
+                        'status' => STATUS_WAIT,
+                    ]);
+                }
+            }
+
+            // Get company information
+            $firstUserJob = $this->userJobRepository->getUserJob($newUserIds[0] ?? null);
+            $companyName = $firstUserJob->job->company->name ?? NAME_COMPANY;
+
+            //  Send notifications to new users
+            foreach ($userIdsToAdd as $userId) {
+                $userJob = $this->userJobRepository->getUserJob($userId);
+                if ($userJob) {
+                    $notification = $this->notificationService->create([
+                        'user_id' => $userJob->user_id,
+                        'title' => 'Bạn có cuộc phỏng vấn với ' . $companyName .
+                            ', vị trí ' . $userJob->job->name . ', vào lúc ' .
+                            date('d/m/Y H:i', strtotime($schedule->start_date)),
+                        'link' => route('historyJobApply'),
+                    ]);
+
+                    $this->notificationService->renderNotificationRealtimeClient($notification);
+                }
+            }
+
+            // Send notifications to existing users about the update
+            foreach ($existingUserIds as $userId) {
+                if (!in_array($userId, $userIdsToDelete)) {
+                    $userJob = $this->userJobRepository->getUserJob($userId);
+                    if ($userJob) {
+                        $notification = $this->notificationService->create([
+                            'user_id' => $userJob->user_id,
+                            'title' => 'Cuộc phỏng vấn của bạn với công ty ' . $companyName .
+                                ', vị trí ' . $userJob->job->name . ' đã có thay đổi. Vui lòng kiểm tra lại thông tin.',
+                            'link' => route('historyJobApply'),
+                        ]);
+
+                        $this->notificationService->renderNotificationRealtimeClient($notification);
+                    }
+                }
+            }
+
+            // Send notifications to users who were removed
+            foreach ($userIdsToDelete as $userId) {
+                $userJob = $this->userJobRepository->getUserJob($userId);
+                if ($userJob) {
+                    $notification = $this->notificationService->create([
+                        'user_id' => $userJob->user_id,
+                        'title' => 'Cuộc phỏng vấn với công ty ' . $companyName .
+                            ', vị trí ' . $userJob->job->name . ' đã bị hủy.',
+                        'link' => route('historyJobApply'),
+                    ]);
+
+                    $this->notificationService->renderNotificationRealtimeClient($notification);
+                }
+            }
+
+            DB::commit();
+
+            return $schedule;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $this->logExceptionDetails($e);
+
+            throw $e;
+        }
+    }
+
+
+
+
+    /**
+     * Retrieve all interview schedules.
+     *
+     * @return mixed List of interview schedules.
+     */
+    public function getAllScheduleInterview()
+    {
+        return $this->scheduleInterViewRepository->getDataScheduleInterview();
+    }
+
+    /**
+     * Retrieve an interview schedule by ID.
+     *
+     * @param int $id The interview schedule ID.
+     * @return mixed The interview schedule details.
+     */
+    public function getScheduleInterviewById($id)
+    {
+        return $this->scheduleInterViewRepository->getByEventId($id);
     }
 }
