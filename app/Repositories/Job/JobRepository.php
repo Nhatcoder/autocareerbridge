@@ -32,6 +32,17 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
         return Job::class;
     }
 
+    /**
+     * Get job details with applied users.
+     *
+     * @param int $jobId
+     * @return Job|null
+     */
+    public function getJobWithApplicants($jobId)
+    {
+        return $this->model::with('userJob.user')->findOrFail($jobId);
+    }
+
     public function getJobs(array $filters)
     {
         $query = $this->model;
@@ -207,6 +218,22 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
     public function getJob($slug)
     {
         return $this->model->with(['skills', 'major', 'universities', 'universities.universityJobs'])->where('slug', $slug)->first();
+    }
+
+    /**
+     * Retrieve a list of all jobs with scheduled interviews.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection List of approved jobs that have not expired.
+     */
+    public function getALlJobInterview()
+    {
+        return $this->model
+            ->query()
+            ->orderByDesc('id')
+            ->where('status', STATUS_APPROVED)
+            ->where('end_date', '>=', now())
+            ->select('id', 'name')
+            ->get();
     }
 
     public function updateJob(string $slug, array $job)
@@ -507,6 +534,4 @@ class JobRepository extends BaseRepository implements JobRepositoryInterface
             ->orderByDesc('id')
             ->paginate(LIMIT_10);
     }
-
-
 }

@@ -72,4 +72,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         return $this->model->where('cv_id', $cvId)->delete();
     }
+
+    public function deleteWhere(array $conditions)
+    {
+        return $this->model->where($conditions)->delete();
+    }
 }

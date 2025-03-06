@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\ScheduleInterView;
+namespace App\Repositories\ScheduleInterview;
 
 use App\Repositories\Base\BaseRepositoryInterface;
 
@@ -30,4 +30,9 @@ interface ScheduleInterViewRepositoryInterface extends BaseRepositoryInterface
      * @return mixed
      */
     public function changeStatusInterView($data);
+
+    public function getByEventId($id);
+
+    public function getDataScheduleInterview();
+
 }

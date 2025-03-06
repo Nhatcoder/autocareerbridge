@@ -44,12 +44,14 @@ use App\Repositories\Education\EducationRepository;
 use App\Repositories\Education\EducationRepositoryInterface;
 use App\Repositories\Experience\ExperienceRepository;
 use App\Repositories\Experience\ExperienceRepositoryInterface;
+use App\Repositories\Interview\InterviewRepository;
+use App\Repositories\Interview\InterviewRepositoryInterface;
 use App\Repositories\JobWishlist\JobWishlistRepository;
 use App\Repositories\JobWishlist\JobWishlistRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepository;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
-use App\Repositories\ScheduleInterView\ScheduleInterViewRepository;
-use App\Repositories\ScheduleInterView\ScheduleInterViewRepositoryInterface;
+use App\Repositories\ScheduleInterview\ScheduleInterViewRepository;
+use App\Repositories\ScheduleInterview\ScheduleInterViewRepositoryInterface;
 use App\Repositories\UserJob\UserJobRepository;
 use App\Repositories\UserJob\UserJobRepositoryInterface;
 
@@ -97,6 +99,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserJobRepositoryInterface::class, UserJobRepository::class);
         $this->app->bind(JobWishlistRepositoryInterface::class, JobWishlistRepository::class);
         $this->app->bind(ScheduleInterViewRepositoryInterface::class, ScheduleInterViewRepository::class);
+        $this->app->bind(InterviewRepositoryInterface::class, InterviewRepository::class);
     }
 
     /**

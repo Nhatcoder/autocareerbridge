@@ -87,8 +87,8 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
      */
     public function getAllUserJobCompany()
     {
-        $currentCompanyId = auth('admin')->user()->id;
-        return $this->model->with([
+        $currentCompanyId = auth('admin')->user()->company->id;
+        return  $this->model->with([
             'job.company' => function ($query) use ($currentCompanyId) {
                 $query->where('id', $currentCompanyId);
             },
@@ -97,7 +97,8 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
             $query->where('id', $currentCompanyId);
         })
             ->where('status', STATUS_W_EVAL)
-            ->get();
+            ->get()
+            ->unique('job.id');
     }
 
     /**
@@ -107,7 +108,7 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
      */
     public function getAllUserJobIdCompany($jobId)
     {
-        $currentCompanyId = auth('admin')->user()->id;
+        $currentCompanyId = auth('admin')->user()->company->id;
         return $this->model->with([
             'job.company' => function ($query) use ($currentCompanyId) {
                 $query->where('id', $currentCompanyId);

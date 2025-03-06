@@ -52,4 +52,8 @@ interface JobRepositoryInterface extends BaseRepositoryInterface
 
     public function getWishlistJobs();
 
+    public function getALlJobInterview();
+
+    public function getJobWithApplicants($jobId);
+
 }

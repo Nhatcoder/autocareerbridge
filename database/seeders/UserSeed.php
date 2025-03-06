@@ -15,7 +15,7 @@ class UserSeed extends Seeder
     public function run(): void
     {
         // Clear existing data
-        DB::table('users')->truncate();
+        DB::table('users')->delete();
 
         // Define the roles
         $roles = [
