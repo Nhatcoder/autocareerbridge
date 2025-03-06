@@ -18,7 +18,7 @@ class ScheduleInterview extends Model
         'job_id',
         'start_date',
         'end_date',
-        'link', 
+        'link',
         'type',
         'description',
         'event_id',
@@ -39,4 +39,9 @@ class ScheduleInterview extends Model
         return $this->hasMany(Interview::class, 'schedule_interview_id');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'interviews', 'schedule_interview_id', 'user_id')
+            ->withTimestamps();
+    }
 }

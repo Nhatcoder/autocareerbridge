@@ -12,4 +12,12 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
     public function updateToggleStatus(int $id, array $data);
     public function getAdmin();
     public function getUserByEmail($data);
+
+    /**
+     *  Get all users by ids
+     * @author TranVanNhat
+     * @param $data
+     * @return mixed
+     */
+    public function getUserByIds($data);
 }

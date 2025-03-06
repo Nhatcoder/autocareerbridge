@@ -386,6 +386,7 @@ return [
             'manage_workshop' => 'Bài workshop đã tham gia',
             'school_candidate' => 'Trường học',
             'custommer_candidate' => 'Ứng viên',
+            "schedule_interview" => 'Đặt lịch phỏng vấn',
         ],
         'collaboration' => [
             'filter' => 'Lọc',

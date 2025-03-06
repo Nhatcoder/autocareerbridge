@@ -55,6 +55,12 @@ return [
             'update_status_job' => 'Updated status job successfully',
             'error_status_job' => 'Error updating status job',
             'check_seen'  => 'You must see the job first',
+        ],
+        'schedule_interview' => [
+            "create_success" => "Interview schedule created successfully",
+            "update_success" => "Interview schedule updated successfully",
+            "delete_success" => "Interview schedule deleted successfully",
+            "error_msg" => "Error interview schedule",
         ]
     ],
     'errors' => [

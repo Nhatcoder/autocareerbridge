@@ -24,5 +24,22 @@ interface UserJobRepositoryInterface extends BaseRepositoryInterface
      */
     public function updateStatusUserJobInterView();
 
+    /**
+     * Get all job applications for a company.
+     * @return mixed Collection of user job applications
+     */
+    public function getAllUserJobCompany();
+
+    /**
+     * Get all user job applications for a company by job ID.
+     * @return mixed Collection of user job applications
+     */
+    public function getAllUserJobIdCompany($id);
+
+    /**
+     * Get userjob job by user_id
+     * @author TranVanNhat <tranvannhat7324@gmail.com>
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getUserJob($id);
 }

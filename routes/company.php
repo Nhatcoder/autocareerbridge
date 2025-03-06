@@ -53,22 +53,19 @@ Route::group([
     Route::delete('collaboration/delete/{id}', [CollaborationsController::class, 'delete'])->name('collaboration.delete');
 
     Route::get('schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('scheduleInterview');
+    Route::post('schedule-interviews-store', [ScheduleInterviewController::class, 'scheduleInterviewStore'])->name('scheduleInterviewStore');
+    Route::post('delete-schedule-interview', [ScheduleInterviewController::class, 'deleteScheduleInterview'])->name('deleteScheduleInterview');
     Route::get('schedule-interviews-all', [ScheduleInterviewController::class, 'refreshEvents'])->name('refreshEvents');
 
-    Route::get('/schedule-interviews/get-data', [ScheduleInterviewController::class, 'getData'])->name('schedule-interviews.data');
     // Route::get('/schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('schedule-interviews.list');
-    Route::post('/schedule-interviews', [ScheduleInterviewController::class, 'store'])->name('schedule-interviews.store');
+    // Route::get('/schedule-interviews/get-data', [ScheduleInterviewController::class, 'getData'])->name('schedule-interviews.data');
     Route::get('/schedule-interviews/{id}/attendees', [ScheduleInterviewController::class, 'getAttendees'])->name('schedule-interviews.attendees');
-
     Route::get('/schedule-interviews/{id}/edit', [ScheduleInterviewController::class, 'edit'])->name('schedule-interviews.edit');
     Route::put('/schedule-interviews/{id}', [ScheduleInterviewController::class, 'update'])->name('schedule-interviews.update');
-    Route::delete('/schedule-interviews/{id}', [ScheduleInterviewController::class, 'destroy'])->name('schedule-interviews.destroy');
 
-
-    // get thông tin từ api theo event id
     Route::get('/api/gg-calendar/{eventId}', [ScheduleInterviewController::class, 'getGoogleCalendarEvent'])->name('gg-calendar.eventId');
+    Route::get('get-user-apply-job', [ScheduleInterviewController::class, 'getUserJob'])->name('getUserJob');
 });
-
 
 Route::group([
     'prefix' => 'company',
@@ -92,7 +89,6 @@ Route::group([
     Route::get('/workshops/applied', [WorkShopsController::class, 'workshopApplied'])->name('workshops.applied');
 
     Route::get('/getAllJobInterview', [JobsController::class, 'getAllJobInterview'])->name('getAllJobInterview');
-
 
     Route::get('jobs/applicants/{job}', [JobsController::class, 'getUserApplyJob'])->name('getUserApplyJob');
 });

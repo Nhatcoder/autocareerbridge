@@ -29,6 +29,7 @@ return [
     'distinct' => ':attribute có giá trị trùng lặp.',
     'skill_length' => 'Kỹ năng \':skill\' phải có độ dài từ 3 đến 242 ký tự.',
     'skill_duplicate' => 'Các kỹ năng không được trùng lặp.',
+    "required_if" => ':attribute không được trống.',
     'attributes' => [
         'slug' => 'Slug',
         'user_name' => 'Tên đăng nhập',
@@ -57,11 +58,18 @@ return [
         'entry_year_lower' => 'thời gian vào học',
         'graduation_year' => "Thời gian tốt nghiệp",
         'role' => 'Vai trò',
-        'fields'=> 'Lĩnh vực',
-        'description'=> 'Mô tả',
-        'string'=> 'Chuỗi',
-        'skills'=> 'Kỹ năng',
+        'fields' => 'Lĩnh vực',
+        'description' => 'Mô tả',
+        'string' => 'Chuỗi',
+        'skills' => 'Kỹ năng',
+        'title' => 'Tiêu đề',
+        'location' => 'Địa chỉ',
+        'startDate' => "Thời gian bắt đầu",
+        'endDate' => "Thời gian kết thúc",
+        'type' => 'Hình thức',
     ],
+
+
 
     'custom' => [
         'user_name' => [

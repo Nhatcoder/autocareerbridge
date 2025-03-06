@@ -57,6 +57,9 @@ define('REGEX_PASSWORD', "/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.
 define('TYPE_CV_CREATE', 0);
 define('TYPE_CV_UPLOAD', 1);
 
+define('TYPE_SCHEDULE_OFF', 1);
+define('TYPE_SCHEDULE_ON', 2);
+
 define('SAVE', 0);
 define('UN_SAVE', 1);
 
@@ -69,8 +72,6 @@ define('STATUS_UNFIT', 5);
 define('COMPANY', 'company');
 define('USER', 'user');
 
-define('TYPE_SCHEDULE_OFF', 1);
-define('TYPE_SCHEDULE_ON', 2);
 
 define('STATUS_WAIT', 1);
 define('STATUS_JOIN', 2);
