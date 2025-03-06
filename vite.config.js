@@ -19,6 +19,10 @@ export default defineConfig({
             generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> a55a7b11 (fixhost/bug_server)
     server: {
         host: '192.168.0.152',
         port: 5173,

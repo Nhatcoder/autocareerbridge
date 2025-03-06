@@ -248,4 +248,162 @@ class JobsController extends Controller
             return redirect()->back()->with('status_fail', __('message.company.job.error_status_job'));
         }
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Manage user job applications.
+     * This method retrieves and categorizes user job applications based on their status
+     * (pending, approved, rejected). It then returns a view with the categorized data for display.
+     *
+     * @return \Illuminate\View\View The view for managing user job applications, including w_eval, fit, interv, hired, unfit, and all jobs.
+     * @author TRAN VAN NHAT
+     * @throws \Exception If retrieving or processing the job applications fails.
+     * @see JobService::manageUserApplyJob() for the logic behind fetching the user job data.
+     */
+    public function manageUserApplyJob()
+    {
+        $universityJobs = $this->jobService->custommerApplicateJob();
+        $data = [
+            'all' => $universityJobs['all'],
+            'w_eval' => $universityJobs['w_eval'],
+            'fit' => $universityJobs['fit'],
+            'interv' => $universityJobs['interv'],
+            'hired' => $universityJobs['hired'],
+            'unfit' => $universityJobs['unfit'],
+        ];
+
+        return view('management.pages.company.custommer_job.index', $data);
+    }
+
+    /**
+     * Get the list of users who applied for a specific job along with their interview status.
+     *
+     * @author khanhnguyen
+     * @param int $jobId The ID of the job.
+     * @return \Illuminate\Http\JsonResponse JSON response containing a list of applicants.
+     */
+    public function getUserApplyJob($jobId)
+    {
+        $job = $this->jobService->getJobWithApplicants($jobId);
+
+        $candidates = $job->userJob->map(function ($userJob) use ($jobId) {
+            $user = $userJob->user;
+
+            $interview = $user->interviews()
+                ->whereHas('scheduleInterview', function ($query) use ($jobId) {
+                    $query->where('job_id', $jobId);
+                })->first();
+
+
+            return [
+                'id' => $user->id,
+                'user_name' => $user->user_name,
+                'name' => $user->name,
+                'email' => $user->email,
+                'status' => $interview ? $interview->status : STATUS_NOT_INVITE
+            ];
+        });
+
+        return response()->json($candidates);
+    }
+
+
+    /**
+     * Update the status of a user job application.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id, status, and interview time.
+     * @author TRAN VAN NHAT
+     * @throws \Exception If updating the status fails.
+     * @see JobService::changeStatusUserAplly()
+     */
+    public function changeStatusUserAplly(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->only(['id', 'status', 'interview_time']);
+            $this->jobService->changeStatusUserAplly($data);
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => __('message.company.job.update_status_job'),
+            ], 201);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $this->logExceptionDetails($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('message.company.job.error_status_job'),
+            ]);
+        }
+    }
+
+    /**
+     * Check if the user has seen a job application or not.
+     * If the user has seen the job application, update the seen status to 1.
+     * If the user has not seen the job application, return an error message.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id.
+     * @author TRAN VAN NHAT
+     * @throws \Exception If an error occurs during the process.
+     */
+    public function checkUserJobSeen(Request $request)
+    {
+        try {
+            $data = $request->only(['id']);
+            $user = $this->jobService->checkUserJobSeen($data);
+            if ($user->is_seen == SEEN) {
+                return response()->json([
+                    'success' => true,
+                ], 201);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('message.company.job.check_seen'),
+                ], 201);
+            }
+        } catch (\Exception $exception) {
+            $this->logExceptionDetails($exception);
+            return redirect()->back()->with('status_fail', $exception->getMessage());
+        }
+    }
+
+    /**
+     * Mark a CV as seen by the user.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request instance containing the job application id.
+     * @author Tran Van Nhat
+     * @throws \Exception If an error occurs during the process.
+     */
+    public function seenCvUserJob(Request $request)
+    {
+        try {
+            $data = $request->only(['id']);
+            $this->jobService->markCvAsSeen($data);
+            return response()->json([
+                'success' => true,
+                'message' => __('message.company.job.update_status_job'),
+            ], 200);
+        } catch (\Exception $exception) {
+            $this->logExceptionDetails($exception);
+            return response()->json([
+                'success' => false,
+                'message' => __('message.company.job.error_status_job'),
+            ], 500);
+        }
+    }
+
+    /**
+     * Retrieve all jobs with scheduled interviews.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response containing the list of approved jobs.
+     */
+    public function getAllJobInterview()
+    {
+        $lists = $this->jobService->getAllJobInterview();
+        return response()->json($lists);
+    }
+>>>>>>> a55a7b11 (fixhost/bug_server)
 }

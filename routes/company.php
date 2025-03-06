@@ -49,6 +49,21 @@ Route::group([
     Route::delete('/major/delete/{majorId}', [MajorsController::class, 'delete'])->name('deleteMajorCompany');
     Route::post('collaboration/change-status', [CollaborationsController::class, 'changeStatus'])->name('changeStatusColab');
     Route::delete('collaboration/delete/{id}', [CollaborationsController::class, 'delete'])->name('collaboration.delete');
+<<<<<<< HEAD
+=======
+
+    Route::get('schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('scheduleInterview');
+    Route::post('schedule-interviews-store', [ScheduleInterviewController::class, 'scheduleInterviewStore'])->name('scheduleInterviewStore');
+    Route::post('delete-schedule-interview', [ScheduleInterviewController::class, 'deleteScheduleInterview'])->name('deleteScheduleInterview');
+    Route::get('schedule-interviews-all', [ScheduleInterviewController::class, 'refreshEvents'])->name('refreshEvents');
+
+    Route::get('/schedule-interviews/{id}/attendees', [ScheduleInterviewController::class, 'getAttendees'])->name('schedule-interviews.attendees');
+    Route::get('/schedule-interviews/{id}/edit', [ScheduleInterviewController::class, 'edit'])->name('schedule-interviews.edit');
+    Route::put('/schedule-interviews/{id}', [ScheduleInterviewController::class, 'update'])->name('schedule-interviews.update');
+
+    Route::get('/api/gg-calendar/{eventId}', [ScheduleInterviewController::class, 'getGoogleCalendarEvent'])->name('gg-calendar.eventId');
+    Route::get('get-user-apply-job', [ScheduleInterviewController::class, 'getUserJob'])->name('getUserJob');
+>>>>>>> a55a7b11 (fixhost/bug_server)
 });
 
 Route::group([

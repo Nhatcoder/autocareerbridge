@@ -46,14 +46,29 @@
                                 </li>
                                 <li
                                     class="has-mega gc_main_navigation {{ Request::routeIs('search') ? 'active' : '' }}">
-                                    <a href="{{ route('search') }}" class="gc_main_navigation">
-                                        Việc làm</a>
-                                    @if (Auth::guard('web')->check() && Auth::guard('web')->user()->userJob()->count() > 0)
+                                    Việc làm
+                                    @if (Auth::guard('web')->check())
                                         <ul>
+<<<<<<< HEAD
                                             <li class="parent"><a href="{{ route('search') }}">Tìm việc làm</a></li>
                                             <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã ứng tuyển</a></li>
+=======
+                                            @if (Auth::guard('web')->user()->userJob()->count() > 0)
+                                                <li class="parent"><a href="{{ route('historyJobApply') }}">Việc làm đã
+                                                        ứng
+                                                        tuyển</a></li>
+                                            @endif
+                                            <li class="parent"><a href="{{ route('listScheduleInterView') }}">Lịch phỏng
+                                                    vấn</a></li>
+                                            @if (auth()->check() && auth()->user()->role !== ROLE_COMPANY && auth()->user()->role !== ROLE_HIRING)
+                                                <li class="parent"><a href="{{ route('job.wishlist.list') }}">Việc làm
+                                                        đã
+                                                        lưu</a></li>
+                                            @endif
+>>>>>>> a55a7b11 (fixhost/bug_server)
                                         </ul>
                                     @endif
+
                                 </li>
 
                                 <li
@@ -228,6 +243,8 @@
                                                     <li>
                                                         <a href="contact.html">Contact</a>
                                                     </li>
+                                                    <li><a href="{{ route('listScheduleInterView') }}">Lịch phỏng
+                                                            vấn</a></li>
                                                     <li>
                                                         <a href="register.html">Sign Up</a>
                                                     </li>
