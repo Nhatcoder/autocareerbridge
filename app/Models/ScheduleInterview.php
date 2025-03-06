@@ -29,4 +29,19 @@ class ScheduleInterview extends Model
         return $this->belongsToMany(User::class, 'interviews', 'schedule_interview_id', 'user_id')
             ->withTimestamps();
     }
+
+    public function interviews()
+    {
+        return $this->hasMany(Interview::class, 'schedule_interview_id');
+    }
+
+    public function job()
+    {
+        return $this->belongsTo(Job::class, 'job_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }

@@ -71,3 +71,7 @@ define('STATUS_UNFIT', 5);
 
 define('COMPANY', 'company');
 define('USER', 'user');
+
+define('STATUS_WAIT', 1);
+define('STATUS_JOIN', 2);
+define('STATUS_UN_JOIN', 3);

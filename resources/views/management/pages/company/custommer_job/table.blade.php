@@ -18,12 +18,14 @@
                             title="{{ $item->job->name ?? '' }}">{{ $item->job->name ?? '' }}</a>
                     </td>
                     <td>
-                        <a class="seen_cv__user" data-id="{{ $item->id }}" target="_blank"
-                            style="color: #007bff; text-decoration: none; display: flex; align-items: center;"
-                            href="{{ $item->cv->type == TYPE_CV_CREATE ? route('cv.view', ['id' => $item->cv->id]) : route('cv.upload.view', ['id' => $item->cv->id]) }}"
-                            title="Xem cv">
-                            {{ $item->user->name ?? '' }}
-                        </a>
+                        @if ($item->cv)
+                            <a class="seen_cv__user" data-id="{{ $item->id }}" target="_blank"
+                                style="color: #007bff; text-decoration: none; display: flex; align-items: center;"
+                                href="{{ $item->cv->type == TYPE_CV_CREATE ? route('cv.view', ['id' => $item->cv->id]) : route('cv.upload.view', ['id' => $item->cv->id]) }}"
+                                title="Xem cv">
+                                {{ $item->user->name ?? '' }}
+                            </a>
+                        @endif
                     </td>
                     <td>{{ \Carbon\Carbon::parse($item->created)->format('d/m/Y') }}</td>
                     <td>

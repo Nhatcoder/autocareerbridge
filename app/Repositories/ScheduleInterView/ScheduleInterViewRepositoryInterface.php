@@ -14,4 +14,20 @@ interface ScheduleInterViewRepositoryInterface extends BaseRepositoryInterface
      * @return mixed The schedule interview data or null if not found
      */
     public function getScheduleInterviewByEventId($eventId);
+
+    /**
+     * Get list schedule interview user ID
+     *
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @return mixed The schedule interview data or null if not found
+     */
+    public function listScheduleInterView();
+
+    /**
+     * Change status of interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @param array $data Data containing status update information
+     * @return mixed
+     */
+    public function changeStatusInterView($data);
 }

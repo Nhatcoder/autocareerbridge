@@ -21,4 +21,9 @@ class Interview extends Model
     {
         return $this->belongsTo(ScheduleInterview::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

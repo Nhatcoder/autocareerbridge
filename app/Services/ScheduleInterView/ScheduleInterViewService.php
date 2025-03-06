@@ -194,4 +194,48 @@ class ScheduleInterViewService
             throw $e;
         }
     }
+
+    /**
+     * Get list schedule interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     */
+    public function listScheduleInterView()
+    {
+        return  $this->scheduleInterViewRepository->listScheduleInterView();
+    }
+
+    /**
+     * Change status of interview
+     * @author TranVanNhat <tranvannhat7624@gmail.com>
+     * @param array $data Data containing status update information
+     * @return mixed
+     */
+    public function changeStatusInterView($data)
+    {
+        DB::beginTransaction();
+        try {
+            $interview = $this->scheduleInterViewRepository->changeStatusInterView($data);
+            $title = $interview->status == STATUS_JOIN ?
+                ($interview->user->name . " đã tham gia") : ($interview->user->name . " đã từ chối");
+            $title .= " cuộc phỏng vấn ". $interview->scheduleInterview->title;
+
+            $companyId = $interview->scheduleInterview->company_id;
+            $notification = $this->notificationService->create([
+                'title' => $title,
+                'company_id' => $companyId,
+                'link' => route('company.scheduleInterview'),
+                'type' => TYPE_JOB,
+            ]);
+
+            $this->notificationService->renderNotificationRealtime(
+                $notification,
+                $companyId
+            );
+            DB::COMMIT();
+            return $interview;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
 }

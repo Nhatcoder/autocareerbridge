@@ -241,10 +241,10 @@
                 select: function(info) {
                     const now = new Date();
                     const selectedStart = new Date(info.start);
-                    const minTime = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+                    const minTime = new Date(now.getTime() + (6 * 60 * 60 * 1000));
 
                     if (selectedStart < minTime) {
-                        toastr.error('Vui lòng chọn thời gian phỏng vấn trước ít nhất 24 giờ.');
+                        toastr.error('Vui lòng chọn thời gian phỏng vấn trước ít nhất 6 giờ.');
                         return;
                     }
 
@@ -381,7 +381,7 @@
                                 calendar.refetchEvents();
                                 $(".modal-footer").html(`
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                      
+
                         <button type="button" class="btn btn-primary" onclick="scheduleInterviewUpdate('${info.event.id}')">Cập nhật</button>
                     `);
                                 $('#createEventModal').modal('hide');
