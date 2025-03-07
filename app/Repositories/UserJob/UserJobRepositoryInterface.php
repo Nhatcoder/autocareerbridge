@@ -42,4 +42,11 @@ interface UserJobRepositoryInterface extends BaseRepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getUserJob($id);
+
+     /**
+     * Update a user interview
+     * @author TranVanNhat <tranvannhat7324@gmail.com>
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function updateStatusInterview($data);
 }

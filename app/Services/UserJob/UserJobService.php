@@ -53,4 +53,15 @@ class UserJobService
     {
         return $this->userJobRepository->getAllUserJobIdCompany($id);
     }
+
+         /**
+     * Update a user's interview status.
+     * @param array $data Data containing status update information
+     * Update userjob company
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function updateStatusUserInterview($data)
+    {
+        return $this->userJobRepository->updateStatusInterview($data);
+    }
 }

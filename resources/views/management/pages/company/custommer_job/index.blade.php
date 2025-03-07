@@ -127,34 +127,6 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade bd-example-modal-lg" id="interviewModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Mời <span id="candidateName"></span> phỏng vấn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form id="interviewForm" action="{{ route('company.changeStatusUserAplly') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="interviewTime" class="form-label">Chọn thời gian phỏng vấn:</label>
-                            <input type="datetime-local" id="interviewTime" name="interview_time" class="form-control"
-                                required>
-                        </div>
-                        <input type="hidden" id="applicationId" name="id">
-                        <input type="hidden" id="statusApplication" name="status">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Xác nhận</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
 @endsection
 @section('js')
     <script>
@@ -173,20 +145,13 @@
                 urlCheck = $select.data('check');
                 let statusFit = $select.data('status');
 
-                if (status == statusFit) {
-                    $('#interviewModal').modal('show');
-                    $('#applicationId').val(id);
-                    $('#statusApplication').val(status);
-                    $('#interviewModal').data('current-select', $select);
-                }
-
                 let dataNew = {
                     id: id,
                     status: status,
                     _token: $('meta[name="csrf-token"]').attr('content'),
                 };
 
-                if (status == 0 || status == statusFit) {
+                if (status == 0 ) {
                     return;
                 }
 

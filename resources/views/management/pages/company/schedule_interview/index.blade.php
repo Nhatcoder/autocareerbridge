@@ -19,6 +19,15 @@
             align-items: center;
             z-index: 9999;
         }
+
+        #calendar {
+            width: 100% !important;
+            max-width: 100%;
+        }
+
+        .fc-view-container {
+            width: 100%;
+        }
     </style>
 @endsection
 @section('content')
@@ -404,7 +413,7 @@
                                     <p><strong>Tin tuyển dụng:</strong> ${dbData.job || 'Không có'}</p>
                                     <p><strong>Bắt đầu:</strong> ${new Date(googleData.start).toLocaleString()}</p>
                                     <p><strong>Kết thúc:</strong> ${googleData.end ? new Date(googleData.end).toLocaleString() : 'N/A'}</p>
-                                    <p><strong>${dbData.type == 2 ? 'Link Google Meet' : 'Địa điểm'}:</strong> ${dbData.type == 2 ? `<a href="${googleData.hangoutLink}" target="_blank">Tham gia</a>` : (googleData.location || 'Không có')}</p>
+                                    <p><strong>${dbData.type == 2 ? 'Link Google Meet' : 'Địa điểm'}:</strong> ${dbData.type == 2 ? `<a class="text-primary" href="${googleData.hangoutLink}" target="_blank">Tham gia</a>` : (googleData.location || 'Không có')}</p>
                                     <p><strong>Mô tả:</strong> ${googleData.description || 'Không có'}</p>
                                     <p><strong>Người tham gia:</strong></p>
                                     <div>${attendeesHtml}</div>
@@ -425,10 +434,11 @@
                                 error);
                         }
                     });
-                }
+                },
+                eventDragStart: false,
+                eventDragStop: false,
             });
             calendar.render();
-
 
             $('#jobSelect').on('change', function() {
                 let jobId = $(this).val();
@@ -683,7 +693,7 @@
                 document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
             });
 
-            // Delete schedule 
+            // Delete schedule
             $(document).on('click', '#deleteSchedule', function() {
                 let id = $('#scheduleInterviewIdHidden').val();
                 Swal.fire({
@@ -717,7 +727,7 @@
                             },
                             error: function(xhr, status, error) {
                                 hideLoading();
-                                toastr.error('Error deleting event:'+error);
+                                toastr.error('Error deleting event:' + error);
                             }
                         });
                     }

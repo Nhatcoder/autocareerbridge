@@ -317,7 +317,7 @@ class JobsController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['id', 'status', 'interview_time']);
+            $data = $request->only(['id', 'status']);
             $this->jobService->changeStatusUserAplly($data);
             DB::commit();
 

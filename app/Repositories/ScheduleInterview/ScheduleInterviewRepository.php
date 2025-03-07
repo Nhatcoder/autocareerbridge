@@ -94,7 +94,7 @@ class ScheduleInterViewRepository extends BaseRepository implements ScheduleInte
         return $this->model->with(['job', 'company', 'interviews' => function ($query) use ($userId) {
             $query->where('user_id', $userId);
         }])
-            ->select('id', 'job_id', 'company_id', 'title', 'description', 'start_date as start', 'end_date as end', 'type', 'link')
+            ->select('id', 'job_id', 'company_id', 'title', 'description', 'start_date as start', 'end_date as end', 'type', 'location', 'link')
             ->get();
     }
 

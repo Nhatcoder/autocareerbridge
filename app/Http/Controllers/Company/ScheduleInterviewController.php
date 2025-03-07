@@ -289,7 +289,6 @@ class ScheduleInterviewController extends Controller
     {
         try {
             $schedule = $this->scheduleInterviewService->updateScheduleInterview($id, $request->all());
-
             return response()->json([
                 'message' => 'Cập nhật lịch phỏng vấn thành công',
                 'schedule' => $schedule

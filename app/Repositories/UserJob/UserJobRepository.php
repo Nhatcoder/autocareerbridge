@@ -141,4 +141,14 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
     {
         return $this->model->where('user_id', $id)->with('job.company')->first();
     }
+
+    /**
+     * Update a user interview
+     * @author TranVanNhat <tranvannhat7324@gmail.com>
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function updateStatusInterview($data)
+    {
+        return $this->model->whereIn('user_id', $data)->update(['status' => STATUS_INTERV]);
+    }
 }

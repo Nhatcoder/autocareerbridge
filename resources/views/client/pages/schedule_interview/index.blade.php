@@ -2,7 +2,11 @@
 @section('title', 'Lịch phỏng vấn')
 
 @section('css')
-
+    <style>
+        .fc-event {
+            cursor: pointer !important;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="jp_img_wrapper">
@@ -51,29 +55,28 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3 d-flex flex-wrap">
-                        <label class="fw-bold">Tiêu đề:</label>
-                        <p class="ps-2" id="eventTitle"></p>
+                        <label class="fw-bold me-2">Tiêu đề:</label>
+                        <p id="eventTitle"></p>
                     </div>
                     <div class="mb-3 d-flex flex-wrap">
-                        <label class="fw-bold">Công việc:</label>
-                        <p class="ps-2 font-bold"><a class="text-primary" href="#" id="eventNameJob"
-                                target="_blank"></a></p>
+                        <label class="fw-bold me-2">Công việc:</label>
+                        <p><a class="text-primary" href="#" id="eventNameJob" target="_blank"></a></p>
                     </div>
                     <div class="mb-3 d-flex flex-wrap">
-                        <label class="fw-bold">Thời gian:</label>
-                        <p class="ps-2" id="eventTime"></p>
+                        <label class="fw-bold me-2">Thời gian:</label>
+                        <p id="eventTime"></p>
                     </div>
                     <div class="mb-3 d-flex flex-wrap">
-                        <label class="fw-bold">Địa điểm:</label>
-                        <p class="ps-2" id="eventLocation"></p>
+                        <label class="fw-bold me-2">Địa điểm:</label>
+                        <p id="eventLocation"></p>
                     </div>
                     <div class="mb-3 d-flex flex-wrap">
-                        <label class="fw-bold">Mô tả:</label>
-                        <p class="ps-2" id="eventDescription"></p>
+                        <label class="fw-bold me-2">Mô tả:</label>
+                        <p id="eventDescription"></p>
                     </div>
                     <div class="mb-3 d-flex flex-wrap" id="eventLinkContainer">
-                        <label class="fw-bold">Link phỏng vấn:</label>
-                        <p class="ps-2"><a class="text-primary" href="#" id="eventLink" target="_blank"></a></p>
+                        <label class="fw-bold me-2">Link phỏng vấn:</label>
+                        <p><a class="text-primary" href="#" id="eventLink" target="_blank"></a></p>
                     </div>
                 </div>
                 <div class="modal-footer">
