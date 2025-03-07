@@ -192,185 +192,187 @@
         </div>
     </div>
 
-    <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <form id="apply_job" action="{{ route('applyJob') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ứng tuyển <b
-                                class="text-[#23c0e9]">{{ $job->name ?? 'Chi tiết tuyển dụng' }}</b>
-                        </h1>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                    </div>
+  @if (auth('web')->check())
+      <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                  <form id="apply_job" action="{{ route('applyJob') }}" method="POST" enctype="multipart/form-data">
+                      @csrf
+                      <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Ứng tuyển <b
+                                  class="text-[#23c0e9]">{{ $job->name ?? 'Chi tiết tuyển dụng' }}</b>
+                          </h1>
+                          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                      </div>
 
-                    <input type="hidden" name="job_id" value="{{ $job->id }}">
-                    <div class="modal-body overflow-y-auto h-[calc(100vh-290px)]">
-                        <div class="mt-4">
-                            <input type="file" class="hidden" id="upload_cv" value="" name="file_cv">
-                            <label for="upload_cv"
-                                class="round w-full text-white flex justify-center items-center cursor-pointer fs-14 bg-[#23c0e9] px-4 py-2 rounded-lg"><i
-                                    class="fa-solid fa-arrow-up-from-bracket"></i> Tải lên hồ sơ sẵn
-                            </label>
-                            <span class="text-opacity-75 fs-10 flex justify-center">Hỗ trợ định dạng pdf có
-                                kích thước dưới 5MB </span>
-                        </div>
+                      <input type="hidden" name="job_id" value="{{ $job->id }}">
+                      <div class="modal-body overflow-y-auto h-[calc(100vh-290px)]">
+                          <div class="mt-4">
+                              <input type="file" class="hidden" id="upload_cv" value="" name="file_cv">
+                              <label for="upload_cv"
+                                  class="round w-full text-white flex justify-center items-center cursor-pointer fs-14 bg-[#23c0e9] px-4 py-2 rounded-lg"><i
+                                      class="fa-solid fa-arrow-up-from-bracket"></i> Tải lên hồ sơ sẵn
+                              </label>
+                              <span class="text-opacity-75 fs-10 flex justify-center">Hỗ trợ định dạng pdf có
+                                  kích thước dưới 5MB </span>
+                          </div>
 
-                        <div class="mt-4 list_cv">
-                            @if ($cvApplyLate && $cvApplyLate->cv)
-                                <label for="cv_old"
-                                    class="mt-2 flex gap-x-2 items-center border p-2 rounded-lg bg-gray-50 item_cv active bg-white">
-                                    <input type="radio" name="cv_id" checked id="cv_old"
-                                        value="{{ $cvApplyLate->cv->id ?? '' }}" class="m-0 fs-16">
-                                    <div class="flex m-0 border-b-2 border-transparent">
-                                        <span class="mr-2 ">CV ứng tuyển gần nhất:
-                                            {{ $cvApplyLate->cv->title }}</span>
-                                        <a target="_blank" href="{{ route('cv.view', ['id' => $cvApplyLate->cv->id]) }}"
-                                            class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0]">Xem</a>
-                                    </div>
-                                </label>
-                            @endif
-                            <div class="mt-2 border w-100 p-2 rounded-lg bg-gray-50 item_cv btn_more__mycv bg-white">
-                                <label class="flex gap-x-2 items-center">
-                                    <input type="radio" name="cv_id" id="cv_other" value=""
-                                        class="m-0 fs-16">
-                                    <div class="flex m-0 border-b-2 border-transparent">
-                                        <span class="mr-2 text-[#333333] font-weight-[500]">Chọn CV khác trong thư viện của
-                                            tôi</span>
-                                    </div>
-                                </label>
-                                @if (count($cvCreate) > 0 || count($cvUploads) > 0)
-                                    <div class="list_mycv hidden mt-2">
-                                        <div class="cv-selected hidden d-flex justify-between">
-                                            <div class="d-flex items-center">
-                                                <span
-                                                    class="cv-selected_name mx-2 line-clamp-1 w-70 file_name leading-8 text-[#263a4d]">Abc
-                                                    text selected</span>
-                                                <a target="_blank" href=""
-                                                    class="cv-selected_view text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] mx-1 btn_view_cv">
-                                                    Xem
-                                                </a>
-                                            </div>
-                                            <div class="cv-selected_action">
-                                                <button type="button"
-                                                    class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv_selected">
-                                                    <i class="fa-solid fa-pen"></i> Thay đổi
-                                                </button>
-                                            </div>
-                                        </div>
+                          <div class="mt-4 list_cv">
+                              @if ($cvApplyLate && $cvApplyLate->cv)
+                                  <label for="cv_old"
+                                      class="mt-2 flex gap-x-2 items-center border p-2 rounded-lg bg-gray-50 item_cv active bg-white">
+                                      <input type="radio" name="cv_id" checked id="cv_old"
+                                          value="{{ $cvApplyLate->cv->id ?? '' }}" class="m-0 fs-16">
+                                      <div class="flex m-0 border-b-2 border-transparent">
+                                          <span class="mr-2 ">CV ứng tuyển gần nhất:
+                                              {{ $cvApplyLate->cv->title }}</span>
+                                          <a target="_blank" href="{{ route('cv.view', ['id' => $cvApplyLate->cv->id]) }}"
+                                              class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0]">Xem</a>
+                                      </div>
+                                  </label>
+                              @endif
+                              <div class="mt-2 border w-100 p-2 rounded-lg bg-gray-50 item_cv btn_more__mycv bg-white">
+                                  <label class="flex gap-x-2 items-center">
+                                      <input type="radio" name="cv_id" id="cv_other" value=""
+                                          class="m-0 fs-16">
+                                      <div class="flex m-0 border-b-2 border-transparent">
+                                          <span class="mr-2 text-[#333333] font-weight-[500]">Chọn CV khác trong thư viện của
+                                              tôi</span>
+                                      </div>
+                                  </label>
+                                  @if (count($cvCreate) > 0 || count($cvUploads) > 0)
+                                      <div class="list_mycv hidden mt-2">
+                                          <div class="cv-selected hidden d-flex justify-between">
+                                              <div class="d-flex items-center">
+                                                  <span
+                                                      class="cv-selected_name mx-2 line-clamp-1 w-70 file_name leading-8 text-[#263a4d]">Abc
+                                                      text selected</span>
+                                                  <a target="_blank" href=""
+                                                      class="cv-selected_view text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] mx-1 btn_view_cv">
+                                                      Xem
+                                                  </a>
+                                              </div>
+                                              <div class="cv-selected_action">
+                                                  <button type="button"
+                                                      class="btn btn-primary border-0 text-center bg-gray-400 text-white hover:bg-[#23c0e9] btn_change_cv_selected">
+                                                      <i class="fa-solid fa-pen"></i> Thay đổi
+                                                  </button>
+                                              </div>
+                                          </div>
 
-                                        <div class="block_cv">
-                                            @if (count($cvCreate) > 0)
-                                                <h4 class="py-2">CV online</h4>
-                                                @foreach ($cvCreate as $cvCr)
-                                                    <div
-                                                        class="border p-2 mb-1 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
-                                                        <div class="block_cv__item flex items-center flex-start">
-                                                            <span class="mx-2 line-clamp-1 leading-8 file_name"
-                                                                style="width: 24rem;">{{ $cvCr->title }}</span>
-                                                            @if ($cvCr->type == TYPE_CV_CREATE)
-                                                                <a target="_blank"
-                                                                    href="{{ route('cv.view', ['id' => $cvCr->id]) }}"
-                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                                    Xem
-                                                                </a>
-                                                            @elseif($cvCr->type == TYPE_CV_UPLOAD)
-                                                                <a target="_blank"
-                                                                    href="{{ route('cv.upload.view', ['id' => $cvCr->id]) }}"
-                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                                    Xem
-                                                                </a>
-                                                            @endif
-                                                        </div>
+                                          <div class="block_cv">
+                                              @if (count($cvCreate) > 0)
+                                                  <h4 class="py-2">CV online</h4>
+                                                  @foreach ($cvCreate as $cvCr)
+                                                      <div
+                                                          class="border p-2 mb-1 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
+                                                          <div class="block_cv__item flex items-center flex-start">
+                                                              <span class="mx-2 line-clamp-1 leading-8 file_name"
+                                                                  style="width: 24rem;">{{ $cvCr->title }}</span>
+                                                              @if ($cvCr->type == TYPE_CV_CREATE)
+                                                                  <a target="_blank"
+                                                                      href="{{ route('cv.view', ['id' => $cvCr->id]) }}"
+                                                                      class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                      Xem
+                                                                  </a>
+                                                              @elseif($cvCr->type == TYPE_CV_UPLOAD)
+                                                                  <a target="_blank"
+                                                                      href="{{ route('cv.upload.view', ['id' => $cvCr->id]) }}"
+                                                                      class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                      Xem
+                                                                  </a>
+                                                              @endif
+                                                          </div>
 
-                                                        <div class="float-right">
-                                                            <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
-                                                                data-id="{{ $cvCr->id }}">Chọn CV
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                            @if (count($cvUploads) > 0)
-                                                <h4 class="py-2">CV đã tải lên</h4>
-                                                @foreach ($cvUploads as $cvUp)
-                                                    <div
-                                                        class="border p-2 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
-                                                        <div class="block_cv__item flex items-center flex-start">
-                                                            <span class="mx-2 line-clamp-1 leading-8 file_name"
-                                                                style="width: 24rem;">{{ $cvUp->title }}</span>
-                                                            @if ($cvUp->type == TYPE_CV_CREATE)
-                                                                <a target="_blank"
-                                                                    href="{{ route('cv.view', ['id' => $cvUp->id]) }}"
-                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                                    Xem
-                                                                </a>
-                                                            @elseif($cvUp->type == TYPE_CV_UPLOAD)
-                                                                <a target="_blank"
-                                                                    href="{{ route('cv.upload.view', ['id' => $cvUp->id]) }}"
-                                                                    class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
-                                                                    Xem
-                                                                </a>
-                                                            @endif
-                                                        </div>
+                                                          <div class="float-right">
+                                                              <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
+                                                                  data-id="{{ $cvCr->id }}">Chọn CV
+                                                              </span>
+                                                          </div>
+                                                      </div>
+                                                  @endforeach
+                                              @endif
+                                              @if (count($cvUploads) > 0)
+                                                  <h4 class="py-2">CV đã tải lên</h4>
+                                                  @foreach ($cvUploads as $cvUp)
+                                                      <div
+                                                          class="border p-2 mb-1 rounded-lg bg-gray-50 d-flex justify-between bg-white">
+                                                          <div class="block_cv__item flex items-center flex-start">
+                                                              <span class="mx-2 line-clamp-1 leading-8 file_name"
+                                                                  style="width: 24rem;">{{ $cvUp->title }}</span>
+                                                              @if ($cvUp->type == TYPE_CV_CREATE)
+                                                                  <a target="_blank"
+                                                                      href="{{ route('cv.view', ['id' => $cvUp->id]) }}"
+                                                                      class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                      Xem
+                                                                  </a>
+                                                              @elseif($cvUp->type == TYPE_CV_UPLOAD)
+                                                                  <a target="_blank"
+                                                                      href="{{ route('cv.upload.view', ['id' => $cvUp->id]) }}"
+                                                                      class="text-[#23c0e9] text-decoration-none hover:text-[#1a8fb0] btn_view_cv">
+                                                                      Xem
+                                                                  </a>
+                                                              @endif
+                                                          </div>
 
-                                                        <div class="float-right">
-                                                            <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
-                                                                data-id="{{ $cvUp->id }}">Chọn
-                                                                CV</span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endif
+                                                          <div class="float-right">
+                                                              <span class="btn-sm btn-primary cursor-pointer btn-select-cv"
+                                                                  data-id="{{ $cvUp->id }}">Chọn
+                                                                  CV</span>
+                                                          </div>
+                                                      </div>
+                                                  @endforeach
+                                              @endif
+                                          </div>
+                                      </div>
+                                  @endif
 
-                            </div>
-                        </div>
+                              </div>
+                          </div>
 
-                        <div class="mt-4">
-                            <label class="block fs-13 opacity-75 font-medium">Họ và tên <span
-                                    class="text-[#ff0000]">*</span></label>
-                            <input type="text" class="w-full border p-2 rounded-lg" name="name"
-                                value="{{ Auth::guard('web')->user()->name ?? '' }}"
-                                {{ auth('web')->user()->name ? 'disabled' : '' }} placeholder="Nhập họ và tên">
-                            <span class="text-danger text-sm err_name"></span>
+                          <div class="mt-4">
+                              <label class="block fs-13 opacity-75 font-medium">Họ và tên <span
+                                      class="text-[#ff0000]">*</span></label>
+                              <input type="text" class="w-full border p-2 rounded-lg" name="name"
+                                  value="{{ Auth::guard('web')->user()->name ?? '' }}"
+                                  {{ auth('web')->user()->name ? 'disabled' : '' }} placeholder="Nhập họ và tên">
+                              <span class="text-danger text-sm err_name"></span>
 
-                        </div>
+                          </div>
 
-                        <div class="mt-4 grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block fs-13 opacity-75 font-medium">Email <span
-                                        class="text-[#ff0000]">*</span></label>
-                                <input type="text" class="w-full border p-2 rounded-lg"
-                                    value="{{ Auth::guard('web')->user()->email ?? '' }}"
-                                    {{ auth('web')->user()->email ? 'disabled' : '' }} name="email"
-                                    placeholder="Nhập email">
-                                <span class="text-danger text-sm err_email"></span>
+                          <div class="mt-4 grid grid-cols-2 gap-4">
+                              <div>
+                                  <label class="block fs-13 opacity-75 font-medium">Email <span
+                                          class="text-[#ff0000]">*</span></label>
+                                  <input type="text" class="w-full border p-2 rounded-lg"
+                                      value="{{ Auth::guard('web')->user()->email ?? '' }}"
+                                      {{ auth('web')->user()->email ? 'disabled' : '' }} name="email"
+                                      placeholder="Nhập email">
+                                  <span class="text-danger text-sm err_email"></span>
 
-                            </div>
-                            <div>
-                                <label class="block fs-13 opacity-75 font-medium">Số điện thoại <span
-                                        class="text-[#ff0000]">*</span></label>
-                                <input type="text" class="w-full border p-2 rounded-lg"
-                                    {{ auth('web')->user()->phone ? 'disabled' : '' }}
-                                    value="{{ Auth::guard('web')->user()->phone ?? '' }}" name="phone"
-                                    placeholder="Nhập số điện thoại">
-                                <span class="text-danger text-sm err_phone"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
-                        <button type="submit" class="btn text-white bg-[#23c0e9] hover:bg-[#1a8fb0]"> Nộp
-                            hồ sơ ứng tuyển
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+                              </div>
+                              <div>
+                                  <label class="block fs-13 opacity-75 font-medium">Số điện thoại <span
+                                          class="text-[#ff0000]">*</span></label>
+                                  <input type="text" class="w-full border p-2 rounded-lg"
+                                      {{ auth('web')->user()->phone ? 'disabled' : '' }}
+                                      value="{{ Auth::guard('web')->user()->phone ?? '' }}" name="phone"
+                                      placeholder="Nhập số điện thoại">
+                                  <span class="text-danger text-sm err_phone"></span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
+                          <button type="submit" class="btn text-white bg-[#23c0e9] hover:bg-[#1a8fb0]"> Nộp
+                              hồ sơ ứng tuyển
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  @endif
 @endsection
 
 @section('css')
