@@ -295,7 +295,7 @@ class ScheduleInterViewService
                     : null,
                 'type' => $data['type'],
             ];
-            $schedule->update();
+            $schedule->update($dataToUpdate);
 
             // Get existing users
             $existingUserIds = $this->interviewRepository->getWhere([

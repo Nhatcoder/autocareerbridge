@@ -49,6 +49,7 @@ class InterviewRepository extends BaseRepository implements InterviewRepositoryI
             'company'   => $event->scheduleInterview->company->name ?? 'Không có thông tin',
             'job'       => $event->scheduleInterview->job->name ?? 'Không có thông tin',
             'link'      => $event->scheduleInterview->link ?? null,
+            'type'      => $event->scheduleInterview->type ?? null,
             'location'      => $event->scheduleInterview->link ?? null,
             'description' => $event->scheduleInterview->description ?? null,
             'attendees' => $attendees,
