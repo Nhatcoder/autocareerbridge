@@ -88,7 +88,9 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
     public function getAllUserJobCompany()
     {
         $currentCompanyId = auth('admin')->user()->company->id;
-        return  $this->model->with([
+        $currentDate = Carbon::now();
+
+        return $this->model->with([
             'job.company' => function ($query) use ($currentCompanyId) {
                 $query->where('id', $currentCompanyId);
             },
@@ -96,7 +98,10 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
         ])->whereHas('job.company', function ($query) use ($currentCompanyId) {
             $query->where('id', $currentCompanyId);
         })
-            ->where('status', STATUS_W_EVAL)
+            ->whereHas('job', function ($query) use ($currentDate) {
+                $query->where('end_date', '>', $currentDate);
+            })
+            ->where('status', STATUS_FIT)
             ->get()
             ->unique('job.id');
     }
@@ -108,6 +113,8 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
      */
     public function getAllUserJobIdCompany($jobId)
     {
+        $currentDate = Carbon::now();
+
         $currentCompanyId = auth('admin')->user()->company->id;
         return $this->model->with([
             'job.company' => function ($query) use ($currentCompanyId) {
@@ -117,8 +124,11 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
         ])->whereHas('job.company', function ($query) use ($currentCompanyId) {
             $query->where('id', $currentCompanyId);
         })
+            ->whereHas('job', function ($query) use ($currentDate) {
+                $query->where('end_date', '>', $currentDate);
+            })
             ->where('job_id', $jobId)
-            ->where('status', STATUS_W_EVAL)
+            ->where('status', STATUS_FIT)
             ->get();
     }
 

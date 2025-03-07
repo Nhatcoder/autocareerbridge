@@ -5,7 +5,7 @@ namespace App\Http\Requests\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
-use App\Models\ScheduleInterview;
+use App\Models\ScheduleInterView;
 
 class ScheduleInterviewUpdateRequest extends FormRequest
 {
@@ -53,7 +53,7 @@ class ScheduleInterviewUpdateRequest extends FormRequest
             $startDate = $this->input('start_date');
             $endDate = $this->input('end_date');
 
-            $exists = ScheduleInterview::where('company_id', $companyId)
+            $exists = ScheduleInterView::where('company_id', $companyId)
                 ->where('id', '!=', $scheduleId)
                 ->where(function ($query) use ($startDate, $endDate) {
                     $query->where([
@@ -62,7 +62,6 @@ class ScheduleInterviewUpdateRequest extends FormRequest
                     ]);
                 })
                 ->exists();
-
 
             if ($exists) {
                 $validator->errors()->add('start_date', 'Lịch phỏng vấn bị trùng thời gian!');

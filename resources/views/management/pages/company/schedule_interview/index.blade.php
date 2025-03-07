@@ -22,6 +22,12 @@
     </style>
 @endsection
 @section('content')
+    <div class="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xl-12">
             <div class="page-titles">
@@ -157,9 +163,8 @@
                     <ul id="detailAttendees"></ul>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="googleMeetLink" target="_blank" class="btn btn-primary">Tham gia
-                        Google Meet</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" id="deleteSchedule">Xóa</button>
                     <button type="button" class="btn btn-warning" id="editEvent">Sửa</button>
                 </div>
             </div>
@@ -215,9 +220,24 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Địa điểm</label>
-                            <input type="text" name="location" id="editLocation" class="form-control">
-                            <div class="text-danger" id="errorEditLocation"></div>
+                            <label class="form-label">Hình thức <span style="color:red">*</span></label>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="radio" id="editType1" name="type" value="{{ TYPE_SCHEDULE_OFF }}"
+                                        class="form-check-input">
+                                    <label class="form-label m-0" for="editType1">Offline</label>
+                                    <input type="radio" id="editType2" name="type" value="{{ TYPE_SCHEDULE_ON }}"
+                                        class="form-check-input ml-3">
+                                    <label class="form-label m-0" for="editType2">Online</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 eventLocationDiv">
+                            <label class="form-label">Địa điểm <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" name="location" id="editLocation"
+                                placeholder="Địa điểm">
+                            <span class="text-danger eventLocation-error"></span>
                         </div>
 
                         <div class="mb-3">
@@ -346,8 +366,8 @@
                     $('#createEventModal').modal('show');
                 },
                 eventClick: function(info) {
-                    currentEvent = info.event;
                     let eventId = info.event.id;
+                    showLoading();
 
                     $.ajax({
                         url: `/company/schedule-interviews/${eventId}/attendees`,
@@ -360,6 +380,8 @@
                                 url: `/company/api/gg-calendar/${eventId}`,
                                 method: 'GET',
                                 success: function(googleData) {
+                                    hideLoading();
+
                                     let attendeesHtml = '';
                                     if (!dbData.attendees || dbData.attendees
                                         .length === 0) {
@@ -369,7 +391,7 @@
                                         dbData.attendees.forEach(function(
                                             user) {
                                             attendeesHtml +=
-                                                `<p>${user.name} (${user.email})</p>`;
+                                                `<p>${user.name ? user.name : user.user_name} (${user.email})</p>`;
                                         });
                                     }
 
@@ -382,7 +404,7 @@
                                     <p><strong>Tin tuyển dụng:</strong> ${dbData.job || 'Không có'}</p>
                                     <p><strong>Bắt đầu:</strong> ${new Date(googleData.start).toLocaleString()}</p>
                                     <p><strong>Kết thúc:</strong> ${googleData.end ? new Date(googleData.end).toLocaleString() : 'N/A'}</p>
-                                    <p><strong>Link Google Meet:</strong> ${googleData.hangoutLink ? `<a href="${googleData.hangoutLink}" target="_blank">Tham gia</a>` : 'Không có'}</p>
+                                    <p><strong>${dbData.type == 2 ? 'Link Google Meet' : 'Địa điểm'}:</strong> ${dbData.type == 2 ? `<a href="${googleData.hangoutLink}" target="_blank">Tham gia</a>` : (googleData.location || 'Không có')}</p>
                                     <p><strong>Mô tả:</strong> ${googleData.description || 'Không có'}</p>
                                     <p><strong>Người tham gia:</strong></p>
                                     <div>${attendeesHtml}</div>
@@ -390,15 +412,17 @@
 
                                     $('#eventDetailModal').modal('show');
                                 },
-                                error: function() {
-                                    alert(
-                                        'Không lấy được thông tin từ Google Calendar'
-                                    );
+                                error: function(xhr, status, error) {
+                                    hideLoading();
+                                    toastr.error('Error adding event: ' +
+                                        error);
                                 }
                             });
                         },
-                        error: function() {
-                            alert('Không tải được thông tin từ database');
+                        error: function(xhr, status, error) {
+                            hideLoading();
+                            toastr.error('Error adding event: ' +
+                                error);
                         }
                     });
                 }
@@ -461,6 +485,11 @@
                         $('#editEndDate').val(formatDateToInput(data.end_date));
                         $('#editDescription').val(data.description);
                         $('#editLocation').val(data.location);
+                        if (data.type == 1) {
+                            $('#editType1').prop('checked', true);
+                        } else {
+                            $('#editType2').prop('checked', true);
+                        }
 
                         // Lưu sẵn danh sách user đã tham gia
                         selectedUsers = data.attendees.map(user => user.id);
@@ -468,17 +497,18 @@
                         $.ajax({
                             url: '/company/getAllJobInterview',
                             method: 'GET',
-                            success: function(jobs) {
+                            success: function(res) {
                                 let jobSelect = $('#editJobSelect');
                                 jobSelect.html(
                                     '<option value="">-- Chọn công việc --</option>'
                                 );
 
-                                jobs.forEach(job => {
-                                    let selected = (job.id == data.job_id) ?
+                                res.data.forEach(item => {
+                                    let selected = (item.job.id == data
+                                            .job_id) ?
                                         'selected' : '';
                                     jobSelect.append(
-                                        `<option value="${job.id}" ${selected}>${job.name}</option>`
+                                        `<option value="${item.job.id}" ${selected}>${item.job.name}</option>`
                                     );
                                 });
 
@@ -564,7 +594,6 @@
                 }
             }
 
-
             $(document).on('change', '#editJobSelect', function() {
                 let jobId = $(this).val();
 
@@ -576,7 +605,6 @@
                 loadApplicantsByJob(jobId);
             });
 
-
             function formatDateToInput(dateTimeString) {
                 if (!dateTimeString) return '';
 
@@ -587,19 +615,15 @@
                 return `${datePart}T${timePart.slice(0, 5)}`;
             }
 
-
             // cập nhật lịch
-
-
             document.getElementById('updateEvent').addEventListener('click', function() {
                 const form = document.getElementById('editEventForm');
-                console.log(form);
                 let formData = new FormData(form);
                 formData.append('_method', 'PUT');
                 let eventId = document.getElementById('editEventId').value;
 
                 if (!eventId) {
-                    alert('Không tìm thấy ID sự kiện để cập nhật.');
+                    toastr.error('', 'Không tìm thấy ID sự kiện để cập nhật.');
                     return;
                 }
 
@@ -617,13 +641,10 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        console.log("Response JSON:", data);
-
                         if (data.error) {
-                            alert('Lỗi: ' + data.error);
+                            toastr.error('Lỗi: ' + data.error);
                         } else if (data.errors) {
                             console.log("Errors received:", data.errors);
-
                             Object.keys(data.errors).forEach(field => {
                                 let errorField = null;
 
@@ -649,14 +670,9 @@
                             let event = calendar.getEventById(eventId);
                             if (event) event.remove();
                             calendar.addEvent(data.schedule);
-
                             $('#editEventModal').modal('hide');
-
                             toastr.success("", data.message);
-
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1000);
+                            calendar.refetchEvents();
                         }
                     })
                     .catch(error => console.error("Lỗi:", error));
@@ -667,7 +683,46 @@
                 document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
             });
 
-
+            // Delete schedule 
+            $(document).on('click', '#deleteSchedule', function() {
+                let id = $('#scheduleInterviewIdHidden').val();
+                Swal.fire({
+                    title: "Bạn có muốn xóa cuộc phỏng vấn này không?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "{{ __('label.company.job.delete') }}",
+                    cancelButtonText: "{{ __('label.company.job.cancel') }}",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        showLoading();
+                        $.ajax({
+                            url: "{{ route('company.deleteScheduleInterview') }}",
+                            method: 'POST',
+                            data: {
+                                id: id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                hideLoading();
+                                if (data.success) {
+                                    toastr.success("", data.message);
+                                } else {
+                                    toastr.error("", data.message);
+                                }
+                                $('#eventDetailModal').modal('hide');
+                                calendar.refetchEvents();
+                            },
+                            error: function(xhr, status, error) {
+                                hideLoading();
+                                toastr.error('Error deleting event:'+error);
+                            }
+                        });
+                    }
+                });
+            });
 
             window.scheduleInterviewStore = function() {
                 showLoading();

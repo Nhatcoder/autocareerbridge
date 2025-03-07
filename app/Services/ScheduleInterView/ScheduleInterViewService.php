@@ -162,7 +162,7 @@ class ScheduleInterViewService
     {
         DB::beginTransaction();
         try {
-            $scheduleInterview = $this->scheduleInterViewRepository->find($data['id']);
+            $scheduleInterview = $this->scheduleInterViewRepository->getScheduleInterViewByEventId($data['event_id']);
             if (!$scheduleInterview) {
                 throw new \Exception('Schedule interview not found');
             }
@@ -170,7 +170,7 @@ class ScheduleInterViewService
             // Delete from Google Calendar
             $client = $this->authService->getGoogleClient();
             $service = new Calendar($client);
-            $service->events->delete('primary', $scheduleInterview->event_id);
+            $service->events->delete('primary', $data['event_id']);
 
             // Get users before detaching
             $users = $scheduleInterview->users;
@@ -277,25 +277,20 @@ class ScheduleInterViewService
             $eventId = $schedule->event_id;
 
             // Update the event on Google Calendar
-            $eventGoogle = $this->googleCalendarService->updateCalendarEvent($eventId, $data);
+            $updated = $this->googleCalendarService->updateCalendarEvent($eventId, $data);
 
-            if (!$eventGoogle) {
+            if (!$updated) {
                 throw new \Exception('Failed to update the event on Google Calendar.');
             }
 
             // Update schedule details in the database
-            $dataToUpdate = [
+            $schedule->update([
                 'title' => $data['title'] ?? $schedule->title,
                 'start_date' => $data['start_date'] ?? $schedule->start_date,
                 'end_date' => $data['end_date'] ?? $schedule->end_date,
                 'description' => $data['description'] ?? $schedule->description,
-                'location' => $data['type'] != TYPE_SCHEDULE_ON ? ($data['location'] ?? '') : null,
-                'link' => $data['type'] == TYPE_SCHEDULE_ON && isset($eventGoogle->conferenceData->entryPoints[0]->uri) 
-                    ? $eventGoogle->conferenceData->entryPoints[0]->uri 
-                    : null,
-                'type' => $data['type'],
-            ];
-            $schedule->update();
+                'location' => $data['location'] ?? $schedule->location,
+            ]);
 
             // Get existing users
             $existingUserIds = $this->interviewRepository->getWhere([

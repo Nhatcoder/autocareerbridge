@@ -7,10 +7,7 @@ use App\Http\Controllers\Company\JobsController;
 use App\Http\Controllers\Company\MajorsController;
 use App\Http\Controllers\Company\ScheduleInterviewController;
 use App\Http\Controllers\University\WorkShopsController;
-use App\Models\Collaboration;
-use App\Models\WorkShop;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ScheduleInterview;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +19,6 @@ use App\Http\Controllers\ScheduleInterview;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 
 Route::group([
     'prefix' => 'company',
@@ -56,6 +52,7 @@ Route::group([
     Route::post('schedule-interviews-store', [ScheduleInterviewController::class, 'scheduleInterviewStore'])->name('scheduleInterviewStore');
     Route::post('delete-schedule-interview', [ScheduleInterviewController::class, 'deleteScheduleInterview'])->name('deleteScheduleInterview');
     Route::get('schedule-interviews-all', [ScheduleInterviewController::class, 'refreshEvents'])->name('refreshEvents');
+    Route::get('getAllJobInterview', [ScheduleInterviewController::class, 'getAllJobInterview'])->name('getAllJobInterview');
 
     // Route::get('/schedule-interviews', [ScheduleInterviewController::class, 'index'])->name('schedule-interviews.list');
     // Route::get('/schedule-interviews/get-data', [ScheduleInterviewController::class, 'getData'])->name('schedule-interviews.data');
@@ -87,8 +84,6 @@ Route::group([
     Route::get('manage-university-job/change-status/{id}/{status}', [JobsController::class, 'updateStatus'])->name('updateStatus');
     Route::post('workshop/apply/{companyId}/{workshopId}', [WorkShopsController::class, 'applyWorkshop'])->name('workshop.apply');
     Route::get('/workshops/applied', [WorkShopsController::class, 'workshopApplied'])->name('workshops.applied');
-
-    Route::get('/getAllJobInterview', [JobsController::class, 'getAllJobInterview'])->name('getAllJobInterview');
 
     Route::get('jobs/applicants/{job}', [JobsController::class, 'getUserApplyJob'])->name('getUserApplyJob');
 });

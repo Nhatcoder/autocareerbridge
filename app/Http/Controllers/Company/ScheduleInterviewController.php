@@ -9,9 +9,8 @@ use App\Services\Managements\AuthService;
 use Google\Service\Calendar;
 use App\Services\Interview\InterviewService;
 use App\Services\Job\JobService;
-use App\Services\ScheduleInterview\ScheduleInterviewService;
+use App\Services\ScheduleInterView\ScheduleInterViewService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ScheduleRequest;
 use App\Services\UserJob\UserJobService;
@@ -37,8 +36,6 @@ class ScheduleInterviewController extends Controller
     protected $jobService;
     protected $userJobService;
 
-
-
     public  function __construct(
         AuthService $authService,
         ScheduleInterviewService $scheduleInterviewService,
@@ -52,7 +49,6 @@ class ScheduleInterviewController extends Controller
         $this->jobService = $jobService;
         $this->userJobService = $userJobService;
     }
-
 
     /**
      * Display a list of schedule interviews.
@@ -193,7 +189,7 @@ class ScheduleInterviewController extends Controller
     public function deleteScheduleInterview(Request $request)
     {
         $data = [
-            'event_id' => $request->event_id,
+            'id' => $request->id,
         ];
         try {
             $scheduleInterView = $this->scheduleInterviewService->deleteScheduleInterview($data);
@@ -211,7 +207,6 @@ class ScheduleInterviewController extends Controller
         }
     }
 
-
     // get thông tin từ api theo event id
     public function getGoogleCalendarEvent($eventId)
     {
@@ -226,13 +221,13 @@ class ScheduleInterviewController extends Controller
                 'description' => $event->getDescription(),
                 'start' => $event->start->dateTime ?? $event->start->date,
                 'end' => $event->end->dateTime ?? $event->end->date,
+                'location' => $event->location,
                 'hangoutLink' => $event->hangoutLink ?? null,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
     /**
      * Retrieve all scheduled interviews.
@@ -310,5 +305,11 @@ class ScheduleInterviewController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getAllJobInterview()
+    {
+        $userApplyJobs = $this->userJobService->getAllUserJobCompany();
+        return $this->successResponse($userApplyJobs, true, 'Get all job interview success');
     }
 }

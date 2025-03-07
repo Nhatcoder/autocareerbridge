@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repositories\Interview;
 
 use App\Models\Interview;
@@ -13,8 +12,7 @@ class InterviewRepository extends BaseRepository implements InterviewRepositoryI
     }
 
     /**
-     *
-     *
+     * Get event details by event ID
      * @param string $eventId
      * @return array
      */
@@ -35,13 +33,13 @@ class InterviewRepository extends BaseRepository implements InterviewRepositoryI
             ->whereHas('scheduleInterview', function ($query) use ($eventId) {
                 $query->where('event_id', $eventId);
             })
-            ->with('user:id,user_name,email')
+            ->with('user:id,user_name,email,name')
             ->where('status', STATUS_JOIN)
             ->get()
             ->unique('user.email')
             ->map(function ($interview) {
                 return [
-                    'name'  => $interview->user->user_name ?? 'Không rõ',
+                    'name'  => $interview->user->name ?? $interview->user->user_name ?? 'Không rõ',
                     'email' => $interview->user->email ?? 'Không rõ',
                 ];
             });
@@ -51,6 +49,7 @@ class InterviewRepository extends BaseRepository implements InterviewRepositoryI
             'company'   => $event->scheduleInterview->company->name ?? 'Không có thông tin',
             'job'       => $event->scheduleInterview->job->name ?? 'Không có thông tin',
             'link'      => $event->scheduleInterview->link ?? null,
+            'location'      => $event->scheduleInterview->link ?? null,
             'description' => $event->scheduleInterview->description ?? null,
             'attendees' => $attendees,
         ];

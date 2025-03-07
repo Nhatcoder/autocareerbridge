@@ -59,7 +59,7 @@ class ScheduleInterviewController extends Controller
         try {
             $interView = $this->scheduleInterViewService->changeStatusInterView($data);
             if ($interView) {
-                $msg = $interView->status == 1 ? 'Chấp nhận ' : 'Từ chối ';
+                $msg = $interView->status == STATUS_JOIN ? 'Chấp nhận ' : 'Từ chối ';
                 $msg .= 'cuộc phỏng vấn thành công.';
                 return $this->successResponse($interView, true, $msg);
             }

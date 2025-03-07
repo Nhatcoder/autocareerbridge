@@ -8,7 +8,6 @@ use Google\Service\Calendar\Event;
 use Google\Service\Calendar\EventDateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use App\Helpers\LogHelper;
 
 class GoogleCalendarService
@@ -113,11 +112,8 @@ class GoogleCalendarService
     public function updateCalendarEvent($eventId, $data)
     {
         try {
-
             $this->setAccessTokenForAuthenticatedUser();
-
             $calendarService = new Calendar($this->client);
-
             $calendarId = 'primary';
 
             $event = $calendarService->events->get($calendarId, $eventId);
@@ -127,6 +123,24 @@ class GoogleCalendarService
             }
 
             $event->setSummary($data['title'] ?? $event->getSummary());
+
+            if ($data['type'] == TYPE_SCHEDULE_ON) {
+                $event['conferenceData'] = [
+                    'createRequest' => [
+                        'requestId' => uniqid(),
+                        'conferenceSolutionKey' => ['type' => 'hangoutsMeet']
+                    ]
+                ];
+                $optParams = ['conferenceDataVersion' => 1];
+                // Clear location for online meetings
+                $event->setLocation('');
+            } else {
+                // For offline meetings, clear conference data and set location
+                $optParams = [];
+                $event->setLocation($data['location'] ?? '');
+                $event['conferenceData'] = null;
+            }
+
             $event->setDescription($data['description'] ?? $event->getDescription());
 
             $event->setStart(new EventDateTime([
@@ -138,12 +152,11 @@ class GoogleCalendarService
                 'timeZone' => $data['time_zone'] ?? 'Asia/Ho_Chi_Minh',
             ]));
 
-            $calendarService->events->update($calendarId, $eventId, $event);
+            $eventGoogle = $calendarService->events->update($calendarId, $eventId, $event, $optParams);
 
-            return true;
+            return $eventGoogle;
         } catch (\Exception $e) {
             $this->logExceptionDetails($e);
-
             return false;
         }
     }

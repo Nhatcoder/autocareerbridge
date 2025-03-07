@@ -11,8 +11,6 @@ use App\Services\Major\MajorService;
 use App\Services\Skill\SkillService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Company\JobRequest;
-use App\Models\Interview;
-use App\Models\Job;
 
 /**
  * JobsController handles job management operations for companies, including listing
@@ -297,6 +295,7 @@ class JobsController extends Controller
             return [
                 'id' => $user->id,
                 'user_name' => $user->user_name,
+                'name' => $user->name,
                 'email' => $user->email,
                 'status' => $interview ? $interview->status : STATUS_NOT_INVITE
             ];

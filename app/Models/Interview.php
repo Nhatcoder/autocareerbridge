@@ -15,7 +15,7 @@ class Interview extends Model
 
     public function scheduleInterview()
     {
-        return $this->belongsTo(ScheduleInterview::class, 'schedule_interview_id');
+        return $this->belongsTo(ScheduleInterView::class, 'schedule_interview_id');
     }
 
     public function user()

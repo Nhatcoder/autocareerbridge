@@ -57,7 +57,6 @@ Route::middleware('web')->group(function () {
             Route::get('/api/cv/{id}', [ResumeController::class, 'getCVData']);
 
             // thêm thông tin cập nhật hồ sơ
-            // Route::get('cap-nhat-cv/{id}', [ResumeController::class, 'edit'])->name('editCv');
             Route::post('cv/create', [ResumeController::class, 'store'])->name('createCv');
             Route::put('cv/{id}/update', [ResumeController::class, 'update'])->name('updateCv');
 
@@ -110,7 +109,7 @@ Route::middleware('web')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::post('/job/wishlist', [JobsController::class, 'wishlistJob'])->name('job.wishlist');
         Route::get('/viec-lam-da-luu', [JobsController::class, 'listJobWishlist'])->name('job.wishlist.list');
-        
+
         Route::get("lich-phong-van", [ScheduleInterviewController::class, 'listScheduleInterView'])->name("listScheduleInterView");
         Route::get("get-schedule-interview-user", [ScheduleInterviewController::class, 'refreshScheduleInterView'])->name("refreshScheduleInterView");
         Route::post("change-status-interview", [ScheduleInterviewController::class, 'changeStatusInterView'])->name("changeStatusInterView");

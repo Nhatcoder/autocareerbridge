@@ -74,8 +74,6 @@ class ScheduleInterViewRepository extends BaseRepository implements ScheduleInte
                 'end_date' => $schedule->end_date,
                 'description' => $schedule->description,
                 'location' => $schedule->location ?? '',
-                'link' => $schedule->link,
-                'type' => $schedule->type,
                 'attendees' => $attendees
             ];
         }

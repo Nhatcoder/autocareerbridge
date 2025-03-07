@@ -35,7 +35,7 @@ class ScheduleRequest extends FormRequest
                     function ($attribute, $value, $fail) {
                         $companyId = auth()->guard('admin')->id();
 
-                        $existingSchedules = \App\Models\ScheduleInterview::where('company_id', $companyId)->get();
+                        $existingSchedules = \App\Models\ScheduleInterView::where('company_id', $companyId)->get();
                         foreach ($existingSchedules as $schedule) {
                             if ($value >= $schedule->start_date && $value < $schedule->end_date) {
                                 $fail('Bạn đã có lịch phỏng vấn trong khoảng thời gian này.');
@@ -55,7 +55,7 @@ class ScheduleRequest extends FormRequest
                     'after:startDate',
                     function ($attribute, $value, $fail) {
                         $companyId = auth()->guard('admin')->id();
-                        $existingSchedules = \App\Models\ScheduleInterview::where('company_id', $companyId)->get();
+                        $existingSchedules = \App\Models\ScheduleInterView::where('company_id', $companyId)->get();
 
                         foreach ($existingSchedules as $schedule) {
                             if ($value > $schedule->start_date && $value <= $schedule->end_date) {
