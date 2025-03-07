@@ -493,7 +493,7 @@ return [
             'all_data' => 'Tất cả',
             'w_eval' => 'Chờ đánh giá',
             'fit'    => 'Phù hợp',
-            'interv' => 'Đang phỏng vấn',
+            'interv' => 'Phỏng vấn',
             'hired'  => 'Đã tuyển',
             'unfit'  => 'Không phù hợp',
             'message_confirm' => 'Bạn có chắc muốn đổi trạng thái tuyển dụng không?',

@@ -535,7 +535,6 @@ class JobService
         switch ($data['status']) {
             case STATUS_FIT:
                 $this->userJobRepository->update($userJob->id, [
-                    'interview_time' => $data['interview_time'],
                     'status' => $data['status'],
                 ]);
                 $notification = $this->notificationService->create([

@@ -2,18 +2,19 @@
 
 namespace App\Services\ScheduleInterview;
 
-use App\Repositories\Interview\InterviewRepositoryInterface;
+use App\Helpers\LogHelper;
 use Google\Service\Calendar;
 use Google\Service\Calendar\Event;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\UserJob\UserJobService;
 use App\Services\Managements\AuthService;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Services\Notification\NotificationService;
-use App\Repositories\UserJob\UserJobRepositoryInterface;
-use App\Repositories\ScheduleInterview\ScheduleInterViewRepositoryInterface;
 use App\Services\GoogleCalendar\GoogleCalendarService;
-use App\Helpers\LogHelper;
+use App\Repositories\UserJob\UserJobRepositoryInterface;
+use App\Repositories\Interview\InterviewRepositoryInterface;
+use App\Repositories\ScheduleInterview\ScheduleInterViewRepositoryInterface;
 
 /**
  * CRUD, Schedule and Event Google Clendar Api of ScheduleInterViewService
@@ -31,10 +32,12 @@ class ScheduleInterViewService
     protected $notificationService;
     protected $googleCalendarService;
     protected $interviewRepository;
+    protected $userJobService;
 
     public function __construct(
         ScheduleInterViewRepositoryInterface $scheduleInterViewRepository,
         AuthService $authService,
+        UserJobService $userJobService,
         UserRepositoryInterface $userRepository,
         NotificationService $notificationService,
         UserJobRepositoryInterface $userJobRepository,
@@ -48,6 +51,7 @@ class ScheduleInterViewService
         $this->notificationService = $notificationService;
         $this->googleCalendarService = $googleCalendarService;
         $this->interviewRepository = $interviewRepository;
+        $this->userJobService = $userJobService;
     }
 
     /**
@@ -122,9 +126,14 @@ class ScheduleInterViewService
 
             $scheduleInterView = $this->scheduleInterViewRepository->create($scheduleData);
 
+
+
             // Store user_ids
             if (isset($data['user_ids'])) {
                 $scheduleInterView->users()->sync($data['user_ids']);
+
+                // Update status userjob
+                $this->userJobService->updateStatusUserInterview($data['user_ids']);
 
                 $firstUserJob = $this->userJobRepository->getUserJob($data['user_ids'][0]);
                 $companyName = $firstUserJob->job->company->name ?? NAME_COMPANY;
@@ -162,7 +171,7 @@ class ScheduleInterViewService
     {
         DB::beginTransaction();
         try {
-            $scheduleInterview = $this->scheduleInterViewRepository->getScheduleInterViewByEventId($data['event_id']);
+            $scheduleInterview = $this->scheduleInterViewRepository->find($data['id']);
             if (!$scheduleInterview) {
                 throw new \Exception('Schedule interview not found');
             }
@@ -170,7 +179,7 @@ class ScheduleInterViewService
             // Delete from Google Calendar
             $client = $this->authService->getGoogleClient();
             $service = new Calendar($client);
-            $service->events->delete('primary', $data['event_id']);
+            $service->events->delete('primary', $scheduleInterview->event_id);
 
             // Get users before detaching
             $users = $scheduleInterview->users;
@@ -277,20 +286,25 @@ class ScheduleInterViewService
             $eventId = $schedule->event_id;
 
             // Update the event on Google Calendar
-            $updated = $this->googleCalendarService->updateCalendarEvent($eventId, $data);
+            $eventGoogle = $this->googleCalendarService->updateCalendarEvent($eventId, $data);
 
-            if (!$updated) {
+            if (!$eventGoogle) {
                 throw new \Exception('Failed to update the event on Google Calendar.');
             }
 
             // Update schedule details in the database
-            $schedule->update([
+            $dataToUpdate = [
                 'title' => $data['title'] ?? $schedule->title,
                 'start_date' => $data['start_date'] ?? $schedule->start_date,
                 'end_date' => $data['end_date'] ?? $schedule->end_date,
                 'description' => $data['description'] ?? $schedule->description,
-                'location' => $data['location'] ?? $schedule->location,
-            ]);
+                'location' => $data['type'] != TYPE_SCHEDULE_ON ? ($data['location'] ?? '') : null,
+                'link' => $data['type'] == TYPE_SCHEDULE_ON && isset($eventGoogle->conferenceData->entryPoints[0]->uri)
+                    ? $eventGoogle->conferenceData->entryPoints[0]->uri
+                    : null,
+                'type' => $data['type'],
+            ];
+            $schedule->update($dataToUpdate);
 
             // Get existing users
             $existingUserIds = $this->interviewRepository->getWhere([

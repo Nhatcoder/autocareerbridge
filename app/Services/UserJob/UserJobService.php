@@ -53,4 +53,8 @@ class UserJobService
     {
         return $this->userJobRepository->getAllUserJobIdCompany($id);
     }
+
+    public function updateStatusUserInterview ($data) {
+        return $this->userJobRepository->updateStatusInterview($data);
+    }
 }
