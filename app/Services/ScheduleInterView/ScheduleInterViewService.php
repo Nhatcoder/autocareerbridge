@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\ScheduleInterview;
+namespace App\Services\ScheduleInterView;
 
 use App\Helpers\LogHelper;
 use Google\Service\Calendar;

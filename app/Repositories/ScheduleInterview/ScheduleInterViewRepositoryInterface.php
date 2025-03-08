@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\ScheduleInterview;
+namespace App\Repositories\ScheduleInterView;
 
 use App\Repositories\Base\BaseRepositoryInterface;
 
