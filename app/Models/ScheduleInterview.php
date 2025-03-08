@@ -19,7 +19,6 @@ class ScheduleInterView extends Model
         'start_date',
         'end_date',
         'link',
-        'location',
         'type',
         'description',
         'event_id',
