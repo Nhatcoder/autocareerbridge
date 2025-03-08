@@ -50,8 +50,8 @@ use App\Repositories\JobWishlist\JobWishlistRepository;
 use App\Repositories\JobWishlist\JobWishlistRepositoryInterface;
 use App\Repositories\Referrer\ReferrerRepository;
 use App\Repositories\Referrer\ReferrerRepositoryInterface;
-use App\Repositories\ScheduleInterView\ScheduleInterViewRepository;
-use App\Repositories\ScheduleInterView\ScheduleInterViewRepositoryInterface;
+use App\Repositories\ScheduleInterview\ScheduleInterviewRepository;
+use App\Repositories\ScheduleInterview\ScheduleInterviewRepositoryInterface;
 use App\Repositories\UserJob\UserJobRepository;
 use App\Repositories\UserJob\UserJobRepositoryInterface;
 
@@ -98,7 +98,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ChatMessageRepositoryInterface::class, ChatMessageRepository::class);
         $this->app->bind(UserJobRepositoryInterface::class, UserJobRepository::class);
         $this->app->bind(JobWishlistRepositoryInterface::class, JobWishlistRepository::class);
-        $this->app->bind(ScheduleInterViewRepositoryInterface::class, ScheduleInterViewRepository::class);
+        $this->app->bind(ScheduleInterviewRepositoryInterface::class, ScheduleInterviewRepository::class);
         $this->app->bind(InterviewRepositoryInterface::class, InterviewRepository::class);
     }
 

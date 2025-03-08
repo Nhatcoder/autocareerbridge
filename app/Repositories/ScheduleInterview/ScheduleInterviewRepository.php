@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Repositories\ScheduleInterView;
+namespace App\Repositories\ScheduleInterview;
 
 use App\Models\Interview;
-use App\Models\ScheduleInterView;
+use App\Models\ScheduleInterview;
 use App\Repositories\Base\BaseRepository;
 
 
-class ScheduleInterViewRepository extends BaseRepository implements ScheduleInterViewRepositoryInterface
+class ScheduleInterviewRepository extends BaseRepository implements ScheduleInterviewRepositoryInterface
 {
     protected $interview;
     public function __construct(Interview $interview)
