@@ -6,7 +6,7 @@ use App\Helpers\LogHelper;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\ScheduleInterView\ScheduleInterViewService;
+use App\Services\ScheduleInterview\ScheduleInterviewService;
 
 /**
  * List, join or reject schedule interview
@@ -17,7 +17,7 @@ class ScheduleInterviewController extends Controller
     use ApiResponse, LogHelper;
 
     protected $scheduleInterViewService;
-    public function __construct(ScheduleInterViewService $scheduleInterViewService)
+    public function __construct(ScheduleInterviewService $scheduleInterViewService)
     {
         $this->scheduleInterViewService = $scheduleInterViewService;
     }

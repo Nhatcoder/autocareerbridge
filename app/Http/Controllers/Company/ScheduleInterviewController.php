@@ -9,7 +9,7 @@ use App\Services\Managements\AuthService;
 use Google\Service\Calendar;
 use App\Services\Interview\InterviewService;
 use App\Services\Job\JobService;
-use App\Services\ScheduleInterView\ScheduleInterViewService;
+use App\Services\ScheduleInterview\ScheduleInterviewService;
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ScheduleRequest;
