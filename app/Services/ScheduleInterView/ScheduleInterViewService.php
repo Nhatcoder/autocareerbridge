@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\ScheduleInterView;
+namespace App\Services\ScheduleInterview;
 
 use App\Helpers\LogHelper;
 use Google\Service\Calendar;
@@ -14,14 +14,14 @@ use App\Services\Notification\NotificationService;
 use App\Services\GoogleCalendar\GoogleCalendarService;
 use App\Repositories\UserJob\UserJobRepositoryInterface;
 use App\Repositories\Interview\InterviewRepositoryInterface;
-use App\Repositories\ScheduleInterview\ScheduleInterViewRepositoryInterface;
+use App\Repositories\ScheduleInterview\ScheduleInterviewRepositoryInterface;
 
 /**
  * CRUD, Schedule and Event Google Clendar Api of ScheduleInterViewService
  * @author TranVanNhat <tranvannhat7624@gmail.com>
  * @see scheduleInterViewStore($data)
  */
-class ScheduleInterViewService
+class ScheduleInterviewService
 {
     use LogHelper;
 

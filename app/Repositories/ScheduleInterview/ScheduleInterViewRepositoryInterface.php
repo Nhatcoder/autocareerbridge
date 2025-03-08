@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\ScheduleInterView;
+namespace App\Repositories\ScheduleInterview;
 
 use App\Repositories\Base\BaseRepositoryInterface;
 
-interface ScheduleInterViewRepositoryInterface extends BaseRepositoryInterface
+interface ScheduleInterviewRepositoryInterface extends BaseRepositoryInterface
 {
     /**
      * Get schedule interview by event ID
