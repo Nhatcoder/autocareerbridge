@@ -126,8 +126,6 @@ class ScheduleInterviewService
 
             $scheduleInterView = $this->scheduleInterViewRepository->create($scheduleData);
 
-
-
             // Store user_ids
             if (isset($data['user_ids'])) {
                 $scheduleInterView->users()->sync($data['user_ids']);
@@ -147,7 +145,7 @@ class ScheduleInterviewService
                             'title' => 'Bạn có cuộc phỏng vấn với ' . $companyName .
                                 ', vị trí ' . $userJob->job->name . ', vào lúc ' .
                                 date('d/m/Y H:i', strtotime($scheduleInterView->start_date)),
-                            'link' => route('historyJobApply'),
+                            'link' => route('listScheduleInterView'),
                         ]);
 
                         $this->notificationService->renderNotificationRealtimeClient($notification);

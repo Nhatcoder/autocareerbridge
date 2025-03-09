@@ -101,7 +101,7 @@ class UserJobRepository extends BaseRepository implements UserJobRepositoryInter
             ->whereHas('job', function ($query) use ($currentDate) {
                 $query->where('end_date', '>', $currentDate);
             })
-            ->where('status', STATUS_FIT)
+            ->whereIn('status', [STATUS_FIT, STATUS_INTERV])
             ->get()
             ->unique('job.id');
     }

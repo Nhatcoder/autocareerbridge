@@ -15385,8 +15385,6 @@ ul {
 
 .nav-header .brand-logo {
     display: flex;
-    height: 90%;
-    width: 90%;
     justify-content: flex-start;
     align-items: center;
     font-size: 1.125rem;
