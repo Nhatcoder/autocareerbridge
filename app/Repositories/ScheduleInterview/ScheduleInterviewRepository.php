@@ -91,9 +91,10 @@ class ScheduleInterviewRepository extends BaseRepository implements ScheduleInte
     public function listScheduleInterView()
     {
         $userId = auth('web')->user()->id;
-        return $this->model->with(['job', 'company', 'interviews' => function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        }])
+        return $this->model->with(['job', 'company', 'interviews'])
+            ->whereHas('interviews', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
             ->select('id', 'job_id', 'company_id', 'title', 'description', 'start_date as start', 'end_date as end', 'type', 'location', 'link')
             ->get();
     }
