@@ -1,66 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 AutoCareerBridge
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> *Kết nối ứng viên, nhà tuyển dụng và nhà trường một cách thông minh và hiệu quả.*
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🧩 Giới thiệu
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**AutoCareerBridge** là một nền tảng web hỗ trợ đăng tin tuyển dụng, tìm kiếm việc làm, nhắn tin giữa các bên và phân tích thống kê tuyển dụng. Mục tiêu của dự án là tạo cầu nối giữa **ứng viên**, **nhà tuyển dụng** và **các trường đại học** nhằm mang đến giải pháp tìm việc toàn diện.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🛠️ Công nghệ sử dụng
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Công nghệ        | Mô tả                                                                 |
+|------------------|-----------------------------------------------------------------------|
+| **PHP**          | Ngôn ngữ lập trình phía server                                        |
+| **Laravel**          | Ngôn ngữ lập trình phía server                                        |
+| **HTML/CSS**     | Cấu trúc và tạo kiểu cho giao diện người dùng                        |
+| **JavaScript**   | Xử lý tương tác người dùng phía client                               |
+| **ReactJS**   | Xử lý phần nhắn tin ứng viên với doanh nghiệp                               |
+| **Mysql**   | Lưu trữ hệ thống                               |
+| **Jquery**   |    Quản trị admin hệ thống, doanh nghiệp, Nhà trường                            |
+| **CKEditor 4**   | Trình soạn thảo văn bản WYSIWYG tích hợp                             |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ✨ Tính năng chính
 
-## Laravel Sponsors
+- ✅ **Đăng tin tuyển dụng**  
+  Nhà tuyển dụng có thể tạo, chỉnh sửa và quản lý các bài đăng tuyển dụng dễ dàng.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- 🔍 **Tìm kiếm công việc**  
+  Ứng viên có thể lọc và tìm kiếm việc làm theo vị trí, ngành nghề, địa điểm...
 
-### Premium Partners
+- 👤 **Quản lý thông tin người dùng**  
+  Hệ thống phân loại và quản lý thông tin của ứng viên và nhà tuyển dụng hiệu quả.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- 💬 **Nhắn tin giữa ứng viên và doanh nghiệp**  
+  Cho phép trao đổi trực tiếp giữa hai bên thông qua hệ thống chat nội bộ.
 
-## Contributing
+- 🏫 **Hợp tác giữa nhà trường và doanh nghiệp**  
+  Kết nối các trường đại học với doanh nghiệp để hỗ trợ sinh viên tiếp cận cơ hội việc làm.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- 📊 **Thống kê tuyển dụng theo doanh nghiệp**  
+  Hiển thị số lượng công việc, lượt ứng tuyển, và hiệu quả từng bài đăng theo doanh nghiệp.
 
-## Code of Conduct
+- 📄 **Xuất PDF**  
+  Tích hợp **CKEditor 4 Export to PDF** cho phép người dùng xuất nội dung ra file PDF.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 Hướng dẫn cài đặt
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. **Clone dự án về máy:**
 
-## License
+   ```bash
+   git clone https://github.com/Nhatcoder/autocareerbridge.git
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2. **Cấu hình môi trường:**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Cài đặt Composer:**
+
+   ```bash
+   composer install
+   ```
+
+4. **Tạo key và migrate database:**
+
+   ```bash
+   php artisan key:generate
+   php artisan migrate
+   ```
+
+5. **Khởi động server:**
+
+   ```bash
+   php artisan serve
+   ```
+
+---
+
+## 📁 Cấu trúc dự án (cơ bản)
+
+```
+├── app/
+├── public/
+├── resources/
+│   ├── views/
+│   └── js/
+├── routes/
+│   └── web.php
+├── .env
+└── composer.json
+```
+
+---
+
+## 📸 Giao diện (Screenshots)
+
+> *(Thêm ảnh vào thư mục `assets/` và sử dụng link dưới đây để hiển thị)*
+
+![Trang chủ](assets/homepage.png)
+![Tìm việc](assets/job_search.png)
+
+---
+
+## 📜 Giấy phép
+
+Dự án được phát hành theo [MIT License](LICENSE).
+
+---
+
+## 🙋 Liên hệ
+
+- 👤 **Tác giả**: [Nhatcoder](https://github.com/Nhatcoder)
+- 📧 Email: *your-email@example.com*
+
+---
+
+*Hãy ⭐ repo nếu bạn thấy dự án hữu ích!*
